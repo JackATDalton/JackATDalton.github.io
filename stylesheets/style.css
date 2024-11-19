@@ -6,6 +6,8 @@ html *
   box-sizing:border-box;
 }
 
+
+
 nav
 {
   position:fixed;
@@ -50,6 +52,12 @@ body
 {
   margin: 100px;
   background-color: #628474;
+  display: flex; /* Makes the body a flex container */
+  flex-direction: column; /* Stack children (header, main, footer) vertically */
+}
+
+main {
+  flex: 1; /* Takes up all available space, pushing footer to the bottom */
 }
 
 .divider
@@ -121,6 +129,7 @@ h2
 
 /* Footer Styles */
 footer {
+  position: fixed;
   margin: 0; /* Removes default margin around the footer */
   padding: 10px 0; /* adds padding only inside the footer*/
   width: 100%; /* Ensures the footer spans the full width */
