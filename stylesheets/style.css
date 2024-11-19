@@ -77,9 +77,9 @@ h2
 {
   display:inline-block;
   border-radius: .5em;
-  background-color: #738f79;
-  color:#f8f4e3; /*text color*/
-  text-decoration: none; /* Removes underline for links */
+  background-color: #f8f4e3;
+  color:#628474; /*text color*/
+  text-decoration: none!important; /* Removes underline for links */
   text-align: center; /* Centers text */
   margin:.3em;
   padding: .8em;
