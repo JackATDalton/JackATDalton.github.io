@@ -123,7 +123,6 @@ h2
 
 /* Footer Styles */
 footer {
-  position: fixed;
   margin: 0; /* Removes default margin around the footer */
   padding: 10px 0; /* adds padding only inside the footer*/
   width: 100%; /* Ensures the footer spans the full width */
