@@ -129,7 +129,7 @@ footer {
 }
 
 .footer-logo {
-  height: 100px; /* Set a uniform height for all logos */
+  height: 200px; /* Set a uniform height for all logos */
   width: auto; /* Maintain the aspect ratio */
 }
 
