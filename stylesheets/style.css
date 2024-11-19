@@ -52,12 +52,6 @@ body
 {
   margin: 100px;
   background-color: #628474;
-  display: flex; /* Makes the body a flex container */
-  flex-direction: column; /* Stack children (header, main, footer) vertically */
-}
-
-main {
-  flex: 1; /* Takes up all available space, pushing footer to the bottom */
 }
 
 .divider
