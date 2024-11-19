@@ -2,7 +2,7 @@
 html *
 {
   font-family: "Helvetica", sans-serif !important;
-  color: ghostwhite;
+  color: #f8f4e3;
   box-sizing:border-box;
 }
 
@@ -56,7 +56,7 @@ body
 {
   height: 1px;
   width: 100%;
-  background-color: ghostwhite;
+  background-color: #f8f4e3;
 }
 
 h2
