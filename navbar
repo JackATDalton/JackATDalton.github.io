@@ -1,0 +1,13 @@
+<nav>
+    <ul>
+        <li><a href="{{ site.url }}">Home</a></li>
+        <li><a href="{{ site.url }}/CV">CV</a></li>
+        <li><a href="{{ site.url }}/blog">Blog</a></li>
+        <li><a href="{{ site.url }}/protocols">Protocols</a></li>
+        <li style="float:right"><a href="https://github.com/jackatdalton"><img class="icon" src="{{site.url}}/icons/github.png"></a></li>
+        <li style="float:right"><a href="https://www.linkedin.com/in/jackatdalton"><img class="icon" src="{{site.url}}/icons/linkedin.png"></a></li>
+        <li style="float:right"><a href="https://twitter.com/jackatdalton"><img class="icon" src="{{site.url}}/icons/twitter.png"></a></li>
+        <li style="float:right"><a href="https://scholar.google.com.au/citations?user=khC2NjAAAAAJ&hl=en"><img class="icon" src="{{site.url}}/icons/scholar.png"></a></li>
+        <li style="float:right"><a href="https://orcid.org/0009-0000-3095-5404"><img class="icon" src="{{site.url}}/icons/orcid.png"></a></li>
+    </ul>
+</nav>
