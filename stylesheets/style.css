@@ -117,7 +117,6 @@ h2
 footer {
   background-color: #738f79;
   color: #f8f4e3; /* Text color (if needed) */
-  padding: 20px;
   text-align: center;
 }
 
@@ -130,7 +129,7 @@ footer {
 }
 
 .footer-logo {
-  width: 80px; /* Set a uniform width for all logos */
-  height: auto; /* Maintain the aspect ratio */
+  height: 100px; /* Set a uniform height for all logos */
+  width: auto; /* Maintain the aspect ratio */
 }
 
