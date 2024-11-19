@@ -69,7 +69,7 @@ h2
 {
   display:inline-block;
   border-radius: .5em;
-  background-color: #070;
+  background-color: #90b499;
   margin:.3em;
   padding: .8em;
   
@@ -118,8 +118,8 @@ footer {
   margin: 0; /* Removes default margin around the footer */
   padding: 10px 0; /* adds padding only inside the footer*/
   width: 100%; /* Ensures the footer spans the full width */
-  background-color: #628474;
-  color: #f8f4e3; /* Text color (if needed) */
+  background-color: #f8f4e3;
+  color: #628474; /* Text color (if needed) */
   text-align: center;
 }
 
