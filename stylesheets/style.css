@@ -118,7 +118,7 @@ footer {
   margin: 0; /* Removes default margin around the footer */
   padding: 10px 0; /* adds padding only inside the footer*/
   width: 100%; /* Ensures the footer spans the full width */
-  background-color: #738f79;
+  background-color: #628474;
   color: #f8f4e3; /* Text color (if needed) */
   text-align: center;
 }
