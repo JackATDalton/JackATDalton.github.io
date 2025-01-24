@@ -83,7 +83,6 @@ body
 .subsections {
  width: 100%; /* Full width */
   padding: 20px; /* Add spacing inside */
-  background-color: #90b499; /* Background color for each subsection */
   border-bottom: 1px solid #ddd; /* Optional: separate subsections with a line */
   text-align: right; /* right-align text */
 }
