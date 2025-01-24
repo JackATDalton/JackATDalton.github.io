@@ -63,9 +63,9 @@ body
 }
 
 .hero {
-  text-align: center;
+  text-align: left;
   padding: 50px 20px;
-  background-color: #f1f5f9;
+  background-color: #628474;
 }
 
 .hero h1 {
@@ -85,14 +85,15 @@ body
  width: 100%; /* Full width */
   padding: 20px; /* Add spacing inside */
   border-bottom: 1px solid #ddd; /* Optional: separate subsections with a line */
-  text-align: right; /* right-align text */
 }
 .subsection:nth-child(even) {
   background-color: #90b499; /* Lighter green */
+  text-align: left; /* left-align text */
 }
 
 .subsection:nth-child(odd) {
   background-color: #628474; /* Darker green */
+  text-align: right; /* left-align text */
 
 .section {
   background-color: #90b499;
