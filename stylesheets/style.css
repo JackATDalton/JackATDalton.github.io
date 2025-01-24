@@ -84,7 +84,7 @@ body
 
 .subsection {
  width: 100%; /* Full width */
-  padding: 20px; /* Add spacing inside */
+  padding: 100px; /* Add spacing inside */
   border-bottom: 1px solid #ddd; /* Optional: separate subsections with a line */
 }
 .subsection:nth-child(even) {
@@ -132,7 +132,7 @@ h2
   text-decoration: none!important; /* Removes underline for links */
   text-align: center; /* Centers text */
   margin:.3em;
-  padding: .8em;
+  padding: 100px;
   
 }
 .button:hover {
