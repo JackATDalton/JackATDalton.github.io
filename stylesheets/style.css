@@ -50,7 +50,8 @@ nav li a:hover
 
 body
 {
-  margin: 100px;
+  margin: 0px;
+  padding: 0px;
   background-color: #628474;
 }
 
