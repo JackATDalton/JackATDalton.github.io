@@ -87,6 +87,12 @@ body
   border-bottom: 1px solid #ddd; /* Optional: separate subsections with a line */
   text-align: right; /* right-align text */
 }
+.subsection:nth-child(even) {
+  background-color: #90b499; /* Lighter green */
+}
+
+.subsection:nth-child(odd) {
+  background-color: #628474; /* Darker green */
 
 .section {
   background-color: #90b499;
