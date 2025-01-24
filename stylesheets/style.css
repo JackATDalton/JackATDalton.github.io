@@ -82,7 +82,7 @@ body
 
 /* Subsections Style */
 
-.subsections {
+.subsection {
  width: 100%; /* Full width */
   padding: 20px; /* Add spacing inside */
   border-bottom: 1px solid #ddd; /* Optional: separate subsections with a line */
