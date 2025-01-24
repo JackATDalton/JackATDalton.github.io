@@ -131,7 +131,7 @@ h2
   color:#628474; /*text color*/
   text-decoration: none!important; /* Removes underline for links */
   text-align: center; /* Centers text */
-  margin:.3em;
+  margin: .3em 0 .5em 0; /* Adjust margins: top, right/left, bottom */
   padding: 100px;
   
 }
