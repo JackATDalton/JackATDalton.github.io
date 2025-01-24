@@ -162,7 +162,7 @@ h2
 
 .icon
 {
-  height: 40px;
+  height: 15px;
   width: 100%
   
 }
@@ -197,7 +197,7 @@ footer {
 }
 
 .footer-logo {
-  height: 200px; /* Set a uniform height for all logos */
+  height: 50px; /* Set a uniform height for all logos */
   width: auto; /* Maintain the aspect ratio */
   object-fit: contain; /* Fit the entire image within the box */
   margin: 0 10px; /* Optional: Space between logos */
