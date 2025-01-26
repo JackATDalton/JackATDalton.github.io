@@ -65,7 +65,7 @@ body
 
 .hero {
   text-align: left;
-  padding: 50px 20px;
+  padding: 100px 20px;
   background-color: #628474;
 }
 
@@ -78,6 +78,22 @@ body
 .hero p {
   font-size: 1.25rem;
   color: #555;
+}
+
+.button
+{
+  display:inline-block;
+  border-radius: .5em;
+  background-color: #f8f4e3;
+  color:#628474; /*text color*/
+  text-decoration: none!important; /* Removes underline for links */
+  text-align: center; /* Centers text */
+  margin: .3em 0 100px 0; /* Adjust margins: top, right/left, bottom */
+  padding: 100px;
+  
+}
+.button:hover {
+  background-color: #cbc7b8; /* Darker shade on hover */
 }
 
 /* Subsections Style */
@@ -123,21 +139,7 @@ h2
   margin-bottom: 3px;
 }
 
-.button
-{
-  display:inline-block;
-  border-radius: .5em;
-  background-color: #f8f4e3;
-  color:#628474; /*text color*/
-  text-decoration: none!important; /* Removes underline for links */
-  text-align: center; /* Centers text */
-  margin: .3em 0 .5em 0; /* Adjust margins: top, right/left, bottom */
-  padding: 100px;
-  
-}
-.button:hover {
-  background-color: #cbc7b8; /* Darker shade on hover */
-}
+
 
 .uni-column:after
 {
