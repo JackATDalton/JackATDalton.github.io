@@ -48,6 +48,13 @@ nav li a:hover
   background-color: #90b499;
 }
 
+.icon
+{
+  height: 10px;
+  width: 100%
+  
+}
+
 body
 {
   margin: 0px;
@@ -161,12 +168,6 @@ h2
   padding: 1% 3%;
 }
 
-.icon
-{
-  height: 10px;
-  width: 100%
-  
-}
 
 .section-icon
 {
