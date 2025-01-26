@@ -83,7 +83,7 @@ body
 .button
 {
   display:inline-block;
-  border-radius: .5em;
+  border-radius: .1em;
   background-color: #f8f4e3;
   color:#628474; /*text color*/
   text-decoration: none!important; /* Removes underline for links */
