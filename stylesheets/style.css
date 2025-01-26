@@ -88,8 +88,7 @@ body
   color:#628474; /*text color*/
   text-decoration: none!important; /* Removes underline for links */
   text-align: center; /* Centers text */
-  margin: .3em 0 100px 0; /* Adjust margins: top, right/left, bottom */
-  padding: 100px;
+ 
   
 }
 .button:hover {
