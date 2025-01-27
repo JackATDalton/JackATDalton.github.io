@@ -192,10 +192,10 @@ footer {
 }
 
 
-footer .footer-logo {
+.footer-logo {
   width: 200px !important; /* Constrain the width to 200px */
   height: 200px !important; /* Constrain the height to 200px */
   object-fit: contain !important; /* Ensure the logo fits inside the box while maintaining its aspect ratio */
   background-color: transparent; /* Optional: Add a background color if needed for visibility */
-  display: block; /* Ensures alignment with flexbox or inline layout */
+  display: inline-block; /* Ensures alignment with flexbox or inline layout */
 }
