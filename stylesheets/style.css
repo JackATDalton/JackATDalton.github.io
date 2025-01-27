@@ -192,7 +192,7 @@ footer {
 }
 
 
-.footer-logo {
+footer .footer-logo {
   width: 200px; /* Constrain the width to 200px */
   height: 200px; /* Constrain the height to 200px */
   object-fit: contain; /* Ensure the logo fits inside the box while maintaining its aspect ratio */
