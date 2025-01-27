@@ -191,13 +191,18 @@ footer {
   text-align: center;
 }
 
-
 .footer-logo {
-  width: 200px !important; /* Constrain the width to 200px */
-  height: 200px !important; /* Constrain the height to 200px */
-  object-fit: contain !important; /* Ensure the logo fits inside the box while maintaining its aspect ratio */
-  background-color: transparent; /* Optional: Add a background color if needed for visibility */
-  max-width: 200px !important;
-  max-height: 200px !important;
-  display: inline-block; /* Ensures alignment with flexbox or inline layout */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.footer-logo img {
+  height: 200px; /* Fixed height for all logos */
+  width: auto; 
+  object-fit: contain; /* Preserve aspect ratio while resizing */
+  max-width: 100px; /* Optional: Restrict the maximum width */
 }
