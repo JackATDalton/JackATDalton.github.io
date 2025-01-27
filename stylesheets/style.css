@@ -197,7 +197,7 @@ footer {
   height: 200px !important; /* Constrain the height to 200px */
   object-fit: contain !important; /* Ensure the logo fits inside the box while maintaining its aspect ratio */
   background-color: transparent; /* Optional: Add a background color if needed for visibility */
-  max-width: 200px;
-  max-height: 200px;
+  max-width: 200px !important;
+  max-height: 200px !important;
   display: inline-block; /* Ensures alignment with flexbox or inline layout */
 }
