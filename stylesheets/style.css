@@ -200,7 +200,8 @@ footer {
 }
 
 .footer-logo {
-  height: 40px; !important /* Set a uniform height for all logos */
+  height: 40px !important;  /* Set a uniform height for all logos */
+  max-height: 40px;
   width: auto; /* Maintain the aspect ratio */
   object-fit: contain; /* Fit the entire image within the box */
   margin: 0 10px; /* Optional: Space between logos */
