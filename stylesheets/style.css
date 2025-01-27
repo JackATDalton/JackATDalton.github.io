@@ -191,20 +191,12 @@ footer {
   text-align: center;
 }
 
-.footer-content {
-  display: flex; /* Arrange items in a horizontal line */
-  justify-content: center; /* Center items horizontally */
-  align-items: center; /* Align items vertically */
-  gap: 20px; /* Add space between logos */
-  flex-wrap: wrap; /* Allow wrapping on smaller screens */
-}
 
 .footer-logo {
-  height: 40px !important;  /* Set a uniform height for all logos */
-  max-height: 40px;
-  width: auto; /* Maintain the aspect ratio */
-  object-fit: contain; /* Fit the entire image within the box */
-  margin: 0 10px; /* Optional: Space between logos */
-  display: inline-block; /* Ensures alignment */
+  width: 200px; /* Constrain the width to 200px */
+  height: 200px; /* Constrain the height to 200px */
+  object-fit: contain; /* Ensure the logo fits inside the box while maintaining its aspect ratio */
+  background-color: transparent; /* Optional: Add a background color if needed for visibility */
+  display: inline-block; /* Ensures alignment with flexbox or inline layout */
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
-
