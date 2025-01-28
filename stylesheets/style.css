@@ -201,7 +201,7 @@ footer {
 }
 
 .footer-logo img {
-  height: 200px; /* Fixed height for all logos */
+  height: 50px; /* Fixed height for all logos */
   width: auto; 
   object-fit: contain; /* Preserve aspect ratio while resizing */
   max-width: 100px; /* Optional: Restrict the maximum width */
