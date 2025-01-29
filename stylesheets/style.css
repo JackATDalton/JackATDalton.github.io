@@ -193,11 +193,11 @@ footer {
 
 .footer-logo {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1rem;
+    justify-content: center; /* Center logos horizontally */
+    align-items: center; /* Center logos vertically */
+    flex-wrap: wrap; /* Wrap if there are too many logos */
+    text-align: center; /* Ensures inline elements are centered */
+    padding: 10px 0;
 }
 
 .footer-logo img {
