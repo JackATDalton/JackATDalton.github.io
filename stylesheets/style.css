@@ -184,9 +184,17 @@ h2
 
 /* Footer Styles */
 footer {
-  width: 100%; /* Ensures the footer spans the full width */
-  padding: 10px 0; /* adds padding only inside the footer*/
+  footer {
+  width: 100%;
+  max-width: 100vw;
+  overflow: hidden;
+  display: flex;
+  justify-content: center; /* Centers content */
+  align-items: center;
+  flex-wrap: wrap; /* Allows items to wrap if needed */
+  padding: 10px 0;
   background-color: #f8f4e3;
+  text-align: center;
   color: #628474; /* Text color (if needed) */
   text-align: center;
 }
@@ -198,6 +206,7 @@ footer {
   flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 1rem;
+  max-width: 100%;
 }
 
 .footer-logo img {
