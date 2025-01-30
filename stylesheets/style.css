@@ -89,13 +89,13 @@ body
 
 .button
 {
-  display:inline-block;
+    display:inline-block;
   border-radius: .5em;
   background-color: #f8f4e3;
   color:#628474; /*text color*/
   text-decoration: none!important; /* Removes underline for links */
   text-align: center; /* Centers text */
-  #margin:.3em;
+  margin:.3em;
   padding: .8em;
 }
   
