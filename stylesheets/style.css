@@ -106,12 +106,10 @@ body
 /* Subsections Style */
 
 .subsection {
- display: flex;
-  align-items: stretch; /* Makes child elements stretch to equal height */ 
  width: 100%; /* Full width */
+  padding: 100px; /* Add spacing inside */
   border-bottom: 1px solid #ddd; /* Optional: separate subsections with a line */
 }
-
 .subsection:nth-child(even) {
   background-color: #90b499; /* Lighter green */
   text-align: left; /* left-align text */
@@ -120,21 +118,7 @@ body
 .subsection:nth-child(odd) {
   background-color: #628474; /* Darker green */
   text-align: right; /* left-align text */
-  
-.text-content {
-  flex: 1;
-  padding: 100px; /* Adjust spacing as needed */
-}
 
-.image-content {
-  flex: 1;
-}
-
-.image-content img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Ensures the image covers the container */
-}
 .section {
   background-color: #90b499;
   border: 1px solid #ddd;
