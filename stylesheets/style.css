@@ -95,7 +95,8 @@ body
   color:#628474; /*text color*/
   text-decoration: none!important; /* Removes underline for links */
   text-align: center; /* Centers text */
-  margin:.3em;
+  #margin:.3em;
+  padding: .8em;
 }
   
 .button:hover {
