@@ -106,18 +106,38 @@ body
 /* Subsections Style */
 
 .subsection {
- width: 100%; /* Full width */
-  padding: 100px; /* Add spacing inside */
-  border-bottom: 1px solid #ddd; /* Optional: separate subsections with a line */
+  width: 100%; /* Full width */
+    padding: 100px; /* Add spacing inside */
+    border-bottom: 1px solid #ddd; /* Optional: separate subsections with a line */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 .subsection:nth-child(even) {
   background-color: #90b499; /* Lighter green */
-  text-align: left; /* left-align text */
+  flex-direction: row; /* Default: text left, image right */
 }
 
 .subsection:nth-child(odd) {
   background-color: #628474; /* Darker green */
-  text-align: right; /* left-align text */
+  flex-direction: row-reverse; /* Reverse: text right, image left */
+}
+
+.text {
+    width: 50%;
+}
+
+.image {
+    width: 40%;
+    text-align: center;
+}
+
+.image img {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 10px;
+}
 
 .section {
   background-color: #90b499;
