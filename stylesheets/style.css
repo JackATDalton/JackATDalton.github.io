@@ -96,7 +96,6 @@ body
   text-decoration: none!important; /* Removes underline for links */
   text-align: center; /* Centers text */
   margin:.3em;
-  padding: .8em;
 }
   
 .button:hover {
@@ -133,10 +132,9 @@ body
 }
 
 .image img {
-    width: 100%;
+    height: 100%;
     max-width: 400px;
-    height: auto;
-    border-radius: 10px;
+    width: auto;
 }
 
 .section {
