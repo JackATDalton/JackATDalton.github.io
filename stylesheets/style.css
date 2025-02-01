@@ -217,11 +217,12 @@ footer {
     align-items: center; /* Center logos vertically */
     flex-wrap: wrap; /* Wrap if there are too many logos */
     text-align: center; /* Ensures inline elements are centered */
+    gap: 20px ;
     padding: 10px 0;
 }
 
 .footer-logo img {
-  height: 50px !important; /* Fixed height for all logos */
+  height: 100px !important; /* Fixed height for all logos */
   width: auto; 
   object-fit: contain; /* Preserve aspect ratio while resizing */
 }
