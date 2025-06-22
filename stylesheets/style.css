@@ -15,7 +15,7 @@
 :root {
     /* IFP-inspired color palette */
     --color-accent: #373737;
-    --color-body-background: #FCFBE8;
+    --color-body-background: #fdf5e7;
     --color-primary: #373737;
     --color-header-background: var(--color-body-background);
     --color-hero-background: #01796b;
