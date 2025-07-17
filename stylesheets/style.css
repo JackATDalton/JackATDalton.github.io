@@ -740,6 +740,8 @@ main {
     padding: 0.5rem 1rem;
     background: rgba(1, 121, 107, 0.1);
     border-radius: 4px;
+    min-width: 150px;  /* Add this line */
+    text-align: center; /* Add this line */
 }
 
 .timeline-content h3 {
@@ -872,5 +874,53 @@ main {
     .progress-item,
     .timeline-item {
         padding: 1.5rem;
+    }
+}
+
+/* Footer Styles */
+footer {
+    background: var(--color-body-background);
+    padding: 2rem 0;
+    border-top: 1px solid #e0e0e0;
+    margin-top: auto;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.footer-logo {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+.footer-logo a {
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease;
+}
+
+.footer-logo a:hover {
+    transform: scale(1.05);
+}
+
+.footer-logo img {
+    height: 100px;
+    width: auto;
+    object-fit: contain;
+}
+
+@media (max-width: 768px) {
+    .footer-logo {
+        gap: 1rem;
+    }
+    
+    .footer-logo img {
+        height: 80px;
     }
 }
