@@ -8,238 +8,155 @@
     <title>Scientific Projects - Jack Dalton</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 
 <body>
   <nav>
-    <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/assets/JackDalton25_6CV.pdf">CV</a></li>
-        <li><a href="https://alivingfuture.substack.com/">Blog</a></li>
-        <li><a href="https://jackatdalton.notion.site/?v=e817abba686c43fd83dc22a66e8d435b">Protocols</a></li>
-        <li><a href="/policy-and-progress.html">Policy</a></li>
-        <li><a href="/scientific-projects.html">Science</a></li>
-        <li><a href="/biotech-community.html">Community</a></li>
-        <li style="float: right;"><a href="https://orcid.org/0009-0000-3095-5404"><img class="icon" src="/icons/orcid.png" alt="ORCID"></a></li>
-        <li style="float: right;"><a href="https://scholar.google.com.au/citations?user=khC2NjAAAAAJ&hl=en"><img class="icon" src="/icons/scholar.png" alt="Google Scholar"></a></li>
-        <li style="float: right;"><a href="https://www.linkedin.com/in/jackatdalton"><img class="icon" src="/icons/linkedin.png" alt="LinkedIn"></a></li>
-        <li style="float: right;"><a href="https://github.com/jackatdalton"><img class="icon" src="/icons/github.png" alt="GitHub"></a></li>
-    </ul>
+    <div class="nav-inner">
+      <ul class="nav-left">
+        <li><a href="/">home</a></li>
+        <li><a href="/assets/JackDalton25_6CV.pdf">cv</a></li>
+        <li><a href="https://alivingfuture.substack.com/">blog</a></li>
+        <li><a href="/scientific-projects.html">science</a></li>
+        <li><a href="/policy-and-progress.html">policy</a></li>
+      </ul>
+      <ul class="nav-right">
+        <li><a href="https://github.com/jackatdalton"><img class="icon" src="/icons/github.png" alt="GitHub"></a></li>
+        <li><a href="https://www.linkedin.com/in/jackatdalton"><img class="icon" src="/icons/linkedin.png" alt="LinkedIn"></a></li>
+        <li><a href="https://scholar.google.com.au/citations?user=khC2NjAAAAAJ&hl=en"><img class="icon" src="/icons/scholar.png" alt="Google Scholar"></a></li>
+        <li><a href="https://orcid.org/0009-0000-3095-5404"><img class="icon" src="/icons/orcid.png" alt="ORCID"></a></li>
+      </ul>
+    </div>
   </nav>
 
 <main>
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
+  <div class="column">
+
+    <header class="page-header">
       <h1>Scientific Projects</h1>
-      <h2>I work on how biotech, AI and robotics can address challenges in planetary health</h2>
-    </div>
-  </section>
+      <p class="page-tagline">Biotech, AI, and robotics for planetary health</p>
+    </header>
 
-  <!-- Main Content -->
-  <section class="content-section">
-    <div class="container">
-      
-      <!-- Research Areas -->
-      <div class="section">
-        <h2>Research Focus Areas</h2>
-        <div class="content-grid">
-          <div class="content-item">
-            <h3>Engineering Evolution</h3>
-            <p>Developing new methods for adaptive laboratory evolution of whole genomes and directed evolution of single genes. Engineering biological systems for healthcare, environmental, and industrial applications.</p>
-          </div>
-          <div class="content-item">
-            <h3>AI & Bioinformatics</h3>
-            <p>Applying machine learning and computational approaches to biological data analysis, protein engineering, and bioprocess design.</p>
-          </div>
-          <div class="content-item">
-            <h3>Laboratory Automation</h3>
-            <p>How can we leverage automation and robotics to enhance experimental workflows in engineering biology?</p>
-          </div>
-        </div>
-      </div>
+    <section class="content-section">
 
-      <!-- Current Projects -->
-      <div class="section">
-        <h2>Current Research Projects</h2>
+      <div class="section-block">
+        <h2 class="section-label">current research</h2>
         <div class="project-list">
-          <div class="project-item">
-            <h3>PhD Research - Adaptive Laboratory Evolution</h3>
-            <p>ALE enables microbes to access phenotypes inaccesible by rational design alone. How can we speed up adaptive evolution and push the boundries of microbial fitness?
-              Working on new methods for ALE supervised by Associate Professor Harrison Steel at the University of Oxford.</p>
-            <div class="project-links">
-              <a href="https://steel.ac/" class="project-link" target="_blank">Steel Lab</a>
-            </div>
+
+          <div class="project-entry">
+            <h3>PhD Research — Adaptive Laboratory Evolution</h3>
+            <p>ALE enables microbes to access phenotypes inaccessible by rational design alone. Working on new methods to speed up adaptive evolution and push the boundaries of microbial fitness, supervised by Associate Professor Harrison Steel at the University of Oxford.</p>
+            <a href="https://steel.ac/" class="project-link" target="_blank" rel="noopener">Steel Lab →</a>
           </div>
-          <div class="project-item">
-            <h3>PhD Research - AI driven lab automation</h3>
-            <p>How can we pair active learning with laboratory automation to optimise biomanufacturing with minimal experimental data?
-              Developing new methods to embed active learning and LLLms into automated workflows to optimise bioprocesses strating with protein expression. 
-              Supervised by Associate Professor Jean-Baptiste Lugagne.
-            </p>
-            <div class="project-links">
-              <a href="https://jblugagne.gitlab.io/" class="project-link" target="_blank">Lugagne Lab</a>
-            </div>
+
+          <div class="project-entry">
+            <h3>PhD Research — AI-driven Lab Automation</h3>
+            <p>How can we pair active learning with laboratory automation to optimise biomanufacturing with minimal experimental data? Developing new methods to embed active learning and LLMs into automated workflows to optimise bioprocesses, starting with protein expression. Supervised by Associate Professor Jean-Baptiste Lugagne.</p>
+            <a href="https://jblugagne.gitlab.io/" class="project-link" target="_blank" rel="noopener">Lugagne Lab →</a>
           </div>
-          <div class="project-item">
-            <h3>Honours Project - Mining metagenomic data for industrially relevant enzymes</h3>
-            <p>In the the lab of Professor Colin Jackson at the ARC Centre of Excellence in Synthetic Biology,
-              I built a pipeline to analyse the vast amount of public sequencing data to better characterise the diversity of enzymes in nature and identify new enzymes for biotechnology applications.
-              Utilised sequence similarity networks, phylogenetic analysis and high throughput screening to identify new enzymes.
-              First applied this to GH18 chitinases and solved the structure of two chitinase enzymes. Manuscript in preparation. 
-            </p>
-            </p>
-            <div class="project-links">
-              <a href="https://jacksonlab.wordpress.com/" class="project-link" target="_blank">Jackson Lab</a>
-            </div>
+
+          <div class="project-entry">
+            <h3>Honours Project — Mining Metagenomic Data for Industrially Relevant Enzymes</h3>
+            <p>In the lab of Professor Colin Jackson at the ARC Centre of Excellence in Synthetic Biology, I built a pipeline to analyse public sequencing data to characterise enzyme diversity in nature and identify new enzymes for biotechnology applications. Used sequence similarity networks, phylogenetic analysis, and high-throughput screening. First applied this to GH18 chitinases and solved the structure of two chitinase enzymes.</p>
+            <a href="https://jacksonlab.wordpress.com/" class="project-link" target="_blank" rel="noopener">Jackson Lab →</a>
           </div>
+
         </div>
       </div>
 
+      <div class="section-block">
+        <h2 class="section-label">publications</h2>
+        <div class="timeline-list">
 
-      <!-- Publications & Output -->
-      <div class="section">
-        <h2>Research Output</h2>
-        <div class="progress-grid">
-          <div class="progress-item">
-            <h3>Publications</h3>
-            <div class="progress-metric">
-              <span class="metric-number">1</span>
-              <span class="metric-label">Research publications</span>
-            </div>
-            <p>Publication in protein engineering, bioinformatics, and biotechnology innovation.</p>
-          </div>
-          <div class="progress-item">
-            <h3>Conference Presentations</h3>
-            <div class="progress-metric">
-              <span class="metric-number">6</span>
-              <span class="metric-label">Conference talks</span>
-            </div>
-            <p>Presentations at international conferences and symposiums on engineering biology and biotechnology.</p>
-          </div>
-          <div class="progress-item">
-            <h3>Research Collaborations</h3>
-            <div class="progress-metric">
-              <span class="metric-number">3</span>
-              <span class="metric-label">Collaborative projects</span>
-            </div>
-            <p>Active collaborations with researchers across academia and industry to advance the field.</p>
-          </div>
-        </div>
-        <div class="timeline">
-          <div class="timeline-item">
-            <div class="timeline-date">2023</div>
+          <div class="timeline-row">
+            <span class="timeline-year">2023</span>
             <div class="timeline-content">
-              <h3>Applying ProteinMPNN, RFDiffusion & ColabFold tools for the generation & optimisation of useful protein-tools</h3>
-              <p>J Kaczmarski, H Ashley, <strong>J Dalton</strong>, M Lorenzon, C Jackson PROTEIN SCIENCE 32 (12)</p>
+              <h3>Applying ProteinMPNN, RFDiffusion &amp; ColabFold tools for the generation &amp; optimisation of useful protein-tools</h3>
+              <p>J Kaczmarski, H Ashley, <strong>J Dalton</strong>, M Lorenzon, C Jackson — <em>Protein Science</em> 32 (12)</p>
+              <a href="https://doi.org/10.1002/pro.4815" class="project-link" target="_blank" rel="noopener">Read paper →</a>
             </div>
           </div>
-      </div>
+
+        </div>
       </div>
 
+      <div class="section-block">
+        <h2 class="section-label">previous projects</h2>
+        <div class="timeline-list">
 
-      <!-- Previous Projects -->
-      <div class="section">
-        <h2>Previous Projects</h2>
-        <div class="timeline">
-          <div class="timeline-item">
-            <div class="timeline-date">2024</div>
+          <div class="timeline-row">
+            <span class="timeline-year">2024</span>
             <div class="timeline-content">
               <h3>ANU iGEM 2024: Tackling Coral Bleaching using SynBio</h3>
-              <p>We aim to limit future coral bleaching events by neutralising excess ROS produced when coral are under heat stress. Our system, CORA, achieves this through the use of an ROS-detoxifying catalase, which we express in host coral probiotics.</p>
-              <br>
-              <div class="project-links">
-              <a href="https://2024.igem.wiki/anu/index.html" class="project-link" target="_blank">Project Wiki</a>
-              </div>
+              <p>CORA — an ROS-detoxifying catalase system expressed in coral probiotics to limit future bleaching events under heat stress.</p>
+              <a href="https://2024.igem.wiki/anu/index.html" class="project-link" target="_blank" rel="noopener">Project wiki →</a>
             </div>
           </div>
-          <div class="timeline-item">
-            <div class="timeline-date">2023</div>
+
+          <div class="timeline-row">
+            <span class="timeline-year">2023</span>
             <div class="timeline-content">
               <h3>ANU iGEM 2023: Virumediation</h3>
-              <p>A modular bacteriophage-based bioaccumulation platform for remediation of heavy metals. We have designed a system of metal sequestering compartments that can be delivered into native soil bacteria by bacteriophages. Our bacteriophages have been engineered to deliver heavy-metal binding proteins (MBPs) localised to encapsulin-nanocompartments; these proteins can capture and sequester heavy metals in the environment.</p>
-              <br>
-              <div class="project-links">
-              <a href="https://2023.igem.wiki/anu-australia/" class="project-link" target="_blank">Project Wiki</a>
-              </div>
+              <p>A modular bacteriophage-based bioaccumulation platform for remediation of heavy metals using encapsulin-localised metal-binding proteins delivered into native soil bacteria.</p>
+              <a href="https://2023.igem.wiki/anu-australia/" class="project-link" target="_blank" rel="noopener">Project wiki →</a>
             </div>
           </div>
-          <div class="timeline-item">
-            <div class="timeline-date">2022</div>
+
+          <div class="timeline-row">
+            <span class="timeline-year">2022</span>
             <div class="timeline-content">
-              <h3>In silico design of Anti-CD Nanobodies - Undergraduate Research Project</h3>
-              <p>In the lab of Professor Thomas Huber I worked on designing and expressing nanobodies designed to bind to cell surface receptors. Pre-Print on its way.</p>
-              <br>
-              <div class="project-links">
-              <a href="https://researchportalplus.anu.edu.au/en/persons/thomas-huber" class="project-link" target="_blank">Huber Lab</a>
-              </div>
+              <h3>In silico Design of Anti-CD Nanobodies — Undergraduate Research Project</h3>
+              <p>In the lab of Professor Thomas Huber, designed and expressed nanobodies targeting cell surface receptors.</p>
+              <a href="https://researchportalplus.anu.edu.au/en/persons/thomas-huber" class="project-link" target="_blank" rel="noopener">Huber Lab →</a>
             </div>
           </div>
-          <div class="timeline-item">
-            <div class="timeline-date">2022</div>
+
+          <div class="timeline-row">
+            <span class="timeline-year">2022</span>
             <div class="timeline-content">
-              <h3>ANU Australasian SynBio Challenge 2022: Fluorescent nanobody toolkit for research imaging</h3>
-              <p>To increase the efficiency and reduce the price of nanobody production we aimed to develop a modular ‘plug and play’ cloning platform to express nanobodies in bacteria and plant expression systems</p>
-              <br>
-              <div class="project-links">
-              <a href="https://www.aussynbiochallenge.org/meet-the-team#:~:text=the%20LLPS%20system.-,nANUbodies%20%2D%20ANU,-Single%2Ddomain%20antibodies" class="project-link" target="_blank">Read More</a>
-              </div>
+              <h3>ANU Australasian SynBio Challenge 2022: Fluorescent Nanobody Toolkit</h3>
+              <p>A modular plug-and-play cloning platform to express nanobodies in bacterial and plant expression systems, reducing the cost and complexity of nanobody production.</p>
+              <a href="https://www.aussynbiochallenge.org/meet-the-team#:~:text=the%20LLPS%20system.-,nANUbodies%20%2D%20ANU,-Single%2Ddomain%20antibodies" class="project-link" target="_blank" rel="noopener">Read more →</a>
             </div>
           </div>
+
         </div>
       </div>
-      
 
-      
+    </section>
 
-      <!-- Call to Action -->
-    <div class="section cta-section">
-      <h2>Research Collaboration</h2>
-      <p>Interested in collaborating on research projects or discussing scientific opportunities? I'm always open to exploring new research directions and partnerships.</p>
-      <div class="cta-buttons">
-        <a href="https://calendly.com/jackdalton83/30min" class="button primary" target="_blank" rel="noopener">
-            Schedule a Meeting
-        </a>
-        <a href="mailto:jack.dalton@eng.ox.ac.uk" class="button secondary">
-            Contact Me
-        </a>
-      </div>
-    </div>
-
-    </div>
-  </section>
+  </div>
 </main>
-
-</body>
 
 <footer>
   <div class="footer-content">
     <div class="footer-logo">
       <a href="https://www.ramsaycentre.org/" target="_blank" rel="noopener noreferrer" title="Visit the Ramsay Centre">
-        <img src="/icons/Ramsay.png" alt="Ramsay Centre Logo" style="height: 100px; width: auto; object-fit: contain;">
+        <img src="/icons/Ramsay.png" alt="Ramsay Centre Logo">
       </a>
       <a href="https://www.linkedin.com/company/engbio-centre-for-doctoral-training/mycompany/" target="_blank" rel="noopener noreferrer" title="Visit EngBio Centre for Doctoral Training LinkedIn">
-        <img src="/icons/CDT.png" alt="EngBio Centre for Doctoral Training Logo" style="height: 100px; width: auto; object-fit: contain;">
+        <img src="/icons/CDT.png" alt="EngBio Centre for Doctoral Training Logo">
       </a>
       <a href="https://engbio.ox.ac.uk/" target="_blank" rel="noopener noreferrer" title="Visit Oxford EngBio">
-        <img src="/icons/OxEngBio.png" alt="Oxford EngBio Logo" style="height: 100px; width: auto; object-fit: contain;">
+        <img src="/icons/OxEngBio.png" alt="Oxford EngBio Logo">
       </a>
       <a href="https://chemistry.anu.edu.au/research/research-groups/jackson-group" target="_blank" rel="noopener noreferrer" title="Visit the Jackson Group">
-        <img src="/icons/ANU.png" alt="Australian National University Jackson Group Logo" style="height: 100px; width: auto; object-fit: contain;">
+        <img src="/icons/ANU.png" alt="Australian National University Jackson Group Logo">
       </a>
       <a href="https://www.coesb.com.au/" target="_blank" rel="noopener noreferrer" title="Visit CoESB">
-        <img src="/icons/CoESB.png" alt="CoESB Logo" style="height: 100px; width: auto; object-fit: contain;">
+        <img src="/icons/CoESB.png" alt="CoESB Logo">
       </a>
       <a href="https://www.aussynbiochallenge.org/" target="_blank" rel="noopener noreferrer" title="Visit Australasian SynBio Challenge">
-        <img src="/icons/ASBC.png" alt="Australasian SynBio Challenge Logo" style="height: 100px; width: auto; object-fit: contain;">
+        <img src="/icons/ASBC.png" alt="Australasian SynBio Challenge Logo">
       </a>
       <a href="https://nucleate.xyz/" target="_blank" rel="noopener noreferrer" title="Visit Nucleate">
-        <img src="/icons/Nucleate.png" alt="Nucleate Logo" style="height: 100px; width: auto; object-fit: contain;">
+        <img src="/icons/Nucleate.png" alt="Nucleate Logo">
       </a>
     </div>
   </div>
 </footer>
 
+</body>
 </html>
