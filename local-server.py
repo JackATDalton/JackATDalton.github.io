@@ -32,7 +32,7 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         elif not '.' in self.path.split('/')[-1]:
             # If no file extension, try to serve as HTML
             self.path = self.path.rstrip('/') + '.html'
-        
+
         return super().do_GET()
 
 def start_server():

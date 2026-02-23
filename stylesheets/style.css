@@ -29,7 +29,7 @@ html {
 body {
     background: var(--color-bg);
     color: var(--color-text);
-    font-family: var(--font-serif);
+    font-family: var(--font-mono);
     font-size: 1rem;
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
@@ -193,10 +193,8 @@ main {
 }
 
 .bio {
-    font-family: var(--font-serif);
     font-size: 1.025rem;
     line-height: 1.78;
-    max-width: 62ch;
     margin-bottom: 2rem;
     color: var(--color-text);
 }
@@ -307,7 +305,6 @@ main {
 }
 
 .card-body p {
-    font-family: var(--font-mono);
     font-size: 0.76rem;
     color: var(--color-label);
     margin-bottom: 0;
