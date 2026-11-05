@@ -1,0 +1,902 @@
+<title>The Australian Data Centre Pipeline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=Roboto+Serif:opsz,wght@8..144,300;8..144,400&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap">
+<style>
+/* Layout: one ~800px reading column; cream figure panels sit in the column; site-visit cards pair satellite and aerial imagery with a fact list. */
+:root{
+  --bg:#ffffff; --paper:#f7f4ea; --ink:#173d2c; --body:#53604f; --lead:#0f2e20; --muted:#8b8f78; --rule:#e2dcc6; --rule2:#efebdd;
+  --accent:#b98a00; --accent-soft:#f8ecc4; --band:#f3e8c0;
+  --st-inservice:#9aa58a; --st-construction:#0f4a33; --st-approved:#2e7550; --st-assessment:#6f9a5a; --st-scoping:#b4b77e; --st-announced:#e4dfc2;
+  --dv-hyperscaler:#173d2c; --dv-operator:#e0b62f; --dv-neocloud:#7a8b3a; --dv-promoter:#cfc7a0;
+  --c-au:#b98a00; --c-uk:#173d2c; --c-eu:#a7ad8f; --c-us:#cfd2bd;
+  --f-display:"Newsreader", Georgia, "Times New Roman", serif;
+  --f-body:"Roboto Serif", Georgia, serif;
+  --f-ui:"Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0f1611; --paper:#17211a; --ink:#ece6cf; --body:#c3c2a8; --lead:#f6f1dc; --muted:#8d917a; --rule:#2c3a2f; --rule2:#1f2a22;
+  --accent:#e9b824; --accent-soft:#3d3415; --band:#3a3317;
+  --st-inservice:#8f9a80; --st-construction:#cfe8c9; --st-approved:#93c58a; --st-assessment:#5f9a58; --st-scoping:#77764a; --st-announced:#3e3f2b;
+  --dv-hyperscaler:#e6efd5; --dv-operator:#e9b824; --dv-neocloud:#9fb357; --dv-promoter:#6b6a4e;
+  --c-au:#e9b824; --c-uk:#e6efd5; --c-eu:#7c8468; --c-us:#4f5644; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0f1611; --paper:#17211a; --ink:#ece6cf; --body:#c3c2a8; --lead:#f6f1dc; --muted:#8d917a; --rule:#2c3a2f; --rule2:#1f2a22;
+  --accent:#e9b824; --accent-soft:#3d3415; --band:#3a3317;
+  --st-inservice:#8f9a80; --st-construction:#cfe8c9; --st-approved:#93c58a; --st-assessment:#5f9a58; --st-scoping:#77764a; --st-announced:#3e3f2b;
+  --dv-hyperscaler:#e6efd5; --dv-operator:#e9b824; --dv-neocloud:#9fb357; --dv-promoter:#6b6a4e;
+  --c-au:#e9b824; --c-uk:#e6efd5; --c-eu:#7c8468; --c-us:#4f5644; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--body);font-family:var(--f-body);font-weight:300;font-size:17.5px;line-height:1.62;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 72px}
+.col{max-width:800px;margin-inline:auto}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+strong,b.l{font-weight:400;color:var(--lead)}
+p{margin:0}
+.flow{display:flex;flex-direction:column;gap:1.25em}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:300;color:var(--ink);margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1{font-size:clamp(2.5rem,6vw,3.6rem);line-height:1.04}
+h2{font-size:clamp(1.75rem,3.6vw,2.25rem);line-height:1.18;margin-top:1.6em;margin-bottom:.9em}
+sup.fn{font-family:var(--f-ui);font-weight:700;font-size:.62em;color:var(--accent);margin-left:1px}
+sup.fn a{text-decoration:none;color:inherit}
+.num{font-variant-numeric:tabular-nums}
+
+/* masthead */
+.tags{display:flex;gap:36px;border-top:1px solid var(--rule);padding-top:18px;margin-top:22px;font-family:var(--f-display);font-size:1.05rem;color:var(--ink)}
+.hero{display:grid;grid-template-columns:minmax(0,1fr);gap:26px;padding-top:22px}
+.hero .sub{max-width:34ch!important}
+@media (max-width:700px){.hero{grid-template-columns:1fr}}
+.hero .sub{font-family:var(--f-display);font-weight:300;font-size:clamp(1.25rem,2.5vw,1.55rem);line-height:1.35;color:var(--ink);margin-top:22px;max-width:22ch}
+.hero .by{font-family:var(--f-display);font-size:1.45rem;color:var(--accent);margin-top:22px}
+.heromap{position:relative;margin:0}
+.heromap .im{position:relative;border-radius:2px;overflow:hidden;background:var(--paper)}
+.heromap img{width:100%;height:auto;display:block;aspect-ratio:1200/880}
+.heromap svg{position:absolute;inset:0;width:100%;height:100%}
+.heromap figcaption{font-family:var(--f-ui);font-size:.72rem;color:var(--muted);margin-top:6px;line-height:1.4}
+.heromap .hl{font-family:var(--f-ui);font-size:19px;font-weight:600;fill:#fff;paint-order:stroke;stroke:rgba(10,24,16,.8);stroke-width:4px;stroke-linejoin:round}
+@media (max-width:640px){.heromap .hl{font-size:26px;stroke-width:5px}}
+.meta{margin-top:18px;font-size:.98rem;color:var(--body);display:flex;flex-wrap:wrap;gap:4px 18px}
+.meta b{font-family:var(--f-ui);font-weight:700;color:var(--ink)}
+
+/* exec summary */
+.exec{margin-top:30px;border:1px solid var(--rule);border-radius:6px;padding:26px 26px 22px;box-shadow:0 1px 3px rgba(23,61,44,.06)}
+.exec h2{margin:0 0 18px;font-size:2rem}
+.exec ul{margin:16px 0;padding-left:1.1em;display:flex;flex-direction:column;gap:14px;font-size:.97rem}
+.exec li::marker{color:var(--ink)}
+.exec .src{font-size:.95rem}
+
+/* details stepper */
+details.more{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:28px 0}
+details.more summary{list-style:none;cursor:pointer;padding:14px 0;font-family:var(--f-display);font-size:1.35rem;color:var(--ink);display:flex;justify-content:space-between;align-items:center;gap:16px}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::after{content:"+";color:var(--accent);font-family:var(--f-ui);font-size:1.4rem}
+details.more[open] summary::after{content:"–"}
+.steps{font-family:var(--f-ui);font-size:.88rem;color:var(--body);padding:4px 0 22px;display:flex;flex-direction:column;gap:2px}
+.steps .intro{margin-bottom:10px}
+.step{display:grid;grid-template-columns:28px 120px minmax(0,1fr);gap:4px 14px;position:relative;padding-bottom:10px}
+.step .n{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--st-construction);display:flex;align-items:center;justify-content:center;font-family:var(--f-display);color:var(--ink);background:var(--bg);z-index:1}
+.step:not(:last-of-type)::before{content:"";position:absolute;left:11.5px;top:24px;bottom:0;border-left:1.5px solid var(--st-construction)}
+.step .t{font-family:var(--f-display);font-size:1.05rem;color:var(--ink)}
+@media (max-width:560px){.step{grid-template-columns:28px minmax(0,1fr)}.step .d{grid-column:2}}
+.alt{margin:10px 0 0 40px;padding:8px 14px;border-left:3px solid var(--accent);font-size:.86rem}
+.alt.b{border-left-color:var(--ink)}
+.alt .k{font-size:.7rem;letter-spacing:.06em;color:var(--accent);text-transform:uppercase}
+.alt.b .k{color:var(--ink)}
+.alt .h{font-family:var(--f-display);font-size:1.05rem;color:var(--ink)}
+@media (max-width:560px){.alt{margin-left:0}}
+ol.qs{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:6px}
+ol.qs li{color:var(--lead);font-weight:400}
+
+ul.pts{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:14px}
+ol.pts{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:18px}
+
+/* figures */
+figure.fig{margin:34px 0;background:var(--paper);border:1px solid var(--rule);border-radius:4px;padding:28px 30px 22px;display:flex;flex-direction:column;gap:14px}
+@media (max-width:560px){figure.fig{padding:20px 16px 16px}}
+figure.fig .ft{font-family:var(--f-display);font-weight:300;font-size:clamp(1.6rem,3.6vw,2.15rem);line-height:1.15;color:var(--ink)}
+figure.fig .fsub{font-family:var(--f-ui);font-style:italic;color:var(--muted);font-size:.95rem;line-height:1.5}
+figure.fig h4{font-size:1.45rem;margin-top:10px}
+.chart{width:100%;overflow-x:auto}
+.chart svg{display:block;width:100%;height:auto;min-width:500px}
+figcaption{font-family:var(--f-ui);font-size:.86rem;color:var(--muted);line-height:1.5}
+figcaption b{color:var(--ink);font-weight:700}
+.toggle{display:flex;gap:10px}
+.toggle button{font-family:var(--f-ui);font-weight:500;font-size:.9rem;border:1px solid var(--rule);background:var(--bg);color:var(--accent);padding:7px 16px;border-radius:3px;cursor:pointer}
+.toggle button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+svg text{font-family:var(--f-ui);fill:var(--muted);font-size:12px}
+svg .lbl{font-weight:700;font-size:12.5px}
+svg .grid{stroke:var(--rule2);stroke-width:1}
+.phases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;font-family:var(--f-ui);font-size:.78rem;text-align:center;color:var(--muted);border-left:1px dashed var(--rule)}
+.phases div{border-right:1px dashed var(--rule);padding:6px 6px}
+.phases b{display:block;color:var(--ink);font-weight:700;font-size:.82rem}
+@media (max-width:560px){.phases{grid-template-columns:1fr}.phases div{border-bottom:1px dashed var(--rule)}}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--f-ui);font-size:.82rem;color:var(--body)}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.sq{width:12px;height:12px;border-radius:2px;display:inline-block}
+
+/* atlas teaser */
+.teaser{margin:34px 0;display:flex;flex-direction:column;gap:6px}
+.teaser .frame{border:1px solid var(--rule);border-radius:4px;overflow:hidden;background:var(--paper)}
+.teaser .frame svg{display:block;width:100%;height:auto}
+.teaser a.go{font-family:var(--f-display);font-size:1.45rem;color:var(--ink);text-decoration:none;margin-top:8px}
+.teaser a.go:hover{color:var(--accent)}
+.teaser .s{font-family:var(--f-ui);font-size:.9rem;color:var(--muted)}
+
+/* site card */
+.card{margin:34px 0;background:var(--paper);border:1px solid var(--rule);border-radius:4px;padding:22px 20px 18px;display:flex;flex-direction:column;gap:10px}
+.card h3{font-size:1.65rem}
+.card .addr{font-family:var(--f-ui);font-size:.8rem;color:var(--muted)}
+.card .lede{font-size:.98rem;color:var(--body);max-width:62ch}
+.sat{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,1fr);gap:6px;margin-top:6px}
+.sat>figure img{height:100%;aspect-ratio:auto}
+.sat figure{margin:0;position:relative;overflow:hidden;border-radius:2px;background:#20301f}
+.sat img{display:block;width:100%;height:auto;aspect-ratio:10/7;object-fit:cover}
+.sat .strip{display:grid;grid-template-rows:repeat(3,minmax(0,1fr));gap:6px}
+.sat .badge{position:absolute;left:0;top:0;background:var(--ink);color:#f7f4ea;font-family:var(--f-ui);font-size:.72rem;letter-spacing:.08em;padding:4px 9px}
+.sat .src{position:absolute;right:0;bottom:0;background:rgba(10,24,16,.62);color:#fff;font-family:var(--f-ui);font-size:.66rem;padding:3px 7px}
+.sat .dt{position:absolute;left:0;bottom:0;background:rgba(10,24,16,.66);color:#fff;font-family:var(--f-ui);font-size:.7rem;font-weight:600;padding:3px 7px}
+.sat .n{position:absolute;right:6px;top:6px;width:22px;height:22px}
+@media (max-width:640px){.sat{grid-template-columns:1fr}.sat .strip{grid-template-rows:none;grid-template-columns:repeat(3,minmax(0,1fr))}.sat .dt{font-size:.62rem;padding:2px 5px}}
+.satcap{font-family:var(--f-ui);font-size:.75rem;color:var(--muted);border-top:1px solid var(--rule);padding-top:6px;line-height:1.45}
+.satcap b{color:var(--ink)}
+.card dl.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 18px;margin-top:6px}
+.card dl.facts div{border-bottom:0}
+@media (max-width:640px){.card dl.facts{grid-template-columns:1fr}.card dl.facts div{border-bottom:1px solid var(--rule)}}
+dl.facts{margin:0;border-top:2px solid var(--ink);font-size:.92rem}
+dl.facts div{border-bottom:1px solid var(--rule);padding:8px 0}
+dl.facts dt{font-family:var(--f-display);font-size:.85rem;color:var(--ink)}
+dl.facts dd{margin:2px 0 0;color:var(--body);line-height:1.45}
+details.tl{border:1px solid var(--ink);margin-top:8px}
+details.tl summary{cursor:pointer;padding:10px 14px;font-family:var(--f-display);font-size:1.05rem;color:var(--ink);list-style:none}
+details.tl summary::-webkit-details-marker{display:none}
+details.tl[open] summary{border-bottom:1px solid var(--ink)}
+.tlg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 26px;padding:16px 16px 6px;font-family:var(--f-ui)}
+@media (max-width:560px){.tlg{grid-template-columns:1fr}}
+.ev{display:grid;grid-template-columns:14px minmax(0,1fr);gap:8px;padding-bottom:12px}
+.ev .o{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--ink);margin-top:5px}
+.ev.key .o{background:var(--ink)}
+.ev .dt{font-size:.75rem;color:var(--muted)}
+.ev .k{font-family:var(--f-display);font-size:.98rem;color:var(--ink)}
+.ev .x{font-size:.82rem;color:var(--body)}
+.ev .tag{display:inline-block;background:var(--accent-soft);color:var(--ink);font-size:.68rem;padding:2px 6px;margin-top:4px;text-decoration:none}
+
+/* notes */
+ol.notes{font-family:var(--f-ui);font-size:.86rem;color:var(--lead);padding-left:1.6em;display:flex;flex-direction:column;gap:10px}
+ol.notes li::marker{color:var(--accent);font-weight:700}
+.about{margin:44px auto 0;max-width:580px;font-size:.97rem}
+.about h3{font-size:1.5rem}
+.about .r{font-family:var(--f-ui);color:var(--accent);font-size:.85rem;letter-spacing:.04em;margin-bottom:10px}
+.sources{font-family:var(--f-ui);font-size:.82rem;columns:2;column-gap:28px}
+@media (max-width:640px){.sources{columns:1}}
+.sources a{display:block;margin-bottom:5px;break-inside:avoid}
+.deal{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:26px 0;background:var(--paper);border:1px solid var(--rule);border-radius:4px;padding:18px 20px}
+.deal h4{font-family:var(--f-display);font-weight:400;font-size:1.15rem;color:var(--ink);margin:0 0 8px}
+.deal ul{margin:0;padding-left:1.1em;font-size:.95rem}
+.deal li{margin:.3em 0}
+@media (max-width:640px){.deal{grid-template-columns:1fr}}
+h3.sub3{font-size:1.5rem;line-height:1.25;margin:2em 0 .8em}
+hr{border:0;border-top:1px solid var(--rule);margin:40px 0}
+#tip{position:fixed;pointer-events:none;z-index:40;background:var(--bg);color:var(--body);border:1px solid var(--rule);box-shadow:0 4px 18px rgba(15,40,25,.14);font-family:var(--f-ui);font-size:.8rem;padding:9px 11px;border-radius:4px;max-width:270px;opacity:0;transition:opacity .12s}
+#tip.on{opacity:1}
+#tip b{color:var(--ink);font-weight:700}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div id="tip" role="status" aria-live="polite"></div>
+<article class="col">
+  <div class="tags"><span>Report</span><span>Digital infrastructure</span></div>
+  <header class="hero">
+    <div>
+      <h1>The Australian Data Centre Pipeline</h1>
+      <p class="sub">Mapping the Australian data centre build-out through planning, grid and company data</p>
+      <div class="by">Australian Dynamism</div>
+    </div>
+    <figure class="heromap">
+      <div class="im"><img src="../img/hero_wsyd_c.jpg" width="1200" height="880" alt="Aerial photograph of Western Sydney from Erskine Park to Wetherill Park, with Prospect Reservoir at right" loading="eager"><svg id="heroov" viewBox="0 0 1200 880" role="img" aria-label="Planned data centre sites in Western Sydney, circles sized by IT capacity and coloured by planning stage"></svg></div>
+      <figcaption>Western Sydney's data centre belt, from Glendenning to Kemps Creek, about 16&nbsp;km across. Circles show planned IT capacity, coloured by planning stage. Imagery: NSW Spatial Services (CC&nbsp;BY&nbsp;4.0).</figcaption>
+    </figure>
+  </header>
+  <div class="meta"><span><b>Adapted from:</b> Science Works, <i>The UK Data Centre Pipeline</i></span><span>29 October 2026</span></div>
+
+  <section class="exec">
+    <h2>Executive summary</h2>
+    <p>This report presents and analyses a new project-level dataset of Australia's data centre pipeline. It applies the method Science Works used for the UK, which reveals that:</p>
+    <ul>
+      <li><strong>Australia is planning a data centre build-out that is extremely ambitious by its own historic standards.</strong> Developers plan to add about 10&nbsp;GW of IT capacity by 2030, which would take the national fleet from about 1.75&nbsp;GW to 11.7&nbsp;GW, almost seven times today. That means building nearly nine times faster than over the last five years.</li>
+      <li><strong>Australia already hosts more data centre capacity per person than the UK or most of Europe, and the pipeline would make it the most compute-dense large economy.</strong> At about 63 watts per person, Australia is more than twice as compute-dense as the UK and level with the Netherlands. If the pipeline were delivered it would reach about 400 watts per person by 2030, above the US's planned 340 and almost four times the UK's.</li>
+      <li><strong>The pipeline is further advanced than the UK's, but more than half of the 2030 capacity is still in the planning system.</strong> 24% of the capacity due by 2030 is under construction, against 13% in the UK, and another 23% is approved. The rest is under assessment (34%) or scoping (19%). Fourteen projects deliver half of the planned additions, and only a third of the capacity has a published completion date.</li>
+      <li><strong>Australia's build-out is led by operators with contracted demand, not land promoters looking for tenants.</strong> Wholesale and colocation operators such as CDC, NEXTDC and AirTrunk account for 60% of the capacity planned by 2030. Promoters without a disclosed tenant account for 23%, against 42% in the UK. Hyperscalers lease rather than build: they are building only 4% of the pipeline themselves, against 19% in the UK. Still, 81% of the planned capacity has no publicly named end user, so policymakers cannot see how much of the pipeline is speculative.</li>
+      <li><strong>Capacity is spreading to Victoria and the regions, but Western Sydney remains the centre of gravity, and the grid there is the binding constraint.</strong> NSW and the ACT would hold 56% of capacity in 2030, down from 61%, and a single 20&nbsp;km belt of Western Sydney 35% of all new capacity. Transgrid says it has signed agreements for about 1.5&nbsp;GW there and will have no transmission capacity for new connections beyond 2033. If delivered, the base pipeline would use 51–84&nbsp;TWh a year by 2030, three to six times AEMO's forecast, and would need 16–28&nbsp;GW of new wind and solar while the renewable energy zones' transmission runs years late, and NSW data centres between 44% and 74% of the electricity the state used in 2025. That cannot all be built on time.</li>
+      <li><strong>Australia's bid to be the second home for US frontier training is an ambition, not yet a pipeline.</strong> Proponents of "compute for access" want 10–15&nbsp;GW of training compute by 2030, traded for guaranteed access to frontier models, research compute and safety information. Ten regional gigawatt-class proposals add up to about 10&nbsp;GW, but six are announced only, one has a named frontier tenant, and together they deliver about 1.2&nbsp;GW by 2030 in our base view. Copyright is the gate: labs treat licensing in Australia as a red line, while creators and the government insist on control and payment. Firmus's withdrawn float in October 2026 shows the financing is fragile too.</li>
+      <li><strong>The NSW Investment Delivery Authority covers far more of the pipeline than the UK's AI Growth Zones, but there is little evidence yet that it speeds projects up.</strong> The twelve endorsed projects we can match to a planning record would deliver 26% of the capacity added nationally by 2030. Two were already approved before endorsement, three have been approved since, and seven are undetermined, including the two largest. Victoria's Development Facilitation Program, a planning pathway rather than a list, has approved several Melbourne campuses within three to four months of lodgement. A better NSW scheme would reserve grid capacity, give regional zones fixed boundaries and standing approvals, and publish what each endorsed project delivers.</li>
+    </ul>
+    <p class="src">These findings rest on a dataset of 70 projects, compiled by sweeping the NSW Major Projects portal, Victoria's ministerial permits register, ACT, Queensland, Tasmanian and Western Australian planning records, council agendas, ASX filings, network operator documents and trade press as at 29 October 2026. Together they propose 23.4&nbsp;GW of IT capacity. Where developers publish only grid or peak power, we convert it to IT capacity. Where they publish no date, we infer one using the same simple rule as Science Works.<sup class="fn"><a href="#n1">1</a></sup></p>
+  </section>
+
+  <h2>Introduction</h2>
+  <div class="flow">
+    <p><strong>Data centres are the warehouses of the digital economy.</strong> They are buildings full of servers that store and process data, with their IT capacity measured in megawatts (MW). Australia's existing data centres mostly host cloud services for banks, retailers and governments, run payment systems and serve local copies of streaming video. Speed depends on distance, so they cluster where people and businesses are: two-thirds of today's data centre electricity use is in New South Wales and almost all the rest in Victoria. Newer data centres are built to train and run AI models. Each one needs far more capacity and, for training, less proximity to users.</p>
+    <p><strong>To build a data centre in Australia you need to secure power, get planning approval, and then build.</strong> Construction is usually the simplest part. Power means a connection to the transmission or distribution network, and connection queues are long. Planning rules differ by state. In NSW, where most capacity is proposed, large data centres are State Significant Development, assessed by the state rather than the council.<sup class="fn"><a href="#n2">2</a></sup></p>
+  </div>
+
+  <details class="more">
+    <summary>Further detail: how a data centre gets built in New South Wales</summary>
+    <div class="steps">
+      <p class="intro">Each state differs, but the stages are similar. NSW is shown because it holds most of the pipeline.</p>
+      <div class="step"><span class="n">1</span><span class="t">Power</span><span class="d">The developer asks a network operator for a connection: Transgrid for transmission, or Ausgrid or Endeavour for distribution. Large loads also go through AEMO's connection process. NSW proposes a $30,000/MW bond to deter speculative requests.</span></div>
+      <div class="step"><span class="n">2</span><span class="t">Scoping</span><span class="d">Projects above 15&nbsp;MW are State Significant Development. The developer asks the Department of Planning for Secretary's Environmental Assessment Requirements (SEARs), which set what the environmental impact statement must cover.</span></div>
+      <div class="step"><span class="n">3</span><span class="t">Application</span><span class="d">The developer lodges an environmental impact statement (EIS), which is put on public exhibition.</span></div>
+      <div class="step"><span class="n">4</span><span class="t">Assessment</span><span class="d">The developer responds to submissions. Agencies such as the EPA, Sydney Water, Transgrid and, increasingly, the federal energy department advise on conditions. Projects are often sent back for more information.</span></div>
+      <div class="step"><span class="n">5</span><span class="t">Determination</span><span class="d">The Minister or Department determines the application. If the council objects or there are many public objections, the Independent Planning Commission decides instead. Consent always comes with conditions, often dozens.</span></div>
+      <div class="step"><span class="n">6</span><span class="t">Implementation</span><span class="d">The developer satisfies pre-construction conditions, obtains construction certificates and builds. Many sites are developed by property groups or wholesale operators who build in phases as tenants sign.</span></div>
+      <div class="alt"><div class="k">Below the SSD threshold</div><div class="h">Council or regional planning panel</div>Smaller projects with a capital value over $30&nbsp;million are lodged with the council and decided by a regional planning panel. Others are decided by the council.</div>
+      <div class="alt b"><div class="k">Runs alongside stages 2–5</div><div class="h">Investment Delivery Authority (IDA)</div>Since March 2026 the NSW IDA has endorsed data centre projects for coordinated support across government. Endorsement does not replace planning approval. Other states have their own routes: council permits in Victoria and Queensland, an environmental significance opinion or EIS in the ACT, and council approval under Tasmania's planning system.</div>
+    </div>
+  </details>
+
+  <div class="flow">
+    <p><strong>Demand for AI is driving demand for data centres.</strong> Cheap, nearby computing would let Australian businesses and governments adopt AI quickly. Sensitive data is more secure when hosted onshore. Australia's cheap land, abundant renewable resources and political stability also make it a candidate to host compute for the region. Commonwealth Bank (CBA) economists assume Australia could capture a tenth of OpenAI and Anthropic's global compute demand.</p>
+    <p>At the same time, data centres are hungry for power, water and land. The NSW and Victorian grids are already preparing for coal closures, and some communities object to diesel generators, water use and noise. No one knows how much of the forecast demand for AI will materialise or how profitable it will be. How does Australia build as much capacity as it truly needs while limiting the costs?</p>
+    <p>To answer that, we need to start with some basic questions:</p>
+    <ol class="qs">
+      <li>How much data centre capacity are we planning to build?</li>
+      <li>How does Australia's planned build-out compare internationally? Does our ambition match our record?</li>
+      <li>How far are projects along the pipeline? How long will it take them to get through?</li>
+      <li>Who is building the data centres, and for whom? Will supply meet demand?</li>
+      <li>What is the compute for: training AI models or running them? Where should each go?</li>
+      <li>Where in the country are the planned data centres? Can the grid and the renewable energy zones keep up?</li>
+      <li>Can Australia trade compute for access to frontier AI, and what stands in the way?</li>
+      <li>Is the main state intervention, the NSW Investment Delivery Authority, doing its job? If not, how could it be improved?</li>
+    </ol>
+    <p>There is no national register of data centres. Planning files are spread across state portals and dozens of councils, and the NSW Government says it cannot publish the capacity of the projects it has endorsed because the information is commercially sensitive. We therefore built a project-level dataset from planning records, company announcements, ASX filings, network operator documents and trade press. We do not model delays, cancellations or grid constraints, so this is not a forecast. It is a record of what developers say they intend to build.</p>
+  </div>
+
+  <!-- Q1 -->
+  <h2 id="q1">How much data centre capacity are we planning to build?</h2>
+  <p>Figure 1 shows the aggregate pipeline. The base view includes every project that has left a trace in a planning system, from a SEARs request onwards. The scenario range runs from a floor, which counts only projects under construction or approved, to a ceiling, which adds every project we found that has only been announced.</p>
+
+  <figure class="fig" id="fig1">
+    <div class="ft">Australian data centre pipeline for installed IT capacity</div>
+    <div class="toggle" role="group" aria-label="Time range"><button type="button" id="t2030" aria-pressed="true">To 2030</button><button type="button" id="t2035" aria-pressed="false">To 2035</button></div>
+    <div class="chart" id="c1"></div>
+    <figcaption><b>Figure 1. Australian data centre pipeline for installed IT capacity, 2020–2030 or 2020–2035.</b> The solid line to 2025 is capacity already delivered (2020 value indicative). Not a forecast: no attrition, no grid constraints and no future announcements are modelled. Markers show CBA's central estimate of feasible additions and the additions implied by AEMO's 2026 ESOO demand forecast.</figcaption>
+  </figure>
+
+  <div class="flow">
+    <p><strong>At the start of 2026 Australia had about 1.75&nbsp;GW of installed data centre IT capacity, mostly in Sydney and Melbourne.</strong> CBRE counts 950&nbsp;MW live in Sydney and 580&nbsp;MW in Melbourne. About 120&nbsp;MW sits in Canberra, much of it serving government, and a few tens of megawatts each in Brisbane, Perth and Adelaide.<sup class="fn"><a href="#n3">3</a></sup> Most of this fleet was built for cloud and enterprise hosting. It draws only about a quarter of its connected capacity, which is why AEMO measures just 5&nbsp;TWh of use in 2025–26.</p>
+    <p><strong>The pipeline involves plans for an unprecedented expansion.</strong></p>
+    <ul class="pts">
+      <li><strong>Developers aim to build nearly nine times faster before 2030 than they have over the past five years.</strong> Australia added roughly 1.1&nbsp;GW between 2021 and 2025, about 230&nbsp;MW a year. From 2026 to 2030 the pipeline would add 9.9&nbsp;GW, about 2&nbsp;GW a year. If the projects now in the planning system are delivered, national capacity would reach 11.7&nbsp;GW by 2030, 6.7 times today (6.4–12.9&nbsp;GW scenario range).</li>
+      <li><strong>The build-out continues beyond 2030.</strong> Projects already in the planning system would take capacity to 17.7&nbsp;GW by 2035. Including announced projects with no paperwork yet, the ceiling is 24.1&nbsp;GW. Most of that gap is a handful of regional gigawatt proposals: Firmus's two South Australian Southgate sites, NEXTDC's M5 in Melbourne, a gas-powered precinct near Darwin, Quantum DC at Tungkillo and Keppel at Hazelwood.</li>
+    </ul>
+    <p><strong>The expansion is being driven by much larger campuses built for AI.</strong></p>
+    <ul class="pts">
+      <li><strong>The average project in the pipeline is about 30 times larger than the average existing data centre.</strong> AEMO counts about 165 operating data centres, an average of roughly 11&nbsp;MW each. The projects in our pipeline average 334&nbsp;MW of IT capacity (median 154&nbsp;MW), and twelve propose 700&nbsp;MW or more. The UK's ratio is 17 times. Projects of this size are suited to AI training and large-scale inference, and each needs a transmission-scale grid connection.</li>
+      <li><strong>The pipeline is far smaller than the connection queue.</strong> AEMO reports 225 projects seeking almost 67&nbsp;GW of connections, and NSW alone has 28&nbsp;GW of requests, about three times the state's average demand. CBA and AEMO both expect only part of the announced pipeline to be built: CBA's central case adds about 4&nbsp;GW by 2030 and 7&nbsp;GW by the mid-2030s, under half of what the base pipeline adds.</li>
+    </ul>
+  </div>
+
+  <!-- Q2 -->
+  <h2 id="q2">How does Australia's planned build-out compare internationally? Does our ambition match our record?</h2>
+  <p>To put the Australian pipeline in context, Figure 2 sets it against the figures Science Works reports for the UK, the EU and the US, which come from S&amp;P Global's Datacenter KnowledgeBase. Our Australian series uses our own dataset, so the comparison is indicative rather than like for like.<sup class="fn"><a href="#n4">4</a></sup></p>
+
+  <figure class="fig" id="fig2">
+    <div class="ft">The Australian build-out in international context</div>
+    <div class="fsub">UK, EU-27 and US figures are those published by Science Works (S&amp;P Global, Q4 2025). Australian figures are from this report's dataset. 2020 points for the UK, EU and US are back-calculated from the growth rates Science Works reports.</div>
+    <h4>Absolute build-out, 2020–2030</h4>
+    <div class="chart" id="c2a"></div>
+    <h4>Relative build-out, 2020–2030</h4>
+    <div class="chart" id="c2b"></div>
+    <div class="phases"><div><b>2020–25: Australia outgrows the pack</b>(CAGR Australia 23%; UK 11%; EU-27 13%; US 19%)</div><div><b>2025–30: Even loftier expectations</b>(CAGR Australia 46%; UK 31%; EU-27 22%; US 25%)</div><div><b>Per person, 2030</b>(Australia ~400 W; UK ~100 W; US ~340 W)</div></div>
+    <h4>Capacity per person</h4>
+    <div class="chart" id="c2c"></div>
+    <figcaption><b>Figure 2. The Australian build-out in international context, 2020–2030.</b> Sources: Science Works (S&amp;P Global Data Centre KnowledgeBase Q4 2025); this report's dataset; ABS population. Watts per person = installed IT capacity ÷ population.</figcaption>
+  </figure>
+
+  <p>Three things stand out.</p>
+  <ol class="pts">
+    <li><strong>Australia already runs well above its weight.</strong> At about 1.75&nbsp;GW, Australia has a data centre fleet as large as the UK's (1.8&nbsp;GW) with two-fifths of the population. That is about 63 watts per person, more than twice the UK's 26 and level with the Netherlands (61). It trails only Ireland (174), the US (114) and Sweden (71) among the markets Science Works compares.</li>
+    <li><strong>Unlike the UK, Australia's ambition matches its record.</strong> Between 2020 and 2025 Australian capacity grew about 23% a year, faster than the US (19%), the EU (13%) or the UK (11%). The pipeline asks for 46% a year to 2030, the most ambitious of the four. Australia is accelerating from an already fast start, whereas the UK is trying to go from laggard to leader. In absolute terms Australia's 2030 pipeline (11.7&nbsp;GW) is larger than the UK's (7.4&nbsp;GW) for less than half the population.</li>
+    <li><strong>The build-out rests on a few dozen projects.</strong> Fourteen projects would deliver half of the capacity added by 2030, led by Western Downs, S7, Marsden Park, Quinbrook's Supernode, Project Atlas, S4, AirTrunk's MEL2 and SYD3, and Firmus's Bell Bay. Science Works finds a similar pattern elsewhere: 13 campuses hold half of the UK's 2030 capacity, 6 in France and 12 in Germany. That raises the risk if any one stalls, but it also makes the pipeline easier to track and to support.</li>
+  </ol>
+
+  <div class="teaser">
+    <div class="frame"><svg id="teaser" viewBox="0 0 800 300" role="img" aria-label="Preview of the Australian Data Centre Atlas"></svg></div>
+    <a class="go" href="../data-centre-atlas/">Explore the Australian Data Centre Atlas →</a>
+    <span class="s">The data centre build-out on the map, year by year, by planning stage, developer and state</span>
+  </div>
+
+  <!-- Q3 -->
+  <h2 id="q3">How far are projects along the pipeline? How long will it take them to get through?</h2>
+  <div class="flow">
+    <p><strong>The road to a finished data centre is long, and the grid sets the pace.</strong> In NSW a large project first asks for SEARs, then prepares and exhibits an environmental impact statement and answers submissions. It may then wait for the Department, or the Independent Planning Commission, to decide. Every stage brings new conditions. Federal agencies now weigh in on energy as well. In mid-2026 the federal energy department asked Goodman to show where Project Atlas's power would come from and whether it would fund new renewables.</p>
+    <p><strong>Australia's 2030 pipeline is much further along than the UK's.</strong> 24% of the capacity due by 2030 is already under construction, against 13% in the UK. A further 23% is approved but not yet built. The remaining 53% is either under assessment (34%) or scoping its environmental impact statement (19%). Only 33% of the capacity due by 2030 has a completion date published by the developer. For the rest we infer one.<sup class="fn"><a href="#n1">1</a></sup></p>
+    <p><strong>Some projects move from approval to construction in months.</strong> NEXTDC's S4 at Horsley Park was approved as State Significant Development in December 2025 and was under construction by April 2026. It has its own 330&nbsp;kV substation connected directly to the transmission network, and its first stage is due in mid-2027.</p>
+  </div>
+
+  <div class="card" data-site="s4">
+    <h3>NEXTDC S4, Horsley Park</h3>
+    <div class="addr">16 Johnston Crescent, Horsley Park, Fairfield City Council</div>
+    <p class="lede">Approved in December 2025 and under construction four months later, with a direct transmission connection.</p>
+    <div class="sat">
+        <figure><img src="../img/s4_main.jpg" width="800" height="560" alt="Aerial photograph of the S4 site at Horsley Park in 2022: a quarry with exposed sandstone benches, outlined in red"><span class="badge">HORSLEY PARK · NSW</span><svg class="n" viewBox="0 0 22 22" aria-label="North is up"><circle cx="11" cy="11" r="10" fill="rgba(10,24,16,.55)"/><path d="M11 3 L15 15 L11 12.5 L7 15Z" fill="#fff"/></svg><span class="src">Aerial, May 2022</span></figure>
+        <div class="strip"><figure><img src="../img/s4_2025-12-19.jpg" width="480" height="336" alt="Sentinel-2 image of the site, 19 Dec 2025"><span class="dt">19 Dec 2025</span></figure><figure><img src="../img/s4_2026-04-20.jpg" width="480" height="336" alt="Sentinel-2 image of the site, 20 Apr 2026"><span class="dt">20 Apr 2026</span></figure><figure><img src="../img/s4_2026-10-07.jpg" width="480" height="336" alt="Sentinel-2 image of the site, 7 Oct 2026"><span class="dt">7 Oct 2026</span></figure></div>
+      </div>
+      <div class="satcap"><b>Imagery.</b> Left: NSW Spatial Services aerial photograph, Western Sydney capture of May 2022 (7&nbsp;cm), showing the former quarry. Right: Sentinel-2 true colour at 10&nbsp;m from Digital Earth Australia, from consent (December 2025) to bulk earthworks and the first structures (October 2026). Gold line: cadastral parcel, 16 Johnston Crescent. Both CC&nbsp;BY&nbsp;4.0; Sentinel-2 contains modified Copernicus Sentinel data (2025–26).</div>
+      <dl class="facts">
+        <div><dt>Operator</dt><dd>NEXTDC (ASX-listed colocation operator)</dd></div>
+        <div><dt>Capacity</dt><dd>365&nbsp;MW of IT capacity, upgraded from 300&nbsp;MW; 250&nbsp;MW in construction, 115&nbsp;MW in planning</dd></div>
+        <div><dt>Status</dt><dd>Under construction by Multiplex. Two four-storey buildings on a former quarry, with an on-site 330&nbsp;kV substation. Completion is scheduled for mid-2027.</dd></div>
+      </dl>
+    <details class="tl"><summary>See the planning timeline</summary><div class="tlg">
+      <div class="ev"><span class="o"></span><div><div class="dt">April 2022</div><div class="k">Pre-application</div><div class="x">Multiplex engaged; early contractor involvement from mid-2024.</div><a class="tag" href="https://www.theurbandeveloper.com/articles/nextdc-s4-sydney-data-centre-multiplex-nsw-breaks-ground" target="_blank" rel="noopener">press</a></div></div>
+      <div class="ev key"><span class="o"></span><div><div class="dt">24 December 2025</div><div class="k">Consent</div><div class="x">Approved as State Significant Development, SSD-63741210.</div><a class="tag" href="https://www.fool.com.au/2025/12/24/nextdc-receives-approval-for-new-s4-sydney-data-centre/" target="_blank" rel="noopener">ASX announcement</a></div></div>
+      <div class="ev"><span class="o"></span><div><div class="dt">27 March 2026</div><div class="k">Endorsement</div><div class="x">Listed among 15 data centre projects endorsed by the NSW Investment Delivery Authority.</div><a class="tag" href="https://w.media/nsw-moves-15-data-centres-worth-aud-51-9bn-into-ida-pipeline/" target="_blank" rel="noopener">press</a></div></div>
+      <div class="ev key"><span class="o"></span><div><div class="dt">April 2026</div><div class="k">Construction</div><div class="x">Ground broken; about 1,800 workers on site at peak.</div><a class="tag" href="https://www.theurbandeveloper.com/articles/nextdc-s4-sydney-data-centre-multiplex-nsw-breaks-ground" target="_blank" rel="noopener">press</a></div></div>
+      <div class="ev"><span class="o"></span><div><div class="dt">30 June 2026</div><div class="k">Capacity</div><div class="x">250&nbsp;MW in progress; planned total raised to 365&nbsp;MW.</div><a class="tag" href="https://announcements.asx.com.au/asxpdf/20260827/pdf/073c04gt4ts40y.pdf" target="_blank" rel="noopener">FY26 results</a></div></div>
+      <div class="ev"><span class="o"></span><div><div class="dt">Mid-2027</div><div class="k">Operation</div><div class="x">Scheduled completion of the first stage.</div></div></div>
+    </div></details>
+  </div>
+
+  <div class="flow">
+    <p><strong>Other projects take much longer to clear the same system.</strong> The largest metropolitan proposal, a 1&nbsp;GW campus on Mamre Road at Kemps Creek, was filed in September 2025. Thirteen months later it is still under assessment. The EPA lodged its response in April 2026, and the proposal includes 852 diesel generators and 14.4&nbsp;million litres of diesel storage. Its neighbours show how crowded this stretch of road has become: Microsoft is building at 769 Mamre Road, and CDC has amended its KC1 request at 871–901 Mamre Road from 144&nbsp;MW to six buildings drawing 1.4&nbsp;GW.</p>
+  </div>
+
+  <div class="card" data-site="mamre">
+    <h3>Mamre Road campus (SYD4), Kemps Creek</h3>
+    <div class="addr">706–752 Mamre Road, Kemps Creek, Penrith City Council</div>
+    <p class="lede">A 1&nbsp;GW campus on a grazing paddock, filed thirteen months ago and still undetermined.</p>
+    <div class="sat">
+        <figure><img src="../img/mamre_main.jpg" width="800" height="560" alt="Aerial photograph of the Mamre Road site at Kemps Creek in 2022: open grazing land with farm dams, outlined in red, beside new warehouses"><span class="badge">KEMPS CREEK · NSW</span><svg class="n" viewBox="0 0 22 22" aria-label="North is up"><circle cx="11" cy="11" r="10" fill="rgba(10,24,16,.55)"/><path d="M11 3 L15 15 L11 12.5 L7 15Z" fill="#fff"/></svg><span class="src">Aerial, May 2022</span></figure>
+        <div class="strip"><figure><img src="../img/m3_2023-09-16.jpg" width="480" height="336" alt="Sentinel-2 image of the site, 16 Sep 2023"><span class="dt">16 Sep 2023</span></figure><figure><img src="../img/m3_2025-09-02.jpg" width="480" height="336" alt="Sentinel-2 image of the site, 2 Sep 2025"><span class="dt">2 Sep 2025</span></figure><figure><img src="../img/m3_2026-10-10.jpg" width="480" height="336" alt="Sentinel-2 image of the site, 10 Oct 2026"><span class="dt">10 Oct 2026</span></figure></div>
+      </div>
+      <div class="satcap"><b>Imagery.</b> Left: NSW Spatial Services aerial photograph, May 2022 (7&nbsp;cm). Right: Sentinel-2 true colour at 10&nbsp;m from Digital Earth Australia, before the site was bought, in the month the application was filed, and today. The paddock is unchanged while warehouses rise around it. Gold line: cadastral parcel. CC&nbsp;BY&nbsp;4.0; Sentinel-2 contains modified Copernicus Sentinel data (2023–26).</div>
+      <dl class="facts">
+        <div><dt>Promoter and buyer</dt><dd>ISPT (industry super funds' property manager), with AirTrunk named as conditional buyer. The IDA lists the proponent as KNBDC SYD4. No tenant disclosed.</dd></div>
+        <div><dt>Capacity</dt><dd>Up to 1&nbsp;GW (1.2&nbsp;GW peak draw reported) across six four-storey buildings and 24 data halls</dd></div>
+        <div><dt>Status</dt><dd>State Significant Development under assessment (SSD-92743706). The proposal includes 852 diesel generators, 936 cooling units and a 38&nbsp;m height against a 20&nbsp;m limit. 79 public submissions.</dd></div>
+      </dl>
+    <details class="tl"><summary>See the planning timeline</summary><div class="tlg">
+      <div class="ev"><span class="o"></span><div><div class="dt">July 2024</div><div class="k">Site</div><div class="x">ISPT acquires the site for a planned A$5bn campus.</div><a class="tag" href="https://m3property.com.au/static/88f0d39061ca9072f2bf0a5b61dc5c3f/M3-Property-Report-Data-Centre-Growth-in-Australia-November-25.pdf" target="_blank" rel="noopener">M3 Property</a></div></div>
+      <div class="ev key"><span class="o"></span><div><div class="dt">September 2025</div><div class="k">Application</div><div class="x">SSD documents filed for six buildings, 852 generators and 14,430&nbsp;kL of diesel.</div><a class="tag" href="https://w.media/ispt-site-to-host-1gw-data-centre-in-western-sydney/" target="_blank" rel="noopener">press</a></div></div>
+      <div class="ev"><span class="o"></span><div><div class="dt">November 2025</div><div class="k">Buyer</div><div class="x">AirTrunk named as conditional buyer, subject to planning approval.</div><a class="tag" href="https://w.media/airtrunk-named-as-buyer-of-ispts-1gw-western-sydney-site/" target="_blank" rel="noopener">press</a></div></div>
+      <div class="ev"><span class="o"></span><div><div class="dt">27 March 2026</div><div class="k">Endorsement</div><div class="x">Endorsed by the NSW Investment Delivery Authority (listed as KNBDC SYD4).</div><a class="tag" href="https://w.media/nsw-moves-15-data-centres-worth-aud-51-9bn-into-ida-pipeline/" target="_blank" rel="noopener">press</a></div></div>
+      <div class="ev"><span class="o"></span><div><div class="dt">10 April 2026</div><div class="k">Assessment</div><div class="x">EPA response lodged on the planning portal.</div><a class="tag" href="https://www.planningportal.nsw.gov.au/major-projects/projects/mamre-road-data-centre-campus" target="_blank" rel="noopener">planning portal</a></div></div>
+      <div class="ev"><span class="o"></span><div><div class="dt">29 October 2026</div><div class="k">Status</div><div class="x">No determination thirteen months after filing.</div></div></div>
+    </div></details>
+  </div>
+
+  <div class="flow">
+    <p><strong>Victoria's fast-track pathway moves faster.</strong> Most new Melbourne campuses now go through the state's Development Facilitation Program, which takes decisions away from councils. AirTrunk's 354&nbsp;MW MEL2 at Tullamarine was lodged in December 2024 and had its permit in March 2025. NEXTDC's Corio site took two months, and a Truganina campus four. Seven more applications lodged in 2026 are under assessment, among them AirTrunk's seven-building campus at Mickleham, GreenSquareDC at Spotswood and HyperDC's 400&nbsp;MW proposal on farmland at Moorabool. The pathway is not a rubber stamp: Monash council refused a 38&nbsp;MW Centuria proposal at Clayton in September 2026, outside the program.</p>
+    <p><strong>Environmental rules elsewhere can force a rethink.</strong> In Canberra, CDC's proposed 576&nbsp;MW Hume Campus 3 would on its own exceed CDC's entire existing Canberra portfolio. In October 2026 the ACT Conservator of Flora and Fauna found it likely to have a significant environmental impact, which means it needs a full environmental impact statement and probably a referral under the federal EPBC Act. The 12-hectare site holds 27 mature native trees with hollows used by threatened birds. CDC says it is reassessing the design.</p>
+
+    <p><strong>Because the causes of delay are specific to each site, understanding the build-out needs case-by-case tracking.</strong> Nobody does this systematically. The Commonwealth's September 2026 consultation on national data centre standards cites investment and electricity estimates but no register of projects. The NSW IDA lists project names but not their capacity. Only an aggregated, project-level view would turn scattered planning files into something governments can act on.</p>
+  </div>
+
+  <!-- Q4 -->
+  <h2 id="q4">Who is building the data centres, and for whom? Will supply meet demand?</h2>
+  <div class="flow">
+    <p>Data centres are developed by four kinds of company. <strong>Hyperscalers</strong> such as AWS and Microsoft build for their own use. <strong>Wholesale and colocation operators</strong> such as CDC, NEXTDC and AirTrunk build and run sites and lease the capacity, often a whole building, to cloud and AI companies. <strong>AI cloud providers</strong>, or neoclouds, such as Firmus and IREN, build to sell GPU compute. <strong>Land, property and power promoters</strong>, such as Goodman, Zerra, Quinbrook or an energy company, secure land, power and planning and then look for a tenant or buyer.</p>
+    <p><strong>Australia's pipeline is led by operators, not land promoters.</strong> Wholesale and colocation operators account for 60% of the capacity planned by 2030. Promoters account for 31%, and the largest single promoter project is Western Downs, where Anthropic is named as the first tenant. Promoters without a disclosed tenant account for 23% of the 2030 pipeline, against 42% in the UK, 33% in the US and 16% in the EU. Their share has grown as property groups such as Stockland, Goodman, PGIM, Gateway and HyperDC turn warehouses and farmland into data centre sites.<sup class="fn"><a href="#n5">5</a></sup></p>
+  </div>
+
+  <figure class="fig" id="fig3">
+    <div class="ft">Who is building Australia's 2030 and 2035 pipeline</div>
+    <div class="chart" id="c3"></div>
+    <div class="legend"><span><i class="sq" style="background:var(--accent)"></i>By 2030</span><span><i class="sq" style="background:var(--accent);opacity:.4"></i>By 2035</span><span><i class="sq" style="background:repeating-linear-gradient(45deg,var(--ink) 0 2px,transparent 2px 5px);border:1px solid var(--ink)"></i>Of which no end user named</span><span><b style="color:var(--ink);font-weight:500">Promoters without a named tenant, share of 2030 pipeline:</b>&nbsp;Australia 23% · UK 42% · US 33% · EU 16%</span></div>
+    <figcaption><b>Figure 3. New IT capacity by type of developer, base view, 2030 and 2035.</b> Comparison shares for the UK, US and EU are those reported by Science Works. "End user named" counts self-build hyperscalers, Anthropic at Western Downs and OpenAI at S7 (non-binding).</figcaption>
+  </figure>
+
+  <div class="flow">
+    <p><strong>Hyperscalers lease Australian capacity rather than build it.</strong> AWS and Microsoft are directly building only about 4% of the 2030 pipeline: AWS at Glendenning, Eastern Creek and Cobblebank, and Microsoft at Huntingwood and Kemps Creek. In the UK the share is 19%, and in the US and EU 30%. This does not signal weak demand. Both companies have made their largest-ever Australian commitments (A$25bn from Microsoft and A$20bn from AWS to 2029), and much of that money flows through leases with CDC and AirTrunk.</p>
+    <p><strong>The demand signals are stronger than in the UK.</strong> NEXTDC had 740&nbsp;MW contracted in July 2026 against 288&nbsp;MW built. In May 2026 CDC signed Australia's largest lease, 555&nbsp;MW for an unnamed US customer on a long-term contract, which CDC says will take its contracted capacity past 1&nbsp;GW by FY29. Two frontier AI labs have put their names to Australian sites: Anthropic at Western Downs and OpenAI at S7. CBRE describes Sydney and Melbourne as effectively pre-leased.</p>
+    <p><strong>Yet 81% of the planned capacity has no publicly named end user,</strong> because wholesale operators rarely disclose their customers. Governments therefore cannot tell how much of the pipeline is contracted and how much is speculative. A lease to an unnamed customer and a campus with no customer look identical in the planning record.</p>
+  </div>
+
+  <div class="card" data-site="wdowns">
+    <h3>Western Downs Digital Park, Kogan</h3>
+    <div class="addr">1933 Dalby–Kogan Road, about 37&nbsp;km north-west of Dalby, Western Downs Regional Council, Queensland</div>
+    <p class="lede">A tenant signed before the council had assessed the application.</p>
+    <div class="sat">
+        <figure><img src="../img/wd_main.jpg" width="800" height="560" alt="Aerial photograph of the Western Downs Digital Park site near Kogan: cleared grazing land among gas-field tracks, with an existing feedlot, outlined in red"><span class="badge">KOGAN · QLD</span><svg class="n" viewBox="0 0 22 22" aria-label="North is up"><circle cx="11" cy="11" r="10" fill="rgba(10,24,16,.55)"/><path d="M11 3 L15 15 L11 12.5 L7 15Z" fill="#fff"/></svg><span class="src">Aerial, 2018–19</span></figure>
+        <div class="strip"><figure><img src="../img/wd3_2023-10-14.jpg" width="480" height="336" alt="Sentinel-2 image of the site, 14 Oct 2023"><span class="dt">14 Oct 2023</span></figure><figure><img src="../img/wd3_2025-10-08.jpg" width="480" height="336" alt="Sentinel-2 image of the site, 8 Oct 2025"><span class="dt">8 Oct 2025</span></figure><figure><img src="../img/wd3_2026-10-07.jpg" width="480" height="336" alt="Sentinel-2 image of the site, 7 Oct 2026"><span class="dt">7 Oct 2026</span></figure></div>
+      </div>
+      <div class="satcap"><b>Imagery.</b> Left: Queensland Government aerial photography, Surat Basin South capture 2018–19 (20&nbsp;cm, State Imagery Program). Right: Sentinel-2 true colour at 10&nbsp;m from Digital Earth Australia; no site works are visible yet. Gold line: cadastral parcel 125&nbsp;DY316, 1933 Dalby–Kogan Road. Aerial © State of Queensland, State Imagery Program, openly released; Sentinel-2 CC&nbsp;BY&nbsp;4.0, contains modified Copernicus Sentinel data (2023–26).</div>
+      <dl class="facts">
+        <div><dt>Promoter and tenant</dt><dd>Zerra DC (applicant WDDP Pty Ltd) with Australian Data Centres and Macquarie Capital. Anthropic has signed a long-term lease for stage one, reportedly to run Claude for user queries rather than training, subject to FIRB approval.</dd></div>
+        <div><dt>Capacity</dt><dd>1.44&nbsp;GW across four 360&nbsp;MW buildings; an engineering report in the application describes six, or 2.16&nbsp;GW of IT and 3.24&nbsp;GVA. A$14.5bn for the four-building scheme; 725.5&nbsp;ha.</dd></div>
+        <div><dt>Status</dt><dd>Impact-assessable development application with the council. First use is targeted for 2027, with a four-to-six-year build. The site sits among gas fields and existing gas generation, and Powerlink's 2025 forecast included no data centre load at all.</dd></div>
+      </dl>
+    <details class="tl"><summary>See the planning timeline</summary><div class="tlg">
+      <div class="ev"><span class="o"></span><div><div class="dt">1 April 2026</div><div class="k">Policy</div><div class="x">Anthropic and the Australian Government sign a non-binding memorandum of understanding.</div><a class="tag" href="https://certifiedstrategic.com/insights/cbre-2026-asia-pacific-data-centre-outlook-australia-leading-tier-1-5gw-shortfall" target="_blank" rel="noopener">press</a></div></div>
+      <div class="ev key"><span class="o"></span><div><div class="dt">17 August 2026</div><div class="k">Application</div><div class="x">Development application lodged for four 360&nbsp;MW buildings.</div><a class="tag" href="https://w.media/zerra-plans-1-44gw-aud-14-5bn-data-centre-campus-in-queensland/" target="_blank" rel="noopener">press</a></div></div>
+      <div class="ev key"><span class="o"></span><div><div class="dt">16 September 2026</div><div class="k">Tenant</div><div class="x">Anthropic signs a long-term lease for stage one, subject to FIRB.</div><a class="tag" href="https://www.abc.net.au/news/2026-09-16/queensland-data-centre-anthropic-dalby/107160640" target="_blank" rel="noopener">ABC News</a></div></div>
+      <div class="ev"><span class="o"></span><div><div class="dt">2027</div><div class="k">Operation</div><div class="x">Targeted first use by Anthropic.</div></div></div>
+    </div></details>
+  </div>
+
+  <div class="flow">
+    <p><strong>Neoclouds show how fast announced capacity can change shape.</strong> In October 2025 Firmus, CDC and Nvidia announced Project Southgate, a 1.6&nbsp;GW national programme of AI factories. A year later the CDC partnership was over, with about 42&nbsp;MW deployed in Melbourne. Firmus has kept the Southgate name for its own sites: three in Tasmania, where it has approval for 288&nbsp;MW at Bell Bay, and two in South Australia, at Port Augusta and Tailem Bend, backed by a 600&nbsp;MW energy supply agreement. Its Tasmanian sites together would draw about 444&nbsp;MW, a large share of an island that already uses roughly all the electricity it generates. Then, on 9 October 2026, Firmus withdrew an ASX float that sought about A$8bn at a valuation near A$44bn, after weak demand from super funds and fund managers. Investors balked at a valuation that had risen several-fold within a year, a company with about 46&nbsp;MW operating and most contracted revenue still years away, thin escrow on early shareholders, and rising US bond yields. Firmus says it will raise privately, and Nvidia is reportedly considering more funding. Firmus is the only neocloud in our base view, so all 424&nbsp;MW of that category's 2030 capacity now depends on private capital it has yet to secure.</p>
+  </div>
+
+  <div class="card" data-site="bellbay">
+    <h3>Firmus Bell Bay AI factory</h3>
+    <div class="addr">Former Gunns pulp mill site, Long Reach, Bell Bay, George Town Council, Tasmania</div>
+    <p class="lede">Approved within ten weeks on an industrial site, but waiting on Hydro Tasmania for power, and now on capital after a failed float.</p>
+    <div class="sat">
+        <figure><img src="../img/bb_main.jpg" width="800" height="560" alt="Satellite image of the Bell Bay site on the Tamar estuary: a cleared industrial platform among bushland, outlined in red"><span class="badge">BELL BAY · TAS</span><svg class="n" viewBox="0 0 22 22" aria-label="North is up"><circle cx="11" cy="11" r="10" fill="rgba(10,24,16,.55)"/><path d="M11 3 L15 15 L11 12.5 L7 15Z" fill="#fff"/></svg><span class="src">Sentinel-2, 23 Oct 2026</span></figure>
+        <div class="strip"><figure><img src="../img/b3_2025-11-21.jpg" width="480" height="336" alt="Sentinel-2 image of the site, 21 Nov 2025"><span class="dt">21 Nov 2025</span></figure><figure><img src="../img/b3_2026-01-26.jpg" width="480" height="336" alt="Sentinel-2 image of the site, 26 Jan 2026"><span class="dt">26 Jan 2026</span></figure><figure><img src="../img/b3_2026-10-23.jpg" width="480" height="336" alt="Sentinel-2 image of the site, 23 Oct 2026"><span class="dt">23 Oct 2026</span></figure></div>
+      </div>
+      <div class="satcap"><b>Imagery.</b> Sentinel-2 true colour at 10&nbsp;m from Digital Earth Australia, brightened; the left panel is the October 2026 scene enlarged. The cleared platform is the former Gunns pulp mill site on the Tamar estuary; no new works are visible since approval. Gold lines: cadastral parcels from Tasmania's LIST. Tasmanian aerial photography is published under a no-derivatives licence and is not used. Sentinel-2 CC&nbsp;BY&nbsp;4.0, contains modified Copernicus Sentinel data (2025–26).</div>
+      <dl class="facts">
+        <div><dt>Developer</dt><dd>Firmus (AI cloud provider), formerly partnered with CDC and Nvidia on Project Southgate. Site GEE01.</dd></div>
+        <div><dt>Capacity</dt><dd>288&nbsp;MW of IT capacity in two AI data hall buildings, connected to the existing 220&nbsp;kV line between Sheffield and George Town. Firmus's three Tasmanian sites would draw about 444&nbsp;MW.</dd></div>
+        <div><dt>Status</dt><dd>Approved 6–1 by George Town Council in August 2026, with conditions on its backup diesel generators. Hydro Tasmania expects to decide on supply by the end of 2026. Firmus asks for 2&nbsp;MW of new renewables per MW of demand.</dd></div>
+      </dl>
+    <details class="tl"><summary>See the planning timeline</summary><div class="tlg">
+      <div class="ev key"><span class="o"></span><div><div class="dt">October 2025</div><div class="k">Announcement</div><div class="x">Project Southgate launched with CDC and Nvidia: 1.6&nbsp;GW by 2028.</div><a class="tag" href="https://w.media/firmus-and-cdc-end-project-southgate-partnership-after-42mw-rollout/" target="_blank" rel="noopener">press</a></div></div>
+      <div class="ev"><span class="o"></span><div><div class="dt">February 2026</div><div class="k">Finance</div><div class="x">US$10bn debt facility led by Blackstone.</div><a class="tag" href="https://w.media/firmus-and-cdc-end-project-southgate-partnership-after-42mw-rollout/" target="_blank" rel="noopener">press</a></div></div>
+      <div class="ev key"><span class="o"></span><div><div class="dt">15 June 2026</div><div class="k">Application</div><div class="x">Plans lodged with George Town Council; submissions close 29 June.</div><a class="tag" href="https://pulsetasmania.com.au/news/firmus-lodges-plans-for-second-tasmanian-ai-factory-at-bell-bay/" target="_blank" rel="noopener">press</a></div></div>
+      <div class="ev key"><span class="o"></span><div><div class="dt">25 August 2026</div><div class="k">Consent</div><div class="x">Bell Bay approved at 288&nbsp;MW.</div><a class="tag" href="https://w.media/firmus-secures-approval-for-288mw-bell-bay-ai-factory/" target="_blank" rel="noopener">press</a></div></div>
+      <div class="ev"><span class="o"></span><div><div class="dt">28 September 2026</div><div class="k">Power</div><div class="x">Hydro Tasmania calls the 444&nbsp;MW load a "material increase in demand" and will decide by the end of 2026.</div><a class="tag" href="https://w.media/hydro-weighs-444mw-firmus-load-as-tasmania-nears-energy-balance/" target="_blank" rel="noopener">press</a></div></div>
+      <div class="ev"><span class="o"></span><div><div class="dt">6 October 2026</div><div class="k">Partnership</div><div class="x">Firmus and CDC confirm the end of their Southgate partnership.</div><a class="tag" href="https://w.media/firmus-and-cdc-end-project-southgate-partnership-after-42mw-rollout/" target="_blank" rel="noopener">press</a></div></div>
+      <div class="ev key"><span class="o"></span><div><div class="dt">9 October 2026</div><div class="k">Finance</div><div class="x">ASX float of about A$8bn at a ~A$44bn valuation withdrawn on weak demand; private raise to follow.</div><a class="tag" href="https://www.forbes.com.au/news/investing/firmus-44-billion-ipo-collapse-explained/" target="_blank" rel="noopener">Forbes</a></div></div>
+    </div></details>
+  </div>
+
+  <div class="flow">
+    <p><strong>Will supply meet demand, or outrun it?</strong> The usual answer is that demand is effectively unlimited. CBA's central case still assumes only about 7&nbsp;GW is feasible by the mid-2030s, under a third of the 23.4&nbsp;GW proposed in our dataset. AEMO's demand forecast implies 5.5–6.5&nbsp;GW of additional capacity by 2035–36, about two-fifths of the 16&nbsp;GW the base pipeline adds by then. Like the UK's government forecasts, these are estimates of demand for compute, not of demand for compute located in Australia. The case for hosting regional AI workloads here rests on assumptions about prices, latency and sovereignty that have not been tested.</p>
+    <p><strong>None of this means government should stop supporting the build-out.</strong> It does mean governments need to know which projects have contracted demand and which are speculative, because the two need different policy. A contracted project held up by a grid connection needs the grid fixed. A speculative one may simply be waiting for a customer that never arrives.</p>
+  </div>
+
+  <!-- Q4b -->
+  <h2 id="q4b">What is the compute for: training AI models or running them? Where should each go?</h2>
+  <div class="flow">
+    <p><strong>AI compute does two different jobs, and they want different places.</strong> <em>Training</em> builds a model: a run that can last weeks or months on tens of thousands of chips, and that cares about cheap, abundant power far more than where it sits. <em>Inference</em> runs the model. In the words of Anthropic's prospectus, it "occurs each time a user or agent interacts with an AI system". It runs around the clock, grows with use, and for chat, voice and copilots it needs to be close to users and, increasingly, to stay within national borders.</p>
+    <p><strong>Inference is overtaking training.</strong> McKinsey estimates that inference made up about 48% of global AI data centre demand in 2025 (21 of 44&nbsp;GW) and will reach about 60% by 2030 (93 of 155&nbsp;GW). Deloitte puts inference at two-thirds of AI compute already in 2026. Agents push this further, because each task chains many model calls.<sup class="fn"><a href="#n6">6</a></sup></p>
+  </div>
+
+  <figure class="fig" id="fig4">
+    <div class="ft">Training versus inference</div>
+    <h4>Global AI data centre demand by workload, GW</h4>
+    <div class="chart" id="c4a"></div>
+    <div class="legend"><span><i class="sq" style="background:var(--ink)"></i>Training</span><span><i class="sq" style="background:var(--accent)"></i>Inference</span></div>
+    <h4>Anthropic, compute and infrastructure expense, US$bn</h4>
+    <div class="chart" id="c4b"></div>
+    <figcaption><b>Figure 4. Training and inference demand, and one frontier lab's compute bill.</b> Top: McKinsey estimates of global AI data centre capacity demand (February 2026). Bottom: Anthropic PBC, Form S-1 filed 26 October 2026; half-years to 30 June. The S-1 does not split compute spending between training and inference.</figcaption>
+  </figure>
+
+  <div class="flow">
+    <p><strong>Anthropic's S-1 shows what that shift looks like inside one lab.</strong> Its compute and infrastructure expense rose from US$0.4bn in 2023 to US$7.3bn in 2025, and to US$8.9bn in the first half of 2026 alone, against US$16.3bn of revenue. The filing says the company "significantly underestimated" its compute needs, leaving it capacity constrained, and that agentic workloads "consume significantly more compute per user interaction" than single requests. It is moving from renting cloud capacity to "directly leased chips that are hosted in dedicated data center facilities", and it lists delays "in securing energy, water, and other critical services" as a risk. Western Downs, where Anthropic has signed for stage one, is reportedly intended to serve Claude to users rather than to train models.</p>
+    <p><strong>For Australia the distinction changes where data centres should go.</strong> Inference for Australian users and government data has to be onshore, and much of it near Sydney and Melbourne, which is why the metropolitan pipeline is contracted and why operators are willing to queue for Western Sydney grid connections. Training, and batch or agentic work that tolerates a few extra milliseconds, can go wherever power is cheapest. That is the logic of the regional gigawatt proposals: Western Downs beside gas fields, Gregadoo where HumeLink and EnergyConnect meet at Wagga Wagga, Firmus in Tasmania and at Port Augusta, and Meridien in the Kimberley. These campuses compete with the US, the Gulf and South-East Asia on power price, not with Sydney on latency.</p>
+    <p><strong>This also changes the energy arithmetic.</strong> Inference fleets run hot and steady, so as they mature they move towards the top of our 40–70% utilisation range, and their load grows with usage rather than arriving in one training run. Governments should therefore plan for two different things: firm, sovereign inference capacity near cities, sized to demand that will keep growing; and a smaller number of power-sited regional campuses that are only worth having if they bring new generation with them.</p>
+  </div>
+
+  <!-- Q5 -->
+  <h2 id="q5">Where in the country are the planned data centres? Can the grid and the renewable energy zones keep up?</h2>
+  <div class="flow">
+    <p><strong>Australia's existing data centres are heavily concentrated: about 61% of capacity is in NSW and the ACT, and a third in Victoria.</strong> The rest of the country holds a few per cent between them.</p>
+    <p><strong>The pipeline spreads capacity a little, but Western Sydney remains the centre of gravity.</strong> By 2030 NSW and the ACT would still hold 56% of national capacity and Victoria 25%. Queensland would rise to 11%, through Western Downs and Supernode, and Western Australia and Tasmania to about 4% each. Within NSW, fourteen projects in a single 20&nbsp;km belt of Western Sydney, from Marsden Park and Glendenning down to Kemps Creek and Wetherill Park, would supply 35% of all the capacity added nationally by 2030. Melbourne's west and north are the second cluster, with eleven campuses between Truganina, Laverton, Spotswood, Tullamarine, Mickleham and South Morang. The regional gigawatt proposals at Wagga Wagga, Port Augusta, Tailem Bend, Tungkillo, Bundey, Weddell and in the Kimberley would change the picture, but only Wagga Wagga and the Kimberley have entered a planning or environmental process.</p>
+    <p><strong>Running these data centres will need a lot of energy, concentrated on one network.</strong> If the base pipeline is delivered, Australian data centres could use 51–84&nbsp;TWh of electricity a year by 2030. That is 26–43% of all electricity used in the NEM and Western Australia in 2025, and three to six times AEMO's own 15&nbsp;TWh forecast for 2029–30.<sup class="fn"><a href="#n7">7</a></sup> The load falls unevenly (Figure 5). NSW data centres could use between 44% and 74% of the electricity the state used in 2025, and by 2035 between 69% and 118%, more than the whole state used at high utilisation. Victoria's would reach 31–51%. These numbers are not a forecast. They show that the pipeline, as filed, cannot be connected on the timetable developers publish: three of NSW's four remaining coal stations close by 2033.</p>
+  </div>
+
+  <figure class="fig" id="fig5">
+    <div class="ft">Data centre electricity use as a share of each state's 2025 consumption</div>
+    <div class="chart" id="c4"></div>
+    <div class="legend"><span><i class="sq" style="background:var(--accent)"></i>2030</span><span><i class="sq" style="background:var(--accent);opacity:.4"></i>2035</span><span>Bars show the range from 40% to 70% utilisation of new capacity</span></div>
+    <figcaption><b>Figure 5. Modelled data centre electricity use by state, base view, 2030 and 2035, as a share of approximate 2024–25 consumption.</b> Today's use is from AEMO's FY26 regional split; new capacity is modelled at PUE 1.3. NSW includes the ACT. Bars beyond 100% mean more than the state's entire 2025 consumption. South Australia has no project in the base view; its ceiling case (Southgate, Tungkillo, Bundey and Aurora) would exceed the state's consumption by 2035.</figcaption>
+  </figure>
+
+  <div class="flow">
+    <p><strong>The grid, not planning, is the binding constraint in Sydney.</strong> In June 2026 Transgrid told proponents it had signed agreements for about 1.5&nbsp;GW of data centre load in Western Sydney, had more than 8&nbsp;GW in advanced discussions, and would have no transmission capacity for new connections there beyond 2033. It pointed developers to the Hunter and the Riverina instead. AirTrunk's 540&nbsp;MW Loxford campus near Kurri Kurri and CDC's 1.4&nbsp;GW Gregadoo proposal near Wagga Wagga are the first responses. Modelling for the Clean Energy Finance Corporation found that without new renewables, data centre growth would push 2035 wholesale prices up 26% in NSW and 23% in Victoria. Adding 3.2&nbsp;GW of wind and solar and 1.9&nbsp;GW of storage cuts that to 3% and 2%.</p>
+  </div>
+
+  <h3 class="sub3">How much generation and transmission has to be built, and is it being built?</h3>
+  <div class="flow">
+    <p><strong>Powering the pipeline would take a second renewable fleet.</strong> Supplying the extra 45–79&nbsp;TWh that the base pipeline would use by 2030 takes roughly 16–28&nbsp;GW of new wind and solar at a typical one-third capacity factor, before firming. The NEM has about 23&nbsp;GW of utility-scale wind and solar today. Even without data centres beyond AEMO's own forecast, the grid needs about 18&nbsp;GW more wind and solar by 2030 to reach 82% renewables, and only about 12% of that is under construction. The best year on record added 4.4&nbsp;GW of renewables and storage (Figure 6).<sup class="fn"><a href="#n8">8</a></sup></p>
+  </div>
+
+  <figure class="fig" id="fig6">
+    <div class="ft">What would have to be built</div>
+    <div class="chart" id="c6"></div>
+    <figcaption><b>Figure 6. Wind and solar capacity: today, already required, and what the data centre pipeline would add, GW.</b> Data centre requirement converts the base pipeline's added 2030 consumption (45–79&nbsp;TWh, Figure 5) at a 32% capacity factor. Sources: AEMO 2026 ISP via PV Tech; Dylan McConnell (UNSW) and Green Energy Markets via Guardian Australia (Sept 2026); Clean Energy Investor Group via Pulse (May 2026).</figcaption>
+  </figure>
+
+  <div class="flow">
+    <p><strong>Renewable energy zones are where that generation is meant to go, and their transmission is late.</strong> NSW has declared five zones with about 18.5&nbsp;GW of intended capacity (Figure 7). Only two will have new transmission before 2030: Central-West Orana, where lines are now being strung for energisation in 2028, and the South West, served by EnergyConnect and HumeLink. New England, the largest at 8&nbsp;GW, will not be connected until 2031 for its first stage and 2033 for its second. The Hunter Transmission Project, which closes the northern loop of the Sydney Ring that feeds Western Sydney, is due in 2028–29. In Victoria, VNI West has slipped two years to late 2030 and the Western Renewables Link to about 2029, and the Auditor-General expects the state to miss its 2030 renewables and 2032 offshore wind targets. Queensland scrapped its renewable energy zones and its legislated renewable targets in December 2025 and extended its coal plants, which is part of why its largest data centre sits beside gas.</p>
+  </div>
+
+  <figure class="fig" id="fig7">
+    <div class="ft">Renewable energy zones and their transmission</div>
+    <div class="chart" id="c7"></div>
+    <div class="legend"><span><i class="sq" style="background:transparent;border:1.5px solid var(--ink)"></i>Declared or targeted capacity</span><span><i class="sq" style="background:var(--accent)"></i>Wind, solar and storage approved or under construction (NSW)</span><span><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="4.5" style="fill:var(--st-construction)"/></svg>Transmission under construction</span><span><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="4.5" style="fill:none;stroke:var(--st-construction);stroke-width:2"/></svg>Transmission in planning</span></div>
+    <figcaption><b>Figure 7. Renewable energy zones in NSW and Victoria: targets, projects and expected transmission dates.</b> Approved and under-construction capacity from REZ Project Watch (May 2026). Transmission dates from EnergyCo, Transgrid, Transmission Company Victoria and the Victorian Auditor-General as reported. Victorian zones have no published per-zone target. See the Atlas for the zones on the map.</figcaption>
+  </figure>
+
+  <div class="flow">
+    <p><strong>The data centre pipeline and the renewable energy zones are being planned separately.</strong> Most new data centre capacity is in Western Sydney and western Melbourne, hundreds of kilometres from the zones that would supply it, and draws on the same transmission corridors that are already late. Only a handful of proposals sit beside a zone or a new transmission hub: CDC's Gregadoo campus at Wagga Wagga, AirTrunk's Loxford campus in the Hunter–Central Coast zone, IREN at Bundey, and Firmus at Bell Bay and Port Augusta. None of the IDA's endorsed projects is in a renewable energy zone.</p>
+    <p><strong>Some developers are planning to go around the grid entirely.</strong> A 673&nbsp;MW gas plant has been proposed alongside a data campus at Moss Vale. The Weddell precinct near Darwin would be gas-powered, and Western Downs sits beside existing gas generation. That sits uneasily with the Commonwealth's expectation that new data centres bring new renewable generation.</p>
+    <p><strong>Water is a local problem rather than a national one, and it falls on Sydney.</strong> Australian data centres used an estimated 5.5&nbsp;GL in 2025, about 0.04% of industrial water. Sydney's data centre use is forecast to rise from about 4&nbsp;GL to 10.5&nbsp;GL by 2030, and Sydney Water estimates data centres could take up to a fifth of the city's drinking water by 2035. A single approved campus, AWS's 194&nbsp;MW Glendenning site, expects to use about 49&nbsp;ML a year and up to 6.8&nbsp;ML on a peak day, mostly for evaporative cooling. Its cooling technology had not been finally chosen at approval.<sup class="fn"><a href="#n9">9</a></sup></p>
+    <p><strong>As in the UK, cooling choices are a structural blind spot, but rules are coming.</strong> The Commonwealth's September 2026 consultation proposes design PUE targets, a national water-use standard and a hierarchy that makes potable water the last resort. Victoria's Sustainable Data Centre Action Plan would require recycled or non-drinking water for water-intensive cooling. Until these apply, the trade-off between electricity and water is made case by case in planning conditions.</p>
+  </div>
+
+  <!-- Q5b -->
+  <h2 id="q5b">Compute for access: can Australia become the second home for frontier AI training, and what should it ask for?</h2>
+  <div class="flow">
+    <p><strong>A new argument for the build-out has emerged in 2026.</strong> It is not about cloud capacity for Australian businesses but about leverage. Only the US and China train frontier models. Australia will not build its own, and in June 2026 it learned how quickly access can be withdrawn, when Anthropic suspended access to two of its newest models for almost three weeks to comply with US export controls.<sup class="fn"><a href="#n10">10</a></sup> The proposal is that Australia make itself indispensable by hosting a large share of American labs' compute, and trade that for guaranteed access to their best models.</p>
+    <p><strong>There are three versions of the idea.</strong> The government's, set out by Assistant Minister Andrew Charlton, is to "climb the stack". Expectation 5 of the March 2026 data centre expectations would require large campuses to contribute to the local AI ecosystem: compute on favourable terms for researchers and start-ups, research partnerships, and capability that can grow into sovereign models for national security, health and other sensitive uses. Charlton treats compute for access as one tool among several, alongside alignment with the US, a diversity of model suppliers and open-weight models hosted onshore. Janet Egan of CNAS argues that only <em>training</em> compute gives real leverage. Labs want to concentrate each training run in one or two places, so a host country becomes part of their core value chain in a way an inference site, which can be built anywhere, does not. In return Australia could ask for three kinds of access: to frontier models for Australians, to a share of compute for public-interest research, and to information, through incident reporting and testing with the Australian AI Safety Institute. Joseph Walker's working target, 10–15&nbsp;GW of AI compute by 2030, about a tenth of the global total, frames the scale such leverage might need. Walker himself calls the leverage argument "very tenuous".</p>
+    <p><strong>The leverage is soft, and its proponents say so.</strong> Egan describes the goal as being "a trusted partner" that a US company will lobby to keep inside the tent, not a supplier that can hold Washington to ransom. If Australia cut off a lab's compute, Washington could escalate against Australia instead, and Australia would still depend on Taiwan for chips. The benefit is real but hard to write into a contract: penalties for withdrawing access, conditions on grid connection, and information-sharing duties are all possible, and none has been tested.</p>
+  </div>
+
+  <figure class="fig" id="fig8">
+    <div class="ft">The "second home" test</div>
+    <div class="chart" id="c8"></div>
+    <figcaption><b>Figure 8. Ambitions for AI training compute in Australia against what our inventory contains, GW of IT capacity.</b> Regional gigawatt-class proposals are the ten campuses of 500&nbsp;MW or more outside the Sydney, Melbourne, Brisbane and Canberra metropolitan areas. Sources: Joseph Walker with Tim Nelson (October 2026); Janet Egan (August 2026); ABC News on Anthropic's NSW interest (August 2026); Transgrid (June 2026); this report's dataset.</figcaption>
+  </figure>
+
+  <div class="flow">
+    <p><strong>Our inventory does not yet contain a second home for frontier training.</strong> Ten regional campuses of 500&nbsp;MW or more propose about 9.9&nbsp;GW of IT capacity, which matches the scale of the ambition (Figure 8). But six are announced only, and only one, Western Downs, has a named frontier tenant, reportedly for inference. In our base view these campuses deliver about 1.2&nbsp;GW by 2030. The metropolitan gigawatt proposals at Mamre Road, Kemps Creek and Eastern Creek sit on a Western Sydney grid that Transgrid says will have no room for new connections after 2033. Anthropic's reported interest in up to 5&nbsp;GW in NSW, which internal government emails described as initial interest rather than a plan, is almost as large as all the capacity NSW expects to add by 2030 in our base view (5.2&nbsp;GW).</p>
+    <p><strong>The energy maths points to the outback.</strong> Walker and the energy economist Tim Nelson estimate that 10–15&nbsp;GW running at 75% utilisation would use 66–99&nbsp;TWh a year, a third to half of today's NEM, and need 26–39&nbsp;GW of new wind and solar: 6.5–10&nbsp;GW a year against a record of about 4.3&nbsp;GW. Nelson's answer is to take the load to the resource: campuses in places like far-west NSW, beside existing easements and the Moomba gas pipelines, running on their own embedded wind, solar, storage and gas, with only a thin grid connection. That only works if training loads are flexible and communities welcome them, but it is the one configuration that does not compete with Sydney's households for transmission that is already late (Figures 6 and 7). Japan, which is restarting nuclear reactors and already has a text and data mining exception, is the obvious alternative host.</p>
+    <p><strong>Copyright is the gate, and both sides have a case.</strong> Australia has no copyright exception for training AI. The government ruled one out in October 2025, and in July 2026 the Prime Minister said creators must keep control of their work, including its price, and that anything less "is theft". The Attorney-General's reference group is weighing statutory licensing, collective licensing and the current voluntary system. The labs' position is that paying for licences in Australia could undermine their fair-use defence in the US, where one test is whether a use harms a licensing market, so copyright is a red line rather than a price. Anthropic's investment was reportedly contingent on "clarity of copyright settings", and in September 2026 Anthropic and OpenAI asked a parliamentary inquiry for conditional approval tied to investment and support for creators. Good Ancestors has proposed a training permit: a fee, an opt-out for Australian rights holders and help with grid connections, kept separate from a public fund for creators modelled on the Public Lending Right. A coalition of 22 rights-holder organisations calls that a text and data mining exception under another name. Sceptics also ask whether the red line is a negotiating position from companies valued at hundreds of billions of dollars that could afford licences. Egan adds a less discussed problem: current law on temporary copies may not cover AI systems that keep context and memory across sessions, which would affect inference as well as training.<sup class="fn"><a href="#n11">11</a></sup></p>
+    <p><strong>If Australia pursues the strategy, it should be explicit about the exchange.</strong> Egan argues the window is "a month or months, rather than a year", before other countries move or the labs commit elsewhere. Whatever the copyright answer, the bargain can be written down:</p>
+  </div>
+
+  <div class="deal">
+    <div><h4>What Australia would offer</h4><ul>
+      <li>Designated compute zones with fast, predictable approvals and grid or off-grid power (special compute zones)</li>
+      <li>A defined legal position on training, by licence, permit or exception, decided once rather than project by project</li>
+      <li>Priority for connection and transmission in those zones, paid for by the developer</li>
+      <li>A trusted Five Eyes jurisdiction for sensitive and classified workloads</li></ul></div>
+    <div><h4>What Australia would ask for</h4><ul>
+      <li>Written commitments on frontier model access and continuity for Australian government and users, with penalties</li>
+      <li>A reserved share of compute on favourable terms for Australian researchers and start-ups (Expectation 5)</li>
+      <li>Incident reporting, model testing and information sharing with the Australian AI Safety Institute</li>
+      <li>New generation at least equal to use, no potable water for cooling, and benefits for host communities</li>
+      <li>Research staff and partnerships located in Australia</li></ul></div>
+  </div>
+
+  <div class="flow">
+    <p><strong>The risks run both ways.</strong> If Australia moves slowly, the training build goes to Texas or Japan and its leverage disappears. If it moves fast, it may trade away creators' rights for commitments it cannot enforce, or build campuses whose financing is fragile. Firmus's failed float in October 2026 is a reminder that the capital behind AI campuses can disappear faster than planning approvals arrive. The test for any deal is whether what Australia receives is specific, verifiable and lasts longer than the next model release.</p>
+  </div>
+
+  <!-- Q6 -->
+  <h2 id="q6">Is the main state intervention, the NSW Investment Delivery Authority, doing its job? If not, how could it be improved?</h2>
+  <div class="flow">
+    <p>Australia has no equivalent of the UK's AI Growth Zones. Its main intervention to support the build-out is in NSW, where most of the pipeline sits. <strong>On 27 March 2026 the NSW Investment Delivery Authority endorsed 15 data centre projects worth A$51.9bn for coordinated, prioritised support,</strong> and screened out a further A$40.7bn of proposals it judged premature or speculative.<sup class="fn"><a href="#n12">12</a></sup> Endorsement does not replace planning approval, and the government does not publish the capacity, developer or value of individual projects.</p>
+    <p><strong>The IDA covers far more of the pipeline than the UK's Growth Zones do.</strong> Twelve of the endorsed projects can now be matched to a planning record. They would deliver about 2.6&nbsp;GW by 2030, 26% of the capacity added nationally by then. The UK's five Growth Zones cover 13% of its 2030 capacity.</p>
+    <p><strong>But there is little evidence yet that endorsement speeds projects up.</strong> Figure 9 tracks each matched project. Two, NEXTDC's S4 and the Stockland and EdgeConneX campus at Wetherill Park, were already approved before endorsement. Three, AWS at Glendenning, Microsoft at Huntingwood and Stockland at Khartoum Road, were approved about six months after it, which is not obviously faster than other NSW approvals: Marsden Park took under twelve months from lodgement without the IDA, and Victoria's Development Facilitation Program has approved Melbourne campuses within three or four months. The other seven, including the two largest, Mamre Road and S7, remain under assessment or scoping. Three endorsed projects publish no capacity at all: AIMS at Bella Vista, the Lane Cove DC Alliance at 16–20 Mars Road, and one undisclosed project.</p>
+  </div>
+
+  <figure class="fig" id="fig9">
+    <div class="ft">Projects endorsed by the NSW Investment Delivery Authority</div>
+    <div class="chart" id="c5"></div>
+    <div class="legend"><span><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="4.5" style="fill:var(--muted)"/></svg>Filing, SEARs or EIS</span><span><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="4.5" style="fill:var(--ink)"/></svg>Planning approval</span><span><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5" style="fill:none;stroke:var(--accent);stroke-width:2"/></svg>IDA endorsement</span><span><svg width="26" height="8" aria-hidden="true"><line x1="0" y1="4" x2="26" y2="4" style="stroke:var(--accent);stroke-dasharray:3 3;stroke-width:1.5"/></svg>Undetermined</span></div>
+    <figcaption><b>Figure 9. Planning milestones for IDA-endorsed data centre projects, positions as at 29 October 2026.</b> Sources: NSW Government; NSW Planning Portal; company announcements and trade press. Three further endorsed projects publish no capacity: AIMS Bella Vista, Lane Cove DC Alliance and one undisclosed project.</figcaption>
+  </figure>
+
+  <div class="flow">
+    <p><strong>The IDA is a list, not a zone.</strong> Endorsement brings coordination, but no land boundary, no standing planning permission and no reserved grid capacity. That matters because power is the binding constraint. Endorsing more Western Sydney projects cannot help if Transgrid cannot connect them after 2033.</p>
+    <p><strong>Five measures could change this.</strong> First, make zones real places. Tie data centre support to defined areas where power can be delivered, such as the Hunter–Central Coast and South-West Renewable Energy Zones, and publish their boundaries. Second, give those zones standing planning permission for data centres that meet set conditions on water, noise, diesel generation and new renewables, so each project does not renegotiate them. Third, reserve transmission capacity in each zone and publish the date it will be available. NSW's proposed connection bonds and upgrade fees would help clear speculative requests from the queue. Fourth, find credible customers: require developers to state at lodgement whether a tenant is contracted, even if confidentially, so governments can tell contracted demand from speculation. Fifth, attach the bargain. Grid priority and endorsement are what developers want most, so they are where Expectation 5's research compute, community benefits and, for frontier labs, access commitments should be written in.</p>
+    <p><strong>Lastly, success needs to be measurable.</strong> Publish the capacity, stage and expected completion of every endorsed project, and report each year how much capacity endorsement has accelerated. The Commonwealth's national standards, due to be legislated in early 2027, are the natural place to require a national register of data centres above 30&nbsp;MW.</p>
+  </div>
+
+  <h2>Conclusion</h2>
+  <p>Australia has good reasons to build a large, sovereign data centre fleet, and it is already building faster and further along the planning system than the UK. The risks are different. Australia's pipeline is mostly led by operators that build against contracts, but it is concentrating on one constrained grid in Western Sydney. It depends on a few dozen very large projects, and its water and energy footprint is decided project by project. To manage that, governments need to know how much is planned and where, whether projects have customers, how they will be cooled and powered, and whether their interventions are working. Most of all, they need policies aimed at the binding constraint, which in Australia is the grid. If Australia also wants to be a second home for frontier training, it will have to decide its copyright settings, put the campuses where power can be built quickly, and write down what it gets in return.</p>
+
+  <hr>
+  <h3 style="font-size:1.6rem;margin-bottom:14px">Notes</h3>
+  <ol class="notes">
+    <li id="n1">IT capacity is the power that reaches servers. Grid or peak power is higher because cooling and losses also draw power. Where a developer publishes only grid, total power or peak figures (15 projects), we divide by a power usage effectiveness (PUE) of 1.3. Where no completion date is published, we follow Science Works: capacity starts two years from now if under construction (2028), and about four years from now if in the planning system (2029 if approved, 2030 otherwise). Announced-only projects start in 2031. Campuses over 150&nbsp;MW then ramp at 200&nbsp;MW a year. Published dates cover 34% of the capacity due by 2030. The inventory covers projects with a published capacity, found by sweeping the NSW Major Projects portal, Victoria's ministerial permits register (Development Facilitation Program), ACT environmental significance opinions, council agendas in Queensland, Western Australia and Tasmania, ASX filings and trade press. Proposals with no published capacity are listed but not counted: Goodman at 433 Mount Atkinson Road, Truganina; Zerra at the former Ford site in Campbellfield; Galileo at Clyde North; AIMS at Bella Vista; the Lane Cove DC Alliance; Northern Concept at Swanbank; and the Southern Highlands Data Campus, whose 673&nbsp;MW gas plant is before the NSW Government. Withdrawn proposals, such as AWS's 40&nbsp;MW at Smeaton Grange and GreenSquareDC's Belmont and Hazelmere schemes in Perth, are excluded. Operating sites are counted in the baseline rather than as projects.</li>
+    <li id="n2">Since June 2023, NSW data centres using more than 15&nbsp;MW are State Significant Development. Below that, projects with a capital value over $30&nbsp;million go to a regional planning panel. Source: NSW Department of Planning.</li>
+    <li id="n3">Estimates of Australia's installed capacity range from 1.3 to 2.2&nbsp;GW depending on whether they count live, built or rated capacity. Our 1.75&nbsp;GW combines CBRE's Q1 2026 figures for Sydney and Melbourne with estimates for other cities. Our 2020 value (~0.6&nbsp;GW) scales M3 Property's occupancy series to the same base.</li>
+    <li id="n4">UK, EU-27 and US figures are taken from Science Works, which uses S&amp;P Global's Q4 2025 data with inference for missing records. The UK 2030 value used here is Science Works' base pipeline view (7.4&nbsp;GW). Australian figures use this report's own dataset, which has a different coverage and timing rule, so cross-country comparisons are indicative.</li>
+    <li id="n5">Developer types are our classification. Property, land and energy companies are treated as promoters: Goodman, Stockland, ISPT, PGIM, Gateway Capital, Markham, Centuria, HyperDC, DCG Admin, Zerra, Quinbrook, Quantum DC, 1414 Degrees, Gingerah and Beetaloo. CDC, NEXTDC, AirTrunk, STACK, GreenSquareDC, Dover, DigiCo, DCI, Digital Realty, EdgeConneX, Macquarie DC and Keppel are treated as operators. CDC's 555&nbsp;MW lease to an unnamed US customer counts as no named end user.</li>
+    <li id="n6">McKinsey, "The future of AI workloads" (February 2026), chart values for 2025 and 2030. Deloitte estimate as cited by Macquarie Data Centres (June 2026). Anthropic PBC, Form S-1 (26 October 2026): compute and infrastructure expense of US$433m (2023), US$2,522m (2024), US$7,326m (2025), US$2,334m (H1 2025) and US$8,945m (H1 2026); revenue US$16,286m in H1 2026. The S-1 does not separate training from inference spending or name data centre sites. The inference use at Western Downs is as reported by the ABC.</li>
+    <li id="n7">Today's use is from AEMO's FY26 regional split of about 5&nbsp;TWh. New capacity is modelled at PUE 1.3 and 40–70% utilisation; AEMO assumes hyperscale sites reach about 68% at maturity, and today's fleet uses about 27% of its connections. State consumption figures for 2024–25 are approximate and consistent with AEMO's 178&nbsp;TWh NEM total. Off-grid projects in the Kimberley and the Northern Territory are excluded.</li>
+    <li id="n8">Wind and solar needed for data centres = added 2030 consumption ÷ (8.76&nbsp;TWh per GW-year × 32%). This ignores firming, storage and transmission losses, so it understates what must be built. The 18&nbsp;GW figure is additional to projects already expected to connect. The 4.4&nbsp;GW record covers renewables and storage reaching full output in the year to June 2025.</li>
+    <li id="n9">Water figures are from Mandala and Data Centres Australia (2025) via the Climate Council, the PM&amp;C consultation paper (Sept 2026), and the Glendenning Road EIS as reported by W.Media.</li>
+    <li id="n10">Anthropic suspended access to Claude Fable 5 and Claude Mythos 5 from 12 June to 1 July 2026 to comply with US Department of Commerce export controls, and restored it when the controls were lifted (Anthropic statement). The three versions of compute for access are drawn from Joseph Walker's <i>Compute in Australia</i> podcast series: Andrew Charlton (recorded 7 August 2026), Janet Egan (24 August 2026) and Tim Nelson (30 September 2026).</li>
+    <li id="n11">Copyright positions as reported by Gilbert + Tobin (July 2026), Mondaq (July 2026), The Next Web citing Reuters (September 2026), Good Ancestors in The Strategist (June 2026) and the rights-holder coalition's letter (July 2026). The point about temporary copies and inference is Janet Egan's, made on the record but not as a legal opinion. This report does not offer legal advice.</li>
+    <li id="n12">IDA projects as listed by the NSW Government and W.Media, 27 March 2026. The NSW Government lists 14 data centre projects by name and says there are 15. We matched twelve to planning records: S4, S5, S7, Mamre Road, Project Atlas, Glendenning Road, Honeman Close, 78 Lockwood Road (STACK), GreenSquareDC SYD1 Stage 2, and Stockland's 2 Davis Road, 90 Aldington Road and Khartoum Road (listed as "Project A"). Stockland names its IDA projects as Wetherill Park, Kemps Creek and Macquarie Park.</li>
+  </ol>
+
+  <hr>
+  <h3 style="font-size:1.6rem;margin-bottom:14px">Sources</h3>
+  <div class="sources">
+    <a href="https://science.works/writing/uk-data-centre-pipeline/" target="_blank" rel="noopener">Science Works, The UK Data Centre Pipeline (Oct 2026)</a>
+    <a href="https://www.aemo.com.au/-/media/files/electricity/nem/planning_and_forecasting/nem_esoo/2026/2026-esoo-data-centre-forecasting-overview.pdf" target="_blank" rel="noopener">AEMO, 2026 ESOO data centre forecasting overview</a>
+    <a href="https://www.aemo.com.au/-/media/files/electricity/nem/planning_and_forecasting/nem_esoo/2025/2025-electricity-statement-of-opportunities.pdf" target="_blank" rel="noopener">AEMO, 2025 Electricity Statement of Opportunities</a>
+    <a href="https://www.commbank.com.au/articles/newsroom/2026/10/data-centre-pipeline-260bn-decade-cba.html" target="_blank" rel="noopener">CBA, data centre pipeline growing to $260bn (Oct 2026)</a>
+    <a href="https://certifiedstrategic.com/insights/cbre-2026-asia-pacific-data-centre-outlook-australia-leading-tier-1-5gw-shortfall" target="_blank" rel="noopener">CBRE 2026 Asia Pacific outlook, Australian summary</a>
+    <a href="https://m3property.com.au/australias-data-centre-sector-expands-fortyfold-in-the-past-20-years/" target="_blank" rel="noopener">M3 Property, data centre sector expands fortyfold</a>
+    <a href="https://www.energy.nsw.gov.au/sites/default/files/2026-08/202608-consultation-paper-reforming-electricity-network-data-centres.pdf" target="_blank" rel="noopener">NSW Government, network reform consultation paper (Aug 2026)</a>
+    <a href="https://www.transgrid.com.au/media/c0hbf1gj/20260617-update-on-network-capacity.pdf" target="_blank" rel="noopener">Transgrid, update on network capacity (Jun 2026)</a>
+    <a href="https://www.planning.nsw.gov.au/policy-and-legislation/planning-reforms/ssd-warehouses-and-data-centres" target="_blank" rel="noopener">NSW Planning, SSD for warehouses and data centres</a>
+    <a href="https://www.nsw.gov.au/departments-and-agencies/investment-nsw/ida/projects-by-ida" target="_blank" rel="noopener">NSW Government, projects supported by the IDA</a>
+    <a href="https://w.media/nsw-moves-15-data-centres-worth-aud-51-9bn-into-ida-pipeline/" target="_blank" rel="noopener">W.Media, NSW moves 15 data centres into IDA pipeline</a>
+    <a href="https://www.pmc.gov.au/resources/getting-it-right-building-ai-infrastructure-works-australia" target="_blank" rel="noopener">PM&amp;C, Getting it right (Sep 2026)</a>
+    <a href="https://www.cefc.com.au/media/hs5ner3s/getting-the-balance-right-data-centres-and-the-energy-transition-full-report.pdf" target="_blank" rel="noopener">CEFC and Baringa, Getting the balance right</a>
+    <a href="https://www.climatecouncil.org.au/wp-content/uploads/2026/06/CC-Report-Data-Centres.pdf" target="_blank" rel="noopener">Climate Council, Clouded Future</a>
+    <a href="https://www.ussc.edu.au/powering-the-cloud-data-centres-and-the-future-of-australias-grid" target="_blank" rel="noopener">USSC, Powering the cloud</a>
+    <a href="https://landers.com.au/legal-insights-news/victorias-sustainable-data-centre-action-plan-what-developers-need-to-know" target="_blank" rel="noopener">Lander &amp; Rogers, Victoria's Sustainable Data Centre Action Plan</a>
+    <a href="https://announcements.asx.com.au/asxpdf/20260827/pdf/073c04gt4ts40y.pdf" target="_blank" rel="noopener">NEXTDC, FY26 results</a>
+    <a href="https://w.media/cdc-lands-555mw-deal-to-push-contracted-capacity-past-1gw/" target="_blank" rel="noopener">W.Media, CDC 555 MW deal</a>
+    <a href="https://w.media/cdc-rethinks-576mw-canberra-data-centre-after-planning-setback/" target="_blank" rel="noopener">W.Media, CDC rethinks Hume Campus 3</a>
+    <a href="https://www.abc.net.au/news/2026-09-16/queensland-data-centre-anthropic-dalby/107160640" target="_blank" rel="noopener">ABC News, Anthropic and Western Downs</a>
+    <a href="https://w.media/amazon-receives-approval-for-aud-2-17bn-sydney-data-centre/" target="_blank" rel="noopener">W.Media, Glendenning Road approval</a>
+    <a href="https://w.media/microsoft-gets-approval-for-au1-26bn-96mw-sydney-data-centre/" target="_blank" rel="noopener">W.Media, Microsoft Honeman Close approval</a>
+    <a href="https://www.planningportal.nsw.gov.au/major-projects/projects/mamre-road-data-centre-campus" target="_blank" rel="noopener">NSW Major Projects portal (project pages cited in the Atlas)</a>
+    <a href="https://www.planning.vic.gov.au/planning-approvals/ministerial-permits-register" target="_blank" rel="noopener">Victoria, ministerial permits register (Development Facilitation Program)</a>
+    <a href="https://w.media/whittlesea-seeks-greater-oversight-as-dover-plans-200mw-victorian-facility/" target="_blank" rel="noopener">W.Media, Dover's South Morang campus</a>
+    <a href="https://www.realestatesource.com.au/green-light-for-data-centre-half-the-size-of-the-rialto/" target="_blank" rel="noopener">Real Estate Source, Melbourne data centre approvals</a>
+    <a href="https://w.media/zerra-plans-1-44gw-aud-14-5bn-data-centre-campus-in-queensland/" target="_blank" rel="noopener">W.Media, Zerra's Western Downs application</a>
+    <a href="https://w.media/?p=44816" target="_blank" rel="noopener">W.Media, Quantum DC at Tungkillo</a>
+    <a href="https://w.media/firmus-confirms-south-australian-ai-factory-sites-renewable-energy-plans-due-within-weeks/" target="_blank" rel="noopener">W.Media, Firmus's South Australian sites</a>
+    <a href="https://w.media/firmus-and-cdc-end-project-southgate-partnership-after-42mw-rollout/" target="_blank" rel="noopener">W.Media, Firmus and CDC end Southgate partnership</a>
+    <a href="https://www.infrastructure.nsw.gov.au/media/qwwpt03m/nsw-data-centre-consultation-paper_wcag.pdf" target="_blank" rel="noopener">Infrastructure NSW, data centre consultation paper (Mar 2026)</a>
+    <a href="https://ows.dea.ga.gov.au/" target="_blank" rel="noopener">Digital Earth Australia, Sentinel-2 ARD (imagery)</a>
+    <a href="https://maps.six.nsw.gov.au/arcgis/rest/services/public/NSW_Imagery/MapServer" target="_blank" rel="noopener">NSW Spatial Services, NSW Imagery (imagery)</a>
+    <a href="https://spatial-img.information.qld.gov.au/arcgis/rest/services/Basemaps/LatestStateProgram_AllUsers/ImageServer" target="_blank" rel="noopener">Queensland Government, State Imagery Program (imagery)</a>
+    <a href="https://www.sec.gov/Archives/edgar/data/0002130357/000162828026067168/anthropicpbc-sx1.htm" target="_blank" rel="noopener">Anthropic PBC, Form S-1 (Oct 2026)</a>
+    <a href="https://www.mckinsey.com/featured-insights/week-in-charts/the-future-of-ai-workloads" target="_blank" rel="noopener">McKinsey, The future of AI workloads (Feb 2026)</a>
+    <a href="https://www.macquariedatacentres.com/blog/from-training-to-inference-the-quiet-shift-redrawing-the-ai-map/" target="_blank" rel="noopener">Macquarie Data Centres, From training to inference (Jun 2026)</a>
+    <a href="https://pv-tech.org/australia-aemos-2026-isp-calls-for-nearly-120gw-of-utility-scale-wind-and-solar-by-2050" target="_blank" rel="noopener">PV Tech, AEMO 2026 ISP</a>
+    <a href="https://www.renewableenergymagazine.com/panorama/australia-necesita-18-gw-adicionales-de-e-20260921" target="_blank" rel="noopener">Renewable Energy Magazine, 18 GW more wind and solar needed (Sept 2026)</a>
+    <a href="https://reneweconomy.com.au/?p=257878" target="_blank" rel="noopener">RenewEconomy, IEEFA state renewables scorecard (Sept 2026)</a>
+    <a href="https://rez-project-watch.pages.dev/handout/" target="_blank" rel="noopener">REZ Project Watch (May 2026)</a>
+    <a href="https://www.mudgeeguardian.com.au/story/9356623/central-west-orana-rez-begins-stringing-first-powerlines/" target="_blank" rel="noopener">Mudgee Guardian, Central-West Orana lines strung (Sept 2026)</a>
+    <a href="https://reneweconomy.com.au/barnaby-effect-mystery-surrounds-late-three-year-delay-for-huge-new-england-renewable-zone/" target="_blank" rel="noopener">RenewEconomy, New England REZ delay</a>
+    <a href="https://wattclarity.com.au/?p=40367" target="_blank" rel="noopener">WattClarity, VNI West delayed to late 2030</a>
+    <a href="https://www.thedailyaus.com.au/politics/queensland-passes-bill-to-scraps-renewable-energy-targets" target="_blank" rel="noopener">The Daily Aus, Queensland scraps renewable targets (Dec 2025)</a>
+    <a href="https://josephnoelwalker.com/andrew-charlton/" target="_blank" rel="noopener">Joseph Walker with Andrew Charlton, Compute in Australia (Aug 2026)</a>
+    <a href="https://josephnoelwalker.com/janet-egan/" target="_blank" rel="noopener">Joseph Walker with Janet Egan, Compute in Australia (Aug 2026)</a>
+    <a href="https://josephnoelwalker.com/tim-nelson/" target="_blank" rel="noopener">Joseph Walker with Tim Nelson, Compute in Australia (Oct 2026)</a>
+    <a href="https://www.anthropic.com/news/fable-mythos-access" target="_blank" rel="noopener">Anthropic, statement on Fable and Mythos access</a>
+    <a href="https://www.techrepublic.com/article/news-anthropic-5gw-ai-data-centers-australia/" target="_blank" rel="noopener">TechRepublic citing ABC, Anthropic eyed 5 GW in NSW (Aug 2026)</a>
+    <a href="https://www.gtlaw.com.au/insights/australian-government-announces-mandatory-ai-standards-for-large-scale-data-centres-and-new-office-of-ai" target="_blank" rel="noopener">Gilbert + Tobin, national AI data centre standards (Jul 2026)</a>
+    <a href="https://www.mondaq.com/australia/licensing-syndication/1819184/australia-%7c-the-copyright-stalemate-deepens-as-albanese-centralises-ai-policy" target="_blank" rel="noopener">Mondaq, the copyright stalemate deepens (Jul 2026)</a>
+    <a href="https://thenextweb.com/news/anthropic-openai-australia-ai-training-copyright" target="_blank" rel="noopener">The Next Web, Anthropic and OpenAI copyright submissions (Sept 2026)</a>
+    <a href="https://www.aspistrategist.org.au/compensating-creators-while-unlocking-ai-training-in-australia/" target="_blank" rel="noopener">Good Ancestors, training permit proposal (Jun 2026)</a>
+    <a href="https://interspacemusic.com/blog/?p=19465" target="_blank" rel="noopener">Rights-holder coalition letter (Jul 2026)</a>
+    <a href="https://ussc.edu.au/sovereignty-through-managed-dependence-australia-s-strategy-for-frontier-ai-access" target="_blank" rel="noopener">USSC, Sovereignty through managed dependence (Aug 2026)</a>
+    <a href="https://www.forbes.com.au/news/investing/firmus-44-billion-ipo-collapse-explained/" target="_blank" rel="noopener">Forbes Australia, Firmus IPO collapse (Oct 2026)</a>
+    <a href="../data-centre-atlas/">Project-level sources: Australian Data Centre Atlas</a>
+  </div>
+
+  <div class="about">
+    <h3>Australian Dynamism</h3>
+    <div class="r">PUBLISHER</div>
+    <p>An independent project on Australian policy, infrastructure and technology. This report adapts the structure and method of Science Works' <i>The UK Data Centre Pipeline</i> by Henning Zschietzschmann to Australian data, so the two can be read side by side. All Australian data and analysis are our own.</p>
+  </div>
+</article>
+
+<script src="../data.js"></script>
+<script>
+(function(){
+const D=window.DATA,M=window.MAP,P=D.projects,A=D.agg;
+const NS='http://www.w3.org/2000/svg',$=id=>document.getElementById(id);
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a){if(['fill','stroke','opacity'].includes(k))e.style[k]=a[k];else e.setAttribute(k,a[k])}if(p)p.appendChild(e);return e}
+function txt(p,x,y,s,a={}){const t=el('text',Object.assign({x,y},a),p);t.textContent=s;return t}
+const fmt=n=>Math.round(n).toLocaleString('en-AU');
+const fmtP=n=>n>=1000?(n/1000).toFixed(n>=10000?1:2).replace(/\.?0+$/,'')+' GW':Math.round(n)+' MW';
+const tip=$('tip');function show(e,h){tip.innerHTML=h;tip.classList.add('on');mv(e)}function mv(e){const w=tip.offsetWidth,h=tip.offsetHeight;tip.style.left=Math.min(innerWidth-w-8,Math.max(8,e.clientX+14))+'px';tip.style.top=(e.clientY+h+24>innerHeight?e.clientY-h-12:e.clientY+14)+'px'}
+function hov(n,h){n.addEventListener('pointerenter',e=>show(e,h));n.addEventListener('pointermove',mv);n.addEventListener('pointerleave',()=>tip.classList.remove('on'));n.style.cursor='default'}
+function svg(host,w,h){host.innerHTML='';return el('svg',{viewBox:`0 0 ${w} ${h}`,role:'img'},host)}
+const delivered=(p,y)=>Object.entries(p.schedule).reduce((a,[k,v])=>a+(+k<=y?v:0),0);
+const BASE=['construction','approved','assessment','scoping'];
+
+const proj=(pr,lon,lat)=>[(lon-pr.lon0)*pr.c*pr.k,(pr.lat1-lat)*pr.k];
+/* ---------- hero: Western Sydney aerial with planned sites ---------- */
+(function(){const g=$('heroov');if(!g)return;const Z=2**15,tx=lon=>(lon+180)/360*Z,ty=lat=>{const r=lat*Math.PI/180;return (1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*Z};
+  const X0=tx(150.755),X1=tx(150.935),Y0=ty(-33.755),Y1=ty(-33.885),W=1200,H=1043;/* image cropped to the top 760 px */
+  const px=p=>[(tx(p.lon)-X0)/(X1-X0)*W,(ty(p.lat)-Y0)/(Y1-Y0)*H];
+  const HC={construction:'#0f4a33',approved:'#2e7550',assessment:'#6f9a5a',scoping:'#d9c96a',announced:'#e4dfc2'};const LAB={mamre:['Mamre Road',1,'end'],kc1:['KC1',1,'end'],s7:['S7',-1,'start'],s4:['S4',1,'start'],atlas:['Atlas',1,'start'],syd3:['SYD3',-1,'end'],stack:['STACK SYD01',-1,'end'],glend:['AWS Glendenning',-1,'start'],davis:['Wetherill Park',1,'end'],mskc:['Microsoft',-1,'end'],aldington:['Aldington Rd',1,'start'],honeman:['Microsoft',1,'start'],echidna:['AWS',1,'end']};
+  const pts=P.filter(p=>p.state==='NSW'&&p.lon>150.755&&p.lon<150.935&&p.lat<-33.755&&p.lat>-33.885).sort((a,b)=>b.it-a.it);
+  pts.forEach(p=>{const [x,y]=px(p);if(y>868)return;const r=Math.max(12,Math.sqrt(p.it)*2.1);
+    const c=el('circle',{cx:x,cy:y,r,fill:HC[p.stage],opacity:.78,stroke:'#fff','stroke-width':2},g);c.style.fillOpacity=.72;
+    el('circle',{cx:x,cy:y,r:3.2,fill:'#fff'},g);
+    hov(c,`<b>${p.name}</b><br>${p.developer} · ${fmtP(p.it)} IT<br>${D.stage_label[p.stage]}`);
+    const L=LAB[p.id];if(L){const dx=L[2]==='end'?-(r+6):(r+6);const t=txt(g,x+dx,y+(L[1]<0?-r*0.35:r*0.55)+4,L[0],{class:'hl','text-anchor':L[2]})}});
+  // legend
+  const lg=el('g',{transform:'translate(16,16)'},g);el('rect',{x:0,y:0,width:250,height:150,rx:4,fill:'rgba(10,24,16,.62)'},lg);
+  [['construction','Under construction'],['approved','Approved'],['assessment','Under assessment'],['scoping','Scoping']].forEach(([k,n],i)=>{el('circle',{cx:22,cy:26+i*33,r:10,fill:HC[k],stroke:'#fff','stroke-width':2},lg);txt(lg,42,32+i*33,n,{class:'hl'})});
+})();
+
+/* ---------- Figure 1 ---------- */
+let F1='2030';
+function fig1(){const host=$('c1');const W=760,H=470,L=58,R=150,T=70,B=40;const s=svg(host,W,H);
+  const y1=F1==='2030'?2030:2035,ymax=F1==='2030'?13.5:25;const yrs=[2020].concat(A.years.filter(y=>y<=y1));
+  const X=y=>L+(y-2020)/(y1-2020)*(W-L-R),Y=v=>H-B-v/ymax*(H-T-B);
+  for(let g=0;g<=ymax;g+=(F1==='2030'?1.5:5)){const y=Y(g);el('line',{x1:L,x2:W-R,y1:y,y2:y,class:'grid'},s);txt(s,L-8,y+4,g.toFixed(1),{'text-anchor':'end'})}
+  for(let y=2020;y<=y1;y+=(F1==='2030'?2:5)){txt(s,X(y),H-B+20,String(y),{'text-anchor':'middle'})}
+  el('line',{x1:L,x2:L,y1:T-40,y2:H-B,stroke:'var(--rule)'},s);
+  // broken axis for connection queue
+  const zz=T-22;let d=`M${L-6},${zz}`;for(let x=L;x<=W-R;x+=8)d+=` L${x},${zz+((x-L)/8%2?-4:4)}`;el('path',{d,fill:'none',stroke:'var(--muted)','stroke-width':1},s);el('path',{d:d.replace(/,(\d+(\.\d+)?)/g,(m,a)=>','+(+a+5)),fill:'none',stroke:'var(--muted)','stroke-width':1},s);
+  txt(s,L-8,T-48,'67.0',{'text-anchor':'end'});
+  const qx=W-R;el('path',{d:`M${qx-7},${T-42} L${qx+7},${T-42} L${qx},${T-54}Z`,fill:'var(--ink)'},s);txt(s,qx-12,T-44,'67 GW connection applications (AEMO, 225 projects)',{'text-anchor':'end',class:'lbl',fill:'var(--ink)'});
+  el('line',{x1:qx,x2:qx,y1:T-40,y2:Y(A.ceiling[A.years.indexOf(y1)]/1000),stroke:'var(--muted)','stroke-dasharray':'1 3'},s);
+  txt(s,18,(T+H-B)/2,'Installed IT capacity, GW',{transform:`rotate(-90 18 ${(T+H-B)/2})`,'text-anchor':'middle'});
+  // band
+  const yy=A.years.filter(y=>y<=y1);const fl=yy.map(y=>A.floor[A.years.indexOf(y)]/1000),ce=yy.map(y=>A.ceiling[A.years.indexOf(y)]/1000),ba=yy.map(y=>A.base[A.years.indexOf(y)]/1000);
+  el('path',{d:'M'+yy.map((y,i)=>`${X(y)},${Y(ce[i])}`).join('L')+'L'+yy.slice().reverse().map((y,i)=>`${X(y)},${Y(fl[fl.length-1-i])}`).join('L')+'Z',fill:'var(--band)'},s);
+  [fl,ce].forEach(arr=>el('polyline',{points:yy.map((y,i)=>`${X(y)},${Y(arr[i])}`).join(' '),fill:'none',stroke:'var(--muted)','stroke-dasharray':'5 4','stroke-width':1.2},s));
+  // today line
+  el('line',{x1:X(2025),x2:X(2025),y1:T-10,y2:H-B,stroke:'var(--muted)','stroke-dasharray':'3 3'},s);
+  // history
+  el('polyline',{points:`${X(2020)},${Y(A.hist['2020']/1000)} ${X(2025)},${Y(1.75)}`,fill:'none',stroke:'var(--ink)','stroke-width':3,'stroke-linecap':'round'},s);
+  // base
+  el('polyline',{points:yy.map((y,i)=>`${X(y)},${Y(ba[i])}`).join(' '),fill:'none',stroke:'var(--accent)','stroke-width':3.2,'stroke-dasharray':'10 6','stroke-linecap':'round'},s);
+  el('circle',{cx:X(2025),cy:Y(1.75),r:13,fill:'var(--accent-soft)'},s);el('circle',{cx:X(2025),cy:Y(1.75),r:5,fill:'var(--lead)'},s);
+  yy.forEach((y,i)=>{const h=el('rect',{x:X(y)-10,y:T,width:20,height:H-B-T,fill:'transparent'},s);hov(h,`<b>${y}</b><br>Base ${ba[i].toFixed(1)} GW<br>Range ${fl[i].toFixed(1)}–${ce[i].toFixed(1)} GW`)});
+  const lx=W-R+10;const lb=ba[ba.length-1];
+  txt(s,lx,Y(lb)-4,'Base pipeline',{class:'lbl',fill:'var(--accent)'});txt(s,lx,Y(lb)+12,`view, ${lb.toFixed(1)} GW`,{class:'lbl',fill:'var(--accent)'});
+  txt(s,lx,Y(ce[ce.length-1])+(F1==='2030'?-14:4),`Ceiling ${ce[ce.length-1].toFixed(1)} GW`,{});
+  txt(s,lx,Y(fl[fl.length-1])+4,`Floor ${fl[fl.length-1].toFixed(1)} GW`,{});
+  // markers
+  const tri=(x,y,up,lab1,lab2)=>{el('path',{d:up?`M${x-7},${y+6} L${x+7},${y+6} L${x},${y-7}Z`:`M${x-7},${y-6} L${x+7},${y-6} L${x},${y+7}Z`,fill:'var(--lead)'},s);txt(s,x+12,y,lab1,{class:'lbl',fill:'var(--ink)'});if(lab2)txt(s,x+12,y+15,lab2,{class:'lbl',fill:'var(--ink)'})};
+  if(F1==='2030'){const x=X(2030)+4,y=Y(5.75);el('path',{d:`M${x-6},${y-5} L${x+6},${y-5} L${x},${y+6}Z`,fill:'var(--lead)'},s);txt(s,W-R+10,Y(6.04)+22,'CBA central',{class:'lbl',fill:'var(--ink)'});txt(s,W-R+10,Y(6.04)+37,'feasible, ~5.8 GW',{class:'lbl',fill:'var(--ink)'})}
+  else {tri(X(2035)+24,Y(8.75),false,'CBA central','mid-2030s, ~8.8 GW');const ax=X(2035)+3;el('rect',{x:ax-3,y:Y(8.25),width:6,height:Y(7.25)-Y(8.25),fill:'var(--lead)'},s);txt(s,ax+18,Y(7.5)+10,'AEMO-implied',{class:'lbl',fill:'var(--ink)'});txt(s,ax+18,Y(7.5)+25,'FY36, 7.3–8.3 GW',{class:'lbl',fill:'var(--ink)'})}
+  txt(s,X(2020)+6,Y(A.hist['2020']/1000)-12,'~0.6 GW',{});txt(s,X(2025)-16,Y(1.75)-18,'1.75 GW today',{'text-anchor':'end',class:'lbl',fill:'var(--ink)'});
+}
+$('t2030').onclick=()=>{F1='2030';$('t2030').setAttribute('aria-pressed','true');$('t2035').setAttribute('aria-pressed','false');fig1()};
+$('t2035').onclick=()=>{F1='2035';$('t2035').setAttribute('aria-pressed','true');$('t2030').setAttribute('aria-pressed','false');fig1()};
+fig1();
+
+/* ---------- Figure 2 ---------- */
+const INT=[{k:'us',n:'USA',v:[16.3,39,119],c:'var(--c-us)'},{k:'eu',n:'EU-27',v:[4.31,8.1,22],c:'var(--c-eu)'},{k:'uk',n:'UK',v:[1.06,1.8,7.4],c:'var(--c-uk)'},{k:'au',n:'Australia',v:[A.hist['2020']/1000,A.live_total/1000,A.base[A.years.indexOf(2030)]/1000],c:'var(--c-au)'}];
+function lineFig(host,vals,ymax,ticks,fmtv,suffix){const W=760,H=300,L=58,R=130,T=16,B=34;const s=svg(host,W,H);const X=y=>L+(y-2020)/10*(W-L-R),Y=v=>H-B-v/ymax*(H-T-B);
+  ticks.forEach(g=>{const y=Y(g);el('line',{x1:L,x2:W-R,y1:y,y2:y,class:'grid'},s);txt(s,L-8,y+4,String(g),{'text-anchor':'end'})});
+  [2020,2025,2030].forEach(y=>txt(s,X(y),H-B+20,String(y),{'text-anchor':'middle'}));el('line',{x1:X(2025),x2:X(2025),y1:T,y2:H-B,stroke:'var(--muted)','stroke-dasharray':'3 3'},s);
+  const placed=[];
+  INT.forEach(c=>{const v=vals(c);el('line',{x1:X(2020),y1:Y(v[0]),x2:X(2025),y2:Y(v[1]),stroke:c.c,'stroke-width':c.k==='au'?3.2:2.2},s);el('line',{x1:X(2025),y1:Y(v[1]),x2:X(2030),y2:Y(v[2]),stroke:c.c,'stroke-width':c.k==='au'?3.2:2.2,'stroke-dasharray':'8 5'},s);
+    [0,1,2].forEach(i=>{const cc=el('circle',{cx:X([2020,2025,2030][i]),cy:Y(v[i]),r:c.k==='au'?4.5:3.2,fill:c.c},s);hov(cc,`<b>${c.n}, ${[2020,2025,2030][i]}</b><br>${fmtv(v[i])}${suffix}`)});
+    let ly=Y(v[2])+4;placed.forEach(p=>{if(Math.abs(p-ly)<16)ly=p+16});placed.push(ly);
+    txt(s,X(2030)+10,ly,`${fmtv(v[2])}${suffix}, ${c.n}`,{class:'lbl',fill:c.k==='au'?'var(--accent)':'var(--muted)'})});
+  txt(s,16,(T+H-B)/2,suffix.trim()==='GW'?'Installed IT capacity, GW':'Indexed, 2025 = 100',{transform:`rotate(-90 16 ${(T+H-B)/2})`,'text-anchor':'middle'})}
+lineFig($('c2a'),c=>c.v,130,[0,25,50,75,100,125],v=>v<20?v.toFixed(1):Math.round(v),' GW');
+lineFig($('c2b'),c=>c.v.map(x=>x/c.v[1]*100),700,[0,100,200,300,400,500,600,700],v=>Math.round(v),'');
+(function(){const host=$('c2c');const rows=[['Ireland',174,null],['United States',114,340],['Sweden',71,null],['Australia',63,Math.round(A.base[A.years.indexOf(2030)]/29.2)],['Netherlands',61,null],['United Kingdom',26,101],['EU-27',18,49]];
+  const W=760,L=130,R=70,rowH=34,H=rows.length*rowH+30;const s=svg(host,W,H);const max=420,sc=(W-L-R)/max;
+  [0,100,200,300,400].forEach(g=>{const x=L+g*sc;el('line',{x1:x,x2:x,y1:4,y2:H-24,class:'grid'},s);txt(s,x,H-8,g+(g?'':' W per person'),{'text-anchor':g?'middle':'start'})});
+  rows.forEach(([n,a,b],i)=>{const y=i*rowH+8;const au=n==='Australia';txt(s,L-10,y+14,n,{'text-anchor':'end',class:au?'lbl':'',fill:au?'var(--accent)':'var(--muted)'});
+    if(b){const r2=el('rect',{x:L,y:y+2,width:b*sc,height:18,rx:2,fill:au?'var(--accent)':'var(--c-eu)',opacity:.35},s);hov(r2,`<b>${n}, 2030 if delivered</b><br>${b} W per person`);txt(s,L+b*sc+6,y+15,`${b} (2030)`,{})}
+    const r1=el('rect',{x:L,y:y+2,width:a*sc,height:18,rx:2,fill:au?'var(--accent)':'var(--c-uk)'},s);hov(r1,`<b>${n}, 2025</b><br>${a} W per person`);
+    txt(s,L+a*sc-6,y+15,String(a),{'text-anchor':'end',fill:'var(--bg)',class:'lbl'})});
+})();
+
+/* ---------- Atlas teaser ---------- */
+(function(){const s=$('teaser');const pr=M.main.proj;const sc=280/pr.w;const g=el('g',{transform:`translate(16,14) scale(${sc})`},s);
+  const capS={};P.forEach(p=>{if(BASE.includes(p.stage))capS[p.state]=(capS[p.state]||0)+delivered(p,2030)});
+  Object.entries(M.main.paths).forEach(([k,d])=>{const v=(capS[k]||0)+(A.live_by_state[k]||0);el('path',{d,fill:`var(--${v>3000?'accent':v>500?'c-eu':'band'})`,stroke:'var(--bg)','stroke-width':2},g)});
+  P.forEach(p=>{if(!BASE.includes(p.stage))return;const [x,y]=proj(pr,p.lon,p.lat);el('circle',{cx:x,cy:y,r:Math.sqrt(delivered(p,2030))*0.5,fill:`var(--st-${p.stage})`,stroke:'var(--bg)','stroke-width':1.5},g)});
+  // mini stage bars
+  const bx=330,by=40,bw=440,bh=220;txt(s,bx,28,'Capacity by current planning stage',{style:'font-family:var(--f-display);font-size:16px;fill:var(--ink)'});
+  A.years.forEach((y,i)=>{let base=A.live_total;const x=bx+i*(bw/11)+4,w=bw/11-8;const Yv=v=>by+bh-v/25000*bh;
+    el('rect',{x,y:Yv(base),width:w,height:bh-(Yv(base)-by),fill:'var(--st-inservice)',opacity:y===2030?1:.5},s);
+    ['construction','approved','assessment','scoping','announced'].forEach(k=>{const v=A.by_stage[k][i];if(!v)return;el('rect',{x,y:Yv(base+v),width:w,height:Math.max(0,v/25000*bh-1),fill:`var(--st-${k})`,opacity:y===2030?1:.5},s);base+=v});
+    if(y%5===0)txt(s,x+w/2,by+bh+16,String(y),{'text-anchor':'middle'})});
+})();
+
+/* ---------- Figure 3: developer types ---------- */
+(function(){const host=$('c3');const DEV=[['operator','Wholesale and colocation operators'],['promoter','Land, property and power promoters'],['neocloud','AI cloud (neocloud)'],['hyperscaler','Hyperscalers (own use)']];
+  const named=p=>p.devtype==='hyperscaler'||!!p.tenant;
+  const val=(d,y,f=()=>true)=>P.filter(p=>BASE.includes(p.stage)&&p.devtype===d&&f(p)).reduce((a,p)=>a+delivered(p,y),0);
+  const tot30=P.filter(p=>BASE.includes(p.stage)).reduce((a,p)=>a+delivered(p,2030),0);
+  const W=760,L=240,R=110,rowH=66,H=DEV.length*rowH+40;const s=svg(host,W,H);const max=10500,sc=(W-L-R)/max;
+  const defs=el('defs',{},s);const pat=el('pattern',{id:'hatch3',patternUnits:'userSpaceOnUse',width:6,height:6,patternTransform:'rotate(45)'},defs);el('line',{x1:0,y1:0,x2:0,y2:6,stroke:'var(--ink)','stroke-width':2},pat);
+  [0,2000,4000,6000,8000,10000].forEach(g=>{const x=L+g*sc;el('line',{x1:x,x2:x,y1:4,y2:H-28,class:'grid'},s);txt(s,x,H-10,g?(g/1000)+' GW':'0',{'text-anchor':'middle'})});
+  DEV.forEach(([d,n],i)=>{const y=i*rowH+10;txt(s,L-12,y+20,n,{'text-anchor':'end',class:'lbl',fill:'var(--ink)'});
+    const v30=val(d,2030),v35=val(d,2035),nn30=val(d,2030,p=>!named(p));
+    const b30=el('rect',{x:L,y,width:v30*sc,height:20,fill:'var(--accent)'},s);hov(b30,`<b>${n}, 2030</b><br>${fmtP(v30)} (${Math.round(100*v30/tot30)}% of additions)<br>${fmtP(nn30)} with no end user named`);
+    if(nn30)el('rect',{x:L,y,width:nn30*sc,height:20,fill:'url(#hatch3)'},s);
+    txt(s,L+v30*sc+6,y+15,fmtP(v30),{class:'lbl',fill:'var(--ink)'});
+    const b35=el('rect',{x:L,y:y+24,width:v35*sc,height:20,fill:'var(--accent)',opacity:.4},s);hov(b35,`<b>${n}, 2035</b><br>${fmtP(v35)}`);txt(s,L+v35*sc+6,y+39,fmtP(v35),{});
+    txt(s,W-4,y+15,`${Math.round(100*v30/tot30)}% of 2030`,{'text-anchor':'end',fill:'var(--accent)',class:'lbl'});
+  });
+})();
+
+/* ---------- Figure 4: training vs inference ---------- */
+(function(){const host=$('c4a');const W=760,L=70,R=150,rowH=58,rows=[['2025',23.1,20.9],['2030',62.2,93.3]],H=rows.length*rowH+40;const s=svg(host,W,H);const max=160,sc=(W-L-R)/max;
+  [0,40,80,120,160].forEach(g=>{const x=L+g*sc;el('line',{x1:x,x2:x,y1:4,y2:H-28,class:'grid'},s);txt(s,x,H-10,g+(g?'':' GW'),{'text-anchor':'middle'})});
+  rows.forEach(([y,t,i],k)=>{const yy=k*rowH+10;txt(s,L-12,yy+24,y,{'text-anchor':'end',class:'lbl',fill:'var(--ink)'});
+    const a=el('rect',{x:L,y:yy+6,width:t*sc,height:28,fill:'var(--ink)'},s);hov(a,`<b>${y}: training</b><br>${t} GW`);
+    const b=el('rect',{x:L+t*sc,y:yy+6,width:i*sc,height:28,fill:'var(--accent)'},s);hov(b,`<b>${y}: inference</b><br>${i} GW`);
+    txt(s,L+6,yy+25,String(t),{fill:'var(--bg)',class:'lbl'});txt(s,L+t*sc+6,yy+25,String(i),{fill:'var(--bg)',class:'lbl'});
+    txt(s,L+(t+i)*sc+8,yy+25,`${Math.round(100*i/(t+i))}% inference`,{class:'lbl',fill:'var(--accent)'})});
+})();
+(function(){const host=$('c4b');const rows=[['2023',0.433],['2024',2.522],['2025',7.326],['H1 2025',2.334],['H1 2026',8.945]];const W=760,L=70,R=40,T=14,B=34,H=230;const s=svg(host,W,H);const max=10,Y=v=>H-B-v/max*(H-T-B);const bw=(W-L-R)/rows.length;
+  [0,2.5,5,7.5,10].forEach(g=>{el('line',{x1:L,x2:W-R,y1:Y(g),y2:Y(g),class:'grid'},s);txt(s,L-8,Y(g)+4,'$'+g+(g?'bn':''),{'text-anchor':'end'})});
+  rows.forEach(([n,v],i)=>{const x=L+i*bw+bw*.22,w=bw*.56;const h1=n.startsWith('H1');const r=el('rect',{x,y:Y(v),width:w,height:Y(0)-Y(v),fill:h1?'var(--accent)':'var(--ink)',opacity:h1?1:.85},s);hov(r,`<b>${n}</b><br>US$${v.toFixed(1)}bn compute and infrastructure`);
+    txt(s,x+w/2,Y(v)-6,'$'+v.toFixed(1)+'bn',{'text-anchor':'middle',class:'lbl',fill:'var(--ink)'});txt(s,x+w/2,H-B+18,n,{'text-anchor':'middle'})});
+  const xd=L+3*bw;el('line',{x1:xd,x2:xd,y1:T,y2:H-B,stroke:'var(--muted)','stroke-dasharray':'3 3'},s);txt(s,xd+6,T+10,'Half-years',{})})();
+
+/* ---------- Figure 6: what has to be built ---------- */
+(function(){const host=$('c6');const rows=[{n:'Utility wind and solar operating in the NEM today',lo:23,hi:23,c:'var(--ink)'},{n:'Extra wind and solar needed for 82% renewables by 2030',lo:18,hi:18,c:'var(--st-approved)'},{n:'Extra wind and solar to power the base data centre pipeline in 2030',lo:Math.round((D.energy.base2030['NEM+WA'][1]-5.2)/(8.76*.32)),hi:Math.round((D.energy.base2030['NEM+WA'][2]-5.2)/(8.76*.32)),c:'var(--accent)'},{n:'Record year of new renewables and storage (to June 2025)',lo:4.4,hi:4.4,c:'var(--st-scoping)'}];
+  const W=760,L=330,R=80,rowH=46,H=rows.length*rowH+36;const s=svg(host,W,H);const max=30,sc=(W-L-R)/max;
+  [0,10,20,30].forEach(g=>{const x=L+g*sc;el('line',{x1:x,x2:x,y1:4,y2:H-28,class:'grid'},s);txt(s,x,H-10,g+(g?'':' GW'),{'text-anchor':'middle'})});
+  rows.forEach((r,i)=>{const y=i*rowH+8;const lines=r.n.length>40?[r.n.slice(0,r.n.lastIndexOf(' ',40)),r.n.slice(r.n.lastIndexOf(' ',40)+1)]:[r.n];lines.forEach((t,k)=>txt(s,L-12,y+16+k*15-(lines.length-1)*7,t,{'text-anchor':'end',fill:'var(--ink)'}));
+    el('rect',{x:L,y:y+4,width:r.lo*sc,height:24,fill:r.c},s);if(r.hi>r.lo){const b=el('rect',{x:L+r.lo*sc,y:y+4,width:(r.hi-r.lo)*sc,height:24,fill:r.c,opacity:.45},s);hov(b,'Range reflects 40–70% utilisation of new data centre capacity')}
+    txt(s,L+r.hi*sc+8,y+21,r.hi>r.lo?`${r.lo}–${r.hi} GW`:`${r.lo} GW`,{class:'lbl',fill:'var(--ink)'})});
+})();
+
+/* ---------- Figure 7: REZ tracker ---------- */
+(function(){const host=$('c7');const Z=D.rez;const W=780,L=250,mid=470,R=40,rowH=40,T=36,H=T+Z.length*rowH+30;const s=svg(host,W,H);
+  const gmax=8,gsc=(mid-30-L)/gmax;const y0=2026,y1=2034,X=y=>mid+(y-y0)/(y1-y0)*(W-R-mid);
+  [0,2,4,6,8].forEach(g=>{const x=L+g*gsc;el('line',{x1:x,x2:x,y1:T-6,y2:H-26,class:'grid'},s);txt(s,x,H-8,g+(g?'':' GW'),{'text-anchor':'middle'})});
+  for(let y=y0;y<=y1;y+=2){el('line',{x1:X(y),x2:X(y),y1:T-6,y2:H-26,class:'grid'},s);txt(s,X(y),H-8,String(y),{'text-anchor':'middle'})}
+  txt(s,L,T-16,'Capacity',{class:'lbl',fill:'var(--ink)'});txt(s,mid,T-16,'New transmission expected',{class:'lbl',fill:'var(--ink)'});
+  el('line',{x1:X(2030),x2:X(2030),y1:T-6,y2:H-26,stroke:'var(--accent)','stroke-dasharray':'3 3'},s);
+  Z.forEach((z,i)=>{const y=T+i*rowH+6;txt(s,L-12,y+12,z.name.replace(/ \(.*\)/,''),{'text-anchor':'end',fill:'var(--ink)'});txt(s,L-12,y+26,z.state,{'text-anchor':'end'});
+    if(z.target){const r=el('rect',{x:L,y:y,width:z.target*gsc,height:22,fill:'none',stroke:'var(--ink)','stroke-width':1.3},s);hov(r,`<b>${z.name}</b><br>${z.target_note}`)}
+    if(z.pipeline!=null){const r=el('rect',{x:L,y:y+4,width:Math.max(1,Math.min(gmax,z.pipeline)*gsc),height:14,fill:'var(--accent)'},s);hov(r,`<b>${z.name}</b><br>${z.pipeline} GW of projects approved or under construction`)}
+    if(!z.target&&z.pipeline==null)txt(s,L+4,y+15,'no per-zone target published',{});
+    if(z.tx_year){const c=el('circle',{cx:X(z.tx_year),cy:y+11,r:7,fill:z.status==='construction'?'var(--st-construction)':'var(--paper)',stroke:'var(--st-construction)','stroke-width':2},s);hov(c,`<b>${z.tx}</b><br>${z.tx_status}`);
+      el('line',{x1:mid,x2:X(z.tx_year)-8,y1:y+11,y2:y+11,stroke:'var(--muted)','stroke-dasharray':'2 3'},s);txt(s,X(z.tx_year)+12,y+15,String(z.tx_year),{})}
+    else txt(s,mid,y+15,'no new transmission',{})});
+})();
+
+/* ---------- Figure 8: second-home test ---------- */
+(function(){const host=$('c8');if(!host)return;const REG=['wdowns','gregadoo','loxford','meridien','weddell','tungkillo','sg_pa','sg_tb','bundey','hazel'];
+  const rp=P.filter(p=>REG.includes(p.id));const planned=rp.filter(p=>p.stage!=='announced').reduce((a,p)=>a+p.it,0)/1000,ann=rp.filter(p=>p.stage==='announced').reduce((a,p)=>a+p.it,0)/1000;
+  const by30=rp.filter(p=>BASE.includes(p.stage)).reduce((a,p)=>a+delivered(p,2030),0)/1000;
+  const rows=[{n:"Walker's working target for 2030",segs:[[10,'var(--ink)'],[5,'var(--ink)',.4]],lab:'10–15 GW'},
+    {n:"Egan's ambitious case, within 2–3 years",segs:[[6,'var(--ink)',.7]],lab:'~6 GW'},
+    {n:"Anthropic's reported interest in NSW",segs:[[5,'var(--ink)',.55]],lab:'up to 5 GW'},
+    {n:'Regional gigawatt-class proposals, all stages',segs:[[planned,'var(--st-assessment)'],[ann,'var(--st-announced)']],lab:`${(planned+ann).toFixed(1)} GW`,tip:`${planned.toFixed(1)} GW in planning, ${ann.toFixed(1)} GW announced only`},
+    {n:'…of which delivered by 2030, base view',segs:[[by30,'var(--accent)']],lab:`${by30.toFixed(1)} GW`},
+    {n:'Western Sydney load agreed by Transgrid',segs:[[1.5,'var(--st-construction)']],lab:'~1.5 GW'}];
+  const W=760,L=300,R=90,rowH=44,H=rows.length*rowH+34;const s=svg(host,W,H);const max=16,sc=(W-L-R)/max;
+  [0,4,8,12,16].forEach(g=>{const x=L+g*sc;el('line',{x1:x,x2:x,y1:4,y2:H-28,class:'grid'},s);txt(s,x,H-10,g+(g?'':' GW'),{'text-anchor':'middle'})});
+  rows.forEach((r,i)=>{const y=i*rowH+8;txt(s,L-12,y+18,r.n,{'text-anchor':'end',fill:'var(--ink)'});let x=L;
+    r.segs.forEach(([v,c,o])=>{const b=el('rect',{x,y:y+4,width:v*sc,height:24,fill:c,opacity:o||1},s);if(r.tip)hov(b,r.tip);x+=v*sc});
+    txt(s,x+8,y+21,r.lab,{class:'lbl',fill:'var(--ink)'})});
+})();
+
+/* ---------- Figure 4: energy shares ---------- */
+(function(){const host=$('c4');const E=D.energy;const rows=[['NSW','New South Wales + ACT'],['TAS','Tasmania'],['QLD','Queensland'],['VIC','Victoria'],['WA','Western Australia (SWIS)'],['SA','South Australia']];
+  const W=760,L=200,R=110,rowH=58,H=rows.length*rowH+40;const s=svg(host,W,H);const max=120,sc=(W-L-R)/max;
+  [0,20,40,60,80,100,120].forEach(g=>{const x=L+g*sc;el('line',{x1:x,x2:x,y1:4,y2:H-28,class:'grid'},s);txt(s,x,H-10,g+'%',{'text-anchor':'middle'})});
+  {const x=L+100*sc;el('line',{x1:x,x2:x,y1:4,y2:H-28,stroke:'var(--ink)','stroke-dasharray':'3 3'},s);}
+  rows.forEach(([k,n],i)=>{const y=i*rowH+10;txt(s,L-12,y+20,n,{'text-anchor':'end',class:'lbl',fill:'var(--ink)'});
+    [['base2030',0,1],['base2035',24,.4]].forEach(([key,dy,op])=>{const e=E[key][k];const lo=e[3],hi=e[4];
+      el('rect',{x:L,y:y+dy,width:Math.max(1,lo*sc),height:20,fill:'var(--accent)',opacity:op*.55},s);
+      const r=el('rect',{x:L+lo*sc,y:y+dy,width:Math.max(2,(hi-lo)*sc),height:20,fill:'var(--accent)',opacity:op},s);
+      hov(r,`<b>${n}, ${key.slice(4)}</b><br>${e[1]}–${e[2]} TWh, ${lo}–${hi}% of FY25 consumption (${D.cons[k]} TWh)`);
+      txt(s,L+hi*sc+6,y+dy+15,lo===hi?`${lo}%`:`${lo}–${hi}%`,{class:dy?'':'lbl',fill:dy?'var(--muted)':'var(--ink)'})});
+    if(i===0)txt(s,W-4,y+15,'2030',{'text-anchor':'end',fill:'var(--accent)',class:'lbl'}),txt(s,W-4,y+39,'2035',{'text-anchor':'end'});
+  });
+})();
+
+/* ---------- Figure 5: IDA timeline ---------- */
+(function(){const host=$('c5');const rows=[
+  {n:'EdgeConneX, Wetherill Park',ev:[[2024.97,'a','Approved Dec 2024']],st:'approved before endorsement',solid:true},
+  {n:'NEXTDC S4, Horsley Park',ev:[[2025.98,'a','Approved Dec 2025']],st:'approved before endorsement; building',solid:true},
+  {n:'AWS, Glendenning Road',ev:[[2026.71,'a','Approved Sep 2026']],st:'approved ~6 months after',solid:true},
+  {n:'Stockland, Khartoum Road',ev:[[2026.75,'a','Approved 1 Oct 2026']],st:'approved ~6 months after',solid:true},
+  {n:'Microsoft, Honeman Close',ev:[[2026.76,'a','Approved ~Oct 2026']],st:'approved ~6 months after',solid:true},
+  {n:'AirTrunk, Mamre Road',ev:[[2025.71,'f','SSD filed Sep 2025']],st:'13 months since filing, undetermined'},
+  {n:'Goodman, Project Atlas',ev:[[2026.07,'f','SEARs Jan 2026'],[2026.55,'f','EIS exhibited Jul 2026']],st:'under assessment'},
+  {n:'STACK, 78 Lockwood Rd',ev:[[2025.28,'f','SEARs Apr 2025']],st:'more information requested'},
+  {n:'GreenSquareDC, Norwest',ev:[],st:'responding to submissions'},
+  {n:'NEXTDC S7, Eastern Creek',ev:[[2025.93,'f','OpenAI MoU Dec 2025']],st:'EIS in preparation'},
+  {n:'Stockland, 90 Aldington Rd',ev:[],st:'SEARs being amended'},
+  {n:'NEXTDC S5, Macquarie Park',ev:[],st:'not yet determined'}];
+  const W=800,L=200,R=230,rowH=36,T=52,H=T+rows.length*rowH+12;const s=svg(host,W,H);const x0=2024.8,x1=2026.9;const X=t=>L+(t-x0)/(x1-x0)*(W-L-R);
+  [2025,2025.5,2026,2026.5].forEach(t=>{el('line',{x1:X(t),x2:X(t),y1:T-12,y2:H-6,class:'grid'},s);txt(s,X(t),T-18,t%1?(t===2025.5?'Jul 2025':'Jul 2026'):String(t),{'text-anchor':'middle'})});
+  const E=2026.24,NOW=2026.82;el('line',{x1:X(E),x2:X(E),y1:T-12,y2:H-6,stroke:'var(--accent)','stroke-dasharray':'2 3'},s);txt(s,X(E),T-30,'IDA endorsement, 27 Mar 2026',{'text-anchor':'middle',fill:'var(--accent)',class:'lbl'});
+  el('line',{x1:X(NOW),x2:X(NOW),y1:T-12,y2:H-6,stroke:'var(--muted)','stroke-dasharray':'2 3'},s);txt(s,X(NOW)+4,T-18,'29 Oct',{});
+  rows.forEach((r,i)=>{const y=T+i*rowH+16;txt(s,L-12,y+4,r.n,{'text-anchor':'end',fill:'var(--ink)'});
+    const a=r.ev.find(e=>e[1]==='a');
+    if(a){const xa=X(a[0]),xe=X(E);el('line',{x1:Math.min(xa,xe),x2:Math.max(xa,xe),y1:y,y2:y,stroke:'var(--ink)','stroke-width':1.6},s)}
+    else{const start=r.ev.length?X(r.ev[0][0]):X(E);el('line',{x1:start,x2:X(NOW),y1:y,y2:y,stroke:'var(--accent)','stroke-dasharray':'3 3','stroke-width':1.4},s)}
+    r.ev.forEach(([t,k,lab])=>{const c=el('circle',{cx:X(t),cy:y,r:5,fill:k==='a'?'var(--ink)':'var(--muted)'},s);hov(c,`<b>${r.n}</b><br>${lab}`)});
+    const ring=el('circle',{cx:X(E),cy:y,r:6,fill:'var(--paper)',stroke:'var(--accent)','stroke-width':2},s);hov(ring,`<b>${r.n}</b><br>Endorsed by the IDA, 27 March 2026`);
+    txt(s,X(NOW)+10,y+4,r.st,{fill:'var(--body)'});
+  });
+})();
+
+/* atlas link */
+})();
+</script>

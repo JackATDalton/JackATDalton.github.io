@@ -1,0 +1,335 @@
+<title>Australian Data Centre Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=Roboto:wght@300;400;500;700&display=swap">
+<style>
+/* Layout: control bar across the top; map (left) beside a 2x2 grid of linked panels (right); stacks to one column on phones. */
+:root{
+  --bg:#ffffff; --paper:#f7f4ea; --ink:#173d2c; --body:#53604f; --lead:#0f2e20; --muted:#8b8f78; --rule:#e2dcc6; --rule2:#efebdd;
+  --accent:#b98a00; --accent-soft:#f8ecc4;
+  --sea:#eef0e6; --land:#e6e1cb;
+  --st-inservice:#9aa58a; --st-construction:#0f4a33; --st-approved:#2e7550; --st-assessment:#6f9a5a; --st-scoping:#b4b77e; --st-announced:#e4dfc2;
+  --dv-hyperscaler:#173d2c; --dv-operator:#e0b62f; --dv-neocloud:#7a8b3a; --dv-promoter:#cfc7a0;
+  --ch0:#efead6; --ch1:#dcd7a9; --ch2:#bcc283; --ch3:#86a25f; --ch4:#4d7a46;
+  --f-display:"Newsreader", Georgia, "Times New Roman", serif;
+  --f-ui:"Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0f1611; --paper:#17211a; --ink:#ece6cf; --body:#c3c2a8; --lead:#f6f1dc; --muted:#8d917a; --rule:#2c3a2f; --rule2:#1f2a22;
+  --accent:#e9b824; --accent-soft:#3d3415; --sea:#141c16; --land:#2a3326;
+  --st-inservice:#8f9a80; --st-construction:#cfe8c9; --st-approved:#93c58a; --st-assessment:#5f9a58; --st-scoping:#77764a; --st-announced:#3e3f2b;
+  --dv-hyperscaler:#e6efd5; --dv-operator:#e9b824; --dv-neocloud:#9fb357; --dv-promoter:#6b6a4e;
+  --ch0:#1f281f; --ch1:#34452f; --ch2:#4c6a3e; --ch3:#6c8f48; --ch4:#a6b84f; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0f1611; --paper:#17211a; --ink:#ece6cf; --body:#c3c2a8; --lead:#f6f1dc; --muted:#8d917a; --rule:#2c3a2f; --rule2:#1f2a22;
+  --accent:#e9b824; --accent-soft:#3d3415; --sea:#141c16; --land:#2a3326;
+  --st-inservice:#8f9a80; --st-construction:#cfe8c9; --st-approved:#93c58a; --st-assessment:#5f9a58; --st-scoping:#77764a; --st-announced:#3e3f2b;
+  --dv-hyperscaler:#e6efd5; --dv-operator:#e9b824; --dv-neocloud:#9fb357; --dv-promoter:#6b6a4e;
+  --ch0:#1f281f; --ch1:#34452f; --ch2:#4c6a3e; --ch3:#6c8f48; --ch4:#a6b84f; color-scheme:dark }
+
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--body);font-family:var(--f-ui);font-size:14px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 32px}
+.wrap{max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:0}
+button,select{font:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+
+/* control bar */
+.bar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 28px;padding-bottom:16px}
+.brand{display:flex;gap:12px;align-items:center;min-width:0}
+.brand svg{flex:none}
+.brand h1{font-family:var(--f-display);font-weight:400;font-size:1.45rem;color:var(--ink);margin:0;line-height:1.1}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:.86rem}
+.ctl{display:flex;flex-direction:column;gap:6px}
+.ctl .lab{font-size:.78rem;color:var(--muted);font-weight:500}
+.yearrow{display:flex;align-items:center;gap:14px}
+.yearrow .yr{font-family:var(--f-display);font-size:1.7rem;color:var(--ink);font-weight:500;min-width:3ch}
+input[type=range]{width:min(200px,50vw);accent-color:var(--accent)}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:4px;overflow:hidden;background:var(--bg)}
+.seg button{border:0;background:transparent;color:var(--muted);padding:7px 13px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--rule)}
+.seg button[aria-pressed="true"]{color:var(--accent);background:var(--paper);font-weight:500}
+select{border:1px solid var(--rule);border-radius:4px;background:var(--bg);color:var(--ink);padding:6px 8px}
+.summary{border-left:1px solid var(--rule);padding-left:18px}
+.summary .big{font-size:1.15rem;color:var(--ink);font-weight:500}
+.summary .small{color:var(--muted);font-size:.85rem}
+.help{margin-left:auto;border:1px solid var(--rule);background:var(--bg);color:var(--muted);border-radius:999px;padding:8px 16px;cursor:pointer;box-shadow:0 1px 4px rgba(23,61,44,.08)}
+.help[aria-expanded="true"]{color:var(--accent);border-color:var(--accent)}
+#howto[hidden]{display:none}
+#howto{background:var(--paper);border:1px solid var(--rule);border-radius:4px;padding:14px 18px;margin-bottom:14px;color:var(--body);display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px 24px;font-size:.88rem}
+#howto b{color:var(--lead);font-weight:500}
+
+/* body */
+.main{display:grid;grid-template-columns:minmax(0,50%) minmax(0,1fr);border:1px solid var(--rule);border-radius:4px;overflow:hidden;background:var(--bg)}
+@media (max-width:980px){.main{grid-template-columns:1fr}}
+.mapcol{position:relative;background:var(--sea);border-right:1px solid var(--rule);min-width:0;display:flex;flex-direction:column}
+.legends{display:flex;flex-wrap:wrap;gap:10px;padding:0 12px 12px;align-items:flex-start}
+@media (max-width:980px){.mapcol{border-right:0;border-bottom:1px solid var(--rule)}}
+.mapcol svg{display:block;width:100%;height:auto}
+.st{stroke:var(--bg);stroke-width:1;transition:fill .25s}
+.dot{stroke:var(--bg);stroke-width:1.2;cursor:pointer;transition:r .25s,opacity .25s}
+.dot:hover,.dot.sel{stroke:var(--accent);stroke-width:2.5}
+.dot.ida{stroke:var(--accent);stroke-width:2.2}
+.inset-frame{fill:var(--sea);stroke:var(--rule);stroke-width:1}
+.inset-cap{font:500 10px var(--f-ui);fill:var(--muted);letter-spacing:.06em}
+.maplabel{font:400 10.5px var(--f-ui);fill:var(--muted)}
+.rez{fill:var(--accent);fill-opacity:.12;stroke:var(--accent);stroke-width:1.6}
+.rez.plan{stroke-dasharray:4 3;fill-opacity:.06}
+.rezlab{font:600 10px var(--f-ui);fill:var(--ink);paint-order:stroke;stroke:var(--bg);stroke-width:3px}
+.legend-box{background:var(--bg);border:1px solid var(--rule);border-radius:4px;padding:10px 12px;font-size:.78rem;color:var(--body)}
+.legend-box h4{margin:0 0 8px;font-weight:500;font-size:.8rem;color:var(--muted)}
+#lg-colour{flex:1 1 220px;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0 16px}
+#lg-colour>.full{grid-column:1/-1}
+.lrow{display:flex;align-items:center;gap:8px;margin:3px 0}
+.sw{width:11px;height:11px;border-radius:50%;flex:none;display:inline-block}
+.sqs{width:11px;height:11px;border-radius:2px;flex:none;display:inline-block}
+.ramp{display:flex;height:8px;border-radius:2px;overflow:hidden;margin:4px 0 2px}
+.ramp i{flex:1}
+.ramp-l{display:flex;justify-content:space-between;color:var(--muted);font-size:.72rem}
+
+.panels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:auto;min-width:0}
+@media (max-width:640px){.panels{grid-template-columns:1fr}}
+.panel{padding:16px 18px;border-bottom:1px solid var(--rule);min-width:0;display:flex;flex-direction:column;gap:8px}
+.panel:nth-child(odd){border-right:1px solid var(--rule)}
+@media (max-width:640px){.panel:nth-child(odd){border-right:0}}
+.panel h3{margin:0;font-family:var(--f-display);font-weight:400;font-size:1.15rem;color:var(--ink);display:flex;gap:6px;align-items:baseline}
+.panel h3 .i{font:400 .72rem var(--f-ui);color:var(--muted);border:1px solid var(--rule);border-radius:50%;width:15px;height:15px;display:inline-flex;align-items:center;justify-content:center;cursor:help}
+.panel .note{font-size:.76rem;color:var(--muted)}
+.panel svg{width:100%;height:auto;display:block;overflow:visible}
+.panel.full{grid-column:1/-1;border-right:0}
+svg text{font-family:var(--f-ui);fill:var(--muted);font-size:10.5px}
+svg text.v{fill:var(--body);font-weight:500}
+svg .grid{stroke:var(--rule2)}
+.bar-yr{transition:opacity .2s}
+#breakdown{min-height:120px}
+.empty{border:1px dashed var(--rule);border-radius:4px;padding:22px;text-align:center;color:var(--muted)}
+.site h4{margin:0;font-family:var(--f-display);font-weight:400;font-size:1.2rem;color:var(--ink)}
+.site .sub{color:var(--muted);font-size:.8rem}
+.kv{display:grid;grid-template-columns:120px minmax(0,1fr);gap:4px 14px;margin-top:8px;font-size:.84rem}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;color:var(--lead)}
+.kv a{color:var(--accent)}
+.blist{display:flex;flex-direction:column;gap:6px;font-size:.84rem}
+.blist .r{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;border-bottom:1px solid var(--rule2);padding-bottom:4px}
+
+footer{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between;align-items:flex-start;padding-top:14px;font-size:.8rem;color:var(--muted)}
+footer i{color:var(--body)}
+footer .brandmark{font-family:var(--f-display);font-size:1rem;color:var(--ink)}
+footer a{color:var(--accent)}
+#tip{position:fixed;pointer-events:none;z-index:40;background:var(--bg);color:var(--body);border:1px solid var(--rule);box-shadow:0 4px 18px rgba(15,40,25,.14);font-size:.8rem;padding:9px 11px;border-radius:4px;max-width:270px;opacity:0;transition:opacity .12s}
+#tip.on{opacity:1}
+#tip b{color:var(--ink);font-weight:500;display:block;font-family:var(--f-display);font-size:1rem}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div id="tip" role="status" aria-live="polite"></div>
+<div class="wrap">
+  <div class="bar">
+    <div class="brand">
+      <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><circle cx="14" cy="13" r="8" style="fill:var(--accent)"/><circle cx="27" cy="20" r="6" style="fill:var(--accent)"/><circle cx="16" cy="29" r="4.5" style="fill:var(--accent)"/><circle cx="29" cy="32" r="2.6" style="fill:var(--ink)"/><circle cx="7" cy="25" r="2" style="fill:var(--ink)"/></svg>
+      <div><h1>Australian Data Centre Atlas</h1><p>Announced pipeline, not a forecast</p></div>
+    </div>
+    <div class="ctl"><label class="lab" for="yr">Pipeline by</label><div class="yearrow"><span class="yr num" id="yrlab">2030</span><input id="yr" type="range" min="2025" max="2035" step="1" value="2030"></div></div>
+    <div class="ctl"><span class="lab">Scenario</span><div class="seg" id="scen"><button type="button" data-v="floor" aria-pressed="false">Floor</button><button type="button" data-v="base" aria-pressed="true">Base</button><button type="button" data-v="ceiling" aria-pressed="false">Ceiling</button></div></div>
+    <div class="ctl"><span class="lab">Colour sites by</span><div class="seg" id="colour"><button type="button" data-v="stage" aria-pressed="true">Stage</button><button type="button" data-v="devtype" aria-pressed="false">Developer</button></div></div>
+    <div class="ctl"><label class="lab" for="overlay">Map overlay</label><select id="overlay"><option value="cap">Installed capacity by state</option><option value="energy">Electricity: data centre share by state</option><option value="ida">NSW Investment Delivery Authority projects</option><option value="rez">Renewable energy zones and transmission</option><option value="none">No overlay</option></select></div>
+    <div class="summary"><div class="big num" id="sum-mw">–</div><div class="small" id="sum-sub">–</div></div>
+    <button class="help" id="helpbtn" type="button" aria-expanded="false" aria-controls="howto">How to use the atlas</button>
+  </div>
+  <div id="howto" hidden>
+    <div><b>Year.</b> Drag the slider to see IT capacity installed by the end of each year if projects arrive on their published or inferred dates.</div>
+    <div><b>Scenario.</b> Floor counts projects under construction or approved. Base adds everything with a trace in the planning system. Ceiling adds projects that have only been announced.</div>
+    <div><b>Sites.</b> Circle area shows IT capacity delivered by the selected year. Hover for detail; click a site to pin it in the breakdown panel.</div>
+    <div><b>Overlays.</b> Shade states by installed capacity or by data centres' modelled share of state electricity, or highlight projects endorsed by the NSW Investment Delivery Authority.</div>
+  </div>
+
+  <div class="main">
+    <div class="mapcol">
+      <svg id="map" role="img" aria-label="Map of Australia showing data centre sites"></svg>
+      <div class="legends"><div class="legend-box" id="lg-size"><h4>Site capacity</h4><svg id="sizeleg" width="112" height="120" aria-hidden="true"></svg></div>
+      <div class="legend-box" id="lg-colour"></div></div>
+    </div>
+    <div class="panels">
+      <div class="panel"><h3>Capacity by current planning stage <span class="i" title="Installed IT capacity at the end of each year, stacked by each project's planning stage as at October 2026. The selected year is highlighted.">i</span></h3><svg id="p-stage" aria-label="Capacity by planning stage"></svg></div>
+      <div class="panel"><h3>Capacity by developer <span class="i" title="Installed IT capacity by type of developer. Wholesale operators lease capacity to cloud and AI companies; promoters secure land and power and look for a tenant or buyer.">i</span></h3><svg id="p-dev" aria-label="Capacity by developer type"></svg></div>
+      <div class="panel"><h3>Capacity by state <span class="i" title="Installed IT capacity at the end of the selected year, including capacity in service today.">i</span></h3><svg id="p-state" aria-label="Capacity by state"></svg></div>
+      <div class="panel"><h3>Timing inference <span class="i" title="Where no developer date is published, capacity is assumed to start two years after construction starts and four years after entering the planning system, then ramps at 200 MW a year.">i</span></h3><svg id="p-time" aria-label="Timing inference"></svg></div>
+      <div class="panel full"><h3 id="bd-title">Layer breakdown</h3><div id="breakdown"><div class="empty">Choose a map overlay or click a site to show further breakdowns.</div></div></div>
+    </div>
+  </div>
+  <footer>
+    <div><i>Sources:</i> planning portals and registers (NSW Major Projects, Victoria's ministerial permits register, ACT, councils in Qld, WA and Tas), REZ Project Watch, EnergyCo, Transgrid, TCV, company filings and announcements, AEMO 2026 ESOO, CBRE, NSW Government, Transgrid, trade press (W.Media, DCD), team analysis. Compiled 29 October 2026.</div>
+    <div>Companion to <a id="reportlink" href="../data-centre-pipeline/">The Australian Data Centre Pipeline</a></div>
+    <div class="brandmark">Australian Dynamism 2026</div>
+  </footer>
+</div>
+
+<script src="../data.js"></script>
+<script>
+(function(){
+const D=window.DATA, M=window.MAP, P=D.projects;
+const NS='http://www.w3.org/2000/svg';
+const $=id=>document.getElementById(id);
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a){if(k==='fill'||k==='stroke')e.style[k]=a[k];else e.setAttribute(k,a[k])}if(p)p.appendChild(e);return e}
+function txt(p,x,y,s,a={}){const t=el('text',Object.assign({x,y},a),p);t.textContent=s;return t}
+const fmt=n=>Math.round(n).toLocaleString('en-AU');
+const fmtP=n=>n>=1000?(n/1000).toFixed(n>=10000?1:2).replace(/\.?0+$/,'')+' GW':Math.round(n)+' MW';
+const STAGES=['construction','approved','assessment','scoping','announced'];
+const SL={inservice:'In service',construction:'Under construction',approved:'Approved',assessment:'Under assessment',scoping:'Scoping',announced:'Announced only'};
+const DEV=['hyperscaler','operator','neocloud','promoter'];
+const DL={hyperscaler:'Hyperscaler (own use)',operator:'Wholesale / colocation operator',neocloud:'AI cloud (neocloud)',promoter:'Land, property or power promoter'};
+const SCEN={floor:['construction','approved'],base:['construction','approved','assessment','scoping'],ceiling:STAGES};
+const LIVE=D.agg.live_by_state, LIVE_TOTAL=D.agg.live_total;
+const LIVEPTS=[{n:'Sydney',s:'NSW',lat:-33.81,lon:150.92,mw:950},{n:'Melbourne',s:'VIC',lat:-37.77,lon:144.90,mw:580},{n:'Canberra',s:'ACT',lat:-35.36,lon:149.17,mw:120},{n:'Brisbane',s:'QLD',lat:-27.45,lon:153.03,mw:40},{n:'Perth',s:'WA',lat:-31.93,lon:115.88,mw:45},{n:'Adelaide',s:'SA',lat:-34.92,lon:138.60,mw:8},{n:'Hobart',s:'TAS',lat:-42.88,lon:147.33,mw:5},{n:'Darwin',s:'NT',lat:-12.46,lon:130.84,mw:2}];
+const CONS=D.cons, DCNOW=D.dc_now;
+const YEARS=[];for(let y=2025;y<=2035;y++)YEARS.push(y);
+let S={year:2030,scen:'base',colour:'stage',overlay:'cap',sel:null};
+const delivered=(p,y)=>Object.entries(p.schedule).reduce((a,[k,v])=>a+(+k<=y?v:0),0);
+const inScen=p=>SCEN[S.scen].includes(p.stage);
+const col=p=>S.colour==='stage'?`var(--st-${p.stage})`:`var(--dv-${p.devtype})`;
+
+/* tooltip */
+const tip=$('tip');
+function show(e,h){tip.innerHTML=h;tip.classList.add('on');move(e)}
+function move(e){const w=tip.offsetWidth,h=tip.offsetHeight;tip.style.left=Math.min(innerWidth-w-8,Math.max(8,e.clientX+14))+'px';tip.style.top=(e.clientY+h+24>innerHeight?e.clientY-h-12:e.clientY+14)+'px'}
+function hide(){tip.classList.remove('on')}
+function hov(n,f){n.addEventListener('pointerenter',e=>show(e,f()));n.addEventListener('pointermove',move);n.addEventListener('pointerleave',hide)}
+
+/* ---------- map ---------- */
+const map=$('map');const mp=M.main.proj;const MH=Math.round(mp.h)+232;map.setAttribute('viewBox',`0 0 ${mp.w} ${MH}`);
+const proj=(pr,lon,lat)=>[(lon-pr.lon0)*pr.c*pr.k,(pr.lat1-lat)*pr.k];
+const stPath={};
+Object.entries(M.main.paths).forEach(([s,d])=>{stPath[s]=el('path',{d,class:'st'},map);hov(stPath[s],()=>stateTip(s))});
+// insets
+const insets=[{key:'syd',x:60,y:Math.round(mp.h)+8,w:270,label:'SYDNEY'},{key:'mel',x:350,y:Math.round(mp.h)+8,w:270,label:'MELBOURNE'}];
+const layers=[{pr:mp,g:el('g',{},map),k:0.42,clip:null}];
+insets.forEach(ins=>{const m=M[ins.key];const sc=ins.w/m.proj.w;const h=m.proj.h*sc;
+  el('rect',{x:ins.x,y:ins.y,width:ins.w,height:h,class:'inset-frame'},map);
+  const cid='clip-'+ins.key;const cp=el('clipPath',{id:cid},el('defs',{},map));el('rect',{x:0,y:0,width:m.proj.w,height:m.proj.h},cp);
+  const g=el('g',{transform:`translate(${ins.x},${ins.y}) scale(${sc})`,'clip-path':`url(#${cid})`},map);
+  Object.values(m.paths).forEach(d=>el('path',{d,fill:'var(--land)',stroke:'var(--bg)','stroke-width':1/sc},g));
+  txt(map,ins.x+7,ins.y+14,ins.label,{class:'inset-cap'});
+  layers.push({pr:m.proj,g:el('g',{},g),k:0.62/sc*sc*1.0,scale:sc,box:[0,0,m.proj.w,m.proj.h]});
+});
+// main-map frame markers for insets
+[['Sydney',151.0,-33.82],['Melbourne',144.85,-37.78]].forEach(([n,lo,la])=>{const [x,y]=proj(mp,lo,la);el('rect',{x:x-9,y:y-9,width:18,height:18,fill:'none',stroke:'var(--muted)','stroke-width':.8,'stroke-dasharray':'2 2'},map)});
+const dots=[];
+layers.forEach((L,li)=>{
+  const inBox=(x,y)=>!L.box||(x>=-4&&y>=-4&&x<=L.box[2]+4&&y<=L.box[3]+4);
+  LIVEPTS.forEach(l=>{const [x,y]=proj(L.pr,l.lon,l.lat);if(li>0&&!inBox(x,y))return;if(li>0&&l.mw<100)return;
+    const c=el('circle',{cx:x,cy:y,r:0,fill:'var(--st-inservice)',class:'dot','fill-opacity':.85},L.g);hov(c,()=>`<b>${l.n}: in service</b>~${fmt(l.mw)} MW IT capacity today${l.mw<100?' (estimate)':''}`);dots.push({c,live:l,L})});
+  P.slice().sort((a,b)=>b.it-a.it).forEach(p=>{const [x,y]=proj(L.pr,p.lon,p.lat);if(li>0&&!inBox(x,y))return;
+    // on the main map, metro sites are drawn in insets too; keep them on main for context
+    const c=el('circle',{cx:x,cy:y,r:0,class:'dot'},L.g);hov(c,()=>siteTip(p));c.addEventListener('click',()=>{S.sel=p.id;render()});c.setAttribute('tabindex','0');c.addEventListener('keydown',e=>{if(e.key==='Enter'){S.sel=p.id;render()}});dots.push({c,p,L})});
+});
+// labels
+[['Western Downs',150.76,-27.04,10,-12],['Bundey',139.33,-33.93,-6,-12],['Weddell',131.03,-12.56,10,4],['Kimberley',122.3,-18.6,10,-10],['Wagga Wagga',147.43,-35.2,-60,16],['Hazelwood',146.4,-38.27,10,14],['Tasmania',146.9,-41.6,18,22],['Kurri Kurri',151.48,-32.8,10,-6],['Perth',115.99,-32.05,10,4],['Canberra',149.17,-35.36,10,10]].forEach(([n,lo,la,dx,dy])=>{const [x,y]=proj(mp,lo,la);txt(map,x+dx,y+dy,n,{class:'maplabel'})});
+
+// renewable energy zones
+const REZ=D.rez||[];const rezG=el('g',{style:'display:none'},map);
+REZ.forEach(z=>{const [x,y]=proj(mp,z.lon,z.lat);const r=Math.sqrt(z.target||2)*9;const c=el('circle',{cx:x,cy:y,r,class:'rez'+(z.status==='construction'?'':' plan')},rezG);
+  hov(c,()=>`<b>${z.name} (${z.state})</b>${z.target?z.target_note:z.target_note}${z.pipeline!=null?`<br>${z.pipeline} GW of projects approved or under construction`:''}<br>${z.tx}: ${z.tx_year?'expected '+z.tx_year:'none planned'}<br>${z.tx_status}`);
+  const short=z.name.replace(/ \(.*\)/,'').replace(' offshore wind','').replace('Hunter–Central Coast','Hunter');const OFF={ne:[-1,-2],cwo:[-1,-6],hcc:[-1,14],ill:[1,10],sw:[1,-8]}[z.id]||[1,0];const lx=OFF[0]>0?x+r+3:x-r-3,an=OFF[0]>0?'start':'end',dy=OFF[1];txt(rezG,lx,y-2+dy,short,{class:'rezlab','text-anchor':an});if(z.tx_year)txt(rezG,lx,y+10+dy,'grid '+z.tx_year,{class:'rezlab',style:'font-weight:400','text-anchor':an})});
+function stateTip(s){const cap=stateCap(s,S.year);const e=energyShare(s,S.year);
+  return `<b>${s}</b>${fmtP(cap)} installed by ${S.year} (${S.scen})${e!=null?`<br>Data centres ≈ ${e[0]}–${e[1]}% of the state's FY25 electricity use`:''}`}
+function siteTip(p){const d=delivered(p,S.year);return `<b>${p.name}</b>${p.developer} · ${p.place}, ${p.state}<br>${fmtP(p.it)} IT${p.basis==='GRID'?` (from ${fmtP(p.mw)} grid)`:''} · ${SL[p.stage]}<br>${inScen(p)?`${fmtP(d)} delivered by ${S.year}`:'Not in this scenario'}<br>First capacity ${p.first_year} (${p.timing==='stated'?'published':'inferred'})${p.tenant?`<br>End user: ${p.tenant}`:''}`}
+
+/* ---------- aggregates ---------- */
+function stateCap(s,y){return (LIVE[s]||0)+P.filter(p=>inScen(p)&&p.state===s).reduce((a,p)=>a+delivered(p,y),0)}
+function energyShare(s,y){if(s==='ACT')s='NSW';if(!CONS[s])return null;const add=P.filter(p=>inScen(p)&&(p.state===s||(s==='NSW'&&p.state==='ACT'))&&!/Kimberley/.test(p.place)).reduce((a,p)=>a+delivered(p,y),0);
+  const lo=(DCNOW[s]||0)+add*1.3*.4*8.76/1000, hi=(DCNOW[s]||0)+add*1.3*.7*8.76/1000;return [Math.round(100*lo/CONS[s]),Math.round(100*hi/CONS[s])]}
+const series=(key,vals)=>Object.fromEntries(vals.map(v=>[v,YEARS.map(y=>P.filter(p=>inScen(p)&&p[key]===v).reduce((a,p)=>a+delivered(p,y),0))]));
+
+/* ---------- stacked bars ---------- */
+function stacked(svgId,keys,data,colours,labelOf){const s=$(svgId);s.innerHTML='';const W=360,H=200,L=34,B=20,T=8;s.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const tot=YEARS.map((y,i)=>LIVE_TOTAL+keys.reduce((a,k)=>a+data[k][i],0));const max=Math.max(4000,Math.ceil(Math.max(...tot)/4000)*4000);const sy=(H-T-B)/max,bw=(W-L)/YEARS.length;
+  for(let g=0;g<=max;g+=max/4){const y=H-B-g*sy;el('line',{x1:L,x2:W,y1:y,y2:y,class:'grid'},s);txt(s,L-5,y+3,g?(g/1000)+' GW':'0',{'text-anchor':'end'})}
+  YEARS.forEach((yr,i)=>{const x=L+i*bw+bw*.16,w=bw*.68;const g=el('g',{class:'bar-yr',opacity:yr===S.year?1:.42},s);let base=0;
+    const segs=[['inservice',LIVE_TOTAL]].concat(keys.map(k=>[k,data[k][i]]));
+    segs.forEach(([k,v])=>{if(v<=0)return;const y=H-B-(base+v)*sy;el('rect',{x,y:y+.6,width:w,height:Math.max(0,v*sy-1.2),fill:k==='inservice'?'var(--st-inservice)':colours(k)},g);base+=v});
+    const hit=el('rect',{x:L+i*bw,y:T,width:bw,height:H-T-B,fill:'transparent'},s);hit.style.cursor='pointer';
+    hov(hit,()=>`<b>${yr}: ${fmtP(tot[i])}</b>`+segs.filter(z=>z[1]>0).reverse().map(([k,v])=>`${k==='inservice'?'In service':labelOf(k)}: ${fmtP(v)}`).join('<br>'));
+    hit.addEventListener('click',()=>{S.year=yr;$('yr').value=yr;render()});
+    if(yr%5===0||yr===2025)txt(s,x+w/2,H-B+13,String(yr).slice(2),{'text-anchor':'middle',class:yr===S.year?'v':''});else if(yr===S.year)txt(s,x+w/2,H-B+13,String(yr),{'text-anchor':'middle',class:'v'});
+  });}
+function hbars(svgId,rows,colourOf){const s=$(svgId);s.innerHTML='';const W=360,rowH=19,L=96,R=44,H=rows.length*rowH+6;s.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const max=Math.max(...rows.map(r=>r.v),1),sc=(W-L-R)/max;
+  rows.forEach((r,i)=>{const y=i*rowH+3;txt(s,L-6,y+11,r.l,{'text-anchor':'end'});const b=el('rect',{x:L,y,width:Math.max(1,r.v*sc),height:rowH-6,fill:colourOf(r,i),rx:1.5},s);
+    txt(s,L+r.v*sc+5,y+11,r.v>=1000?(r.v/1000).toFixed(1)+' GW':fmt(r.v)+' MW',{class:'v'});if(r.tip)hov(b,()=>r.tip)})}
+
+/* ---------- legends ---------- */
+function drawSize(){const SCALEPX=(map.getBoundingClientRect().width||560)/mp.w;const s=$('sizeleg');s.innerHTML='';[[1000,0],[300,1],[100,2],[30,3]].forEach(([mw,i])=>{const r=Math.sqrt(mw)*0.26*SCALEPX;const y=16+i*27;el('circle',{cx:22,cy:y,r:Math.max(2,r),fill:'none',stroke:'var(--muted)','stroke-width':1.2},s);txt(s,48,y+4,mw>=1000?(mw/1000)+' GW':mw+' MW',{})})}
+function colourLegend(){const h=$('lg-colour');let html='';
+  if(S.overlay==='cap'){html+=`<div class="full"><h4>Installed capacity by state, ${S.year}</h4><div class="ramp">${[0,1,2,3,4].map(i=>`<i style="background:var(--ch${i})"></i>`).join('')}</div><div class="ramp-l"><span>0 MW</span><span>${fmtP(CAPMAX)}</span></div></div>`}
+  if(S.overlay==='energy'){html+=`<div class="full"><h4>Data centre share of state electricity, ${S.year}</h4><div class="ramp">${[0,1,2,3,4].map(i=>`<i style="background:var(--ch${i})"></i>`).join('')}</div><div class="ramp-l"><span>0%</span><span>60%+</span></div></div>`}
+  html+=`<h4 class="full" style="margin-top:10px">${S.colour==='stage'?'Sites, stage as of October 2026':'Sites, developer type'}</h4>`;
+  html+=`<div class="lrow"><i class="sw" style="background:var(--st-inservice)"></i>In service (metro clusters)</div>`;
+  (S.colour==='stage'?STAGES:DEV).forEach(k=>{html+=`<div class="lrow"><i class="sw" style="background:var(--${S.colour==='stage'?'st':'dv'}-${k})"></i>${S.colour==='stage'?SL[k]:DL[k]}</div>`});
+  if(S.overlay==='rez')html+=`<div class="lrow"><i class="sw" style="background:transparent;border:2px solid var(--accent)"></i>REZ, transmission under construction</div><div class="lrow"><i class="sw" style="background:transparent;border:2px dashed var(--accent)"></i>REZ, transmission in planning</div>`;
+  if(S.overlay==='ida')html+=`<div class="lrow"><i class="sw" style="background:transparent;border:2px solid var(--accent)"></i>Endorsed by NSW IDA</div>`;
+  h.innerHTML=html}
+let CAPMAX=1;
+
+/* ---------- breakdown ---------- */
+function breakdown(){const h=$('breakdown'),t=$('bd-title');
+  if(S.sel){const p=P.find(x=>x.id===S.sel);t.textContent='Selected site';
+    h.innerHTML=`<div class="site"><h4>${p.name}</h4><div class="sub">${p.place}, ${p.state}</div><dl class="kv">
+      <dt>Developer</dt><dd>${p.developer} · ${DL[p.devtype]}</dd><dt>End user</dt><dd>${p.tenant||'Not disclosed'}</dd>
+      <dt>Capacity</dt><dd>${fmtP(p.it)} IT${p.basis==='GRID'?` (converted from ${fmtP(p.mw)} grid or total power at PUE 1.3)`:p.basis==='MIX'?' (basis not stated)':''}</dd>
+      <dt>Stage</dt><dd>${SL[p.stage]}${p.ida?' · endorsed by NSW IDA':''}</dd>
+      <dt>Timing</dt><dd>First capacity ${p.first_year} (${p.timing==='stated'?'published: '+(p.year_note||''):'inferred from stage'}); ${fmtP(delivered(p,S.year))} by ${S.year}</dd>
+      ${p.capex_bn?`<dt>Investment</dt><dd>A$${p.capex_bn}bn</dd>`:''}<dt>Notes</dt><dd>${p.note||'–'}</dd><dt>Source</dt><dd><a href="${p.src}" target="_blank" rel="noopener">${new URL(p.src).hostname.replace('www.','')}</a></dd></dl>
+      <p style="margin-top:10px"><button type="button" class="help" id="clearsel" style="margin:0">Clear selection</button></p></div>`;
+    $('clearsel').onclick=()=>{S.sel=null;render()};return}
+  if(S.overlay==='energy'){t.textContent='Layer breakdown: electricity';
+    const rows=['NSW','TAS','QLD','VIC','WA','SA'].map(s=>{const e=energyShare(s,S.year);return `<div class="r"><span>${s==='NSW'?'NSW and ACT':s}</span><span class="num">${e[0]}–${e[1]}% of FY25 use</span></div>`}).join('');
+    h.innerHTML=`<div class="blist">${rows}</div><p class="note" style="margin-top:8px;font-size:.76rem;color:var(--muted)">Today's data centre use (AEMO FY26 split of ~5 TWh) plus new capacity at PUE 1.3 and 40–70% utilisation, against approximate FY25 state consumption. Off-grid projects (Kimberley, Weddell) are excluded.</p>`;return}
+  if(S.overlay==='rez'){t.textContent='Layer breakdown: renewable energy zones';
+    h.innerHTML=`<div class="blist">${REZ.map(z=>`<div class="r"><span>${z.name} <span style="color:var(--muted)">(${z.state})</span></span><span class="num">${z.target?z.target+' GW target':'no zone target'}${z.pipeline!=null?' · '+z.pipeline+' GW approved/building':''} · grid ${z.tx_year||'–'}</span></div>`).join('')}</div>
+    <p style="margin-top:8px;font-size:.78rem;color:var(--muted)">Zone positions are approximate centres, sized by declared capacity. NSW zones from EnergyCo; project capacity from REZ Project Watch (May 2026); transmission dates from EnergyCo, Transgrid, Transmission Company Victoria and the Victorian Auditor-General. Queensland abolished its renewable energy zones in December 2025.</p>`;return}
+  if(S.overlay==='ida'){t.textContent='Layer breakdown: NSW Investment Delivery Authority';
+    const ida=P.filter(p=>p.ida);const sum=ida.reduce((a,p)=>a+delivered(p,S.year),0);
+    h.innerHTML=`<div class="blist">${ida.map(p=>`<div class="r"><span>${p.name} <span style="color:var(--muted)">(${p.developer})</span></span><span class="num">${SL[p.stage]} · ${fmtP(delivered(p,S.year))} / ${fmtP(p.it)}</span></div>`).join('')}</div>
+    <p style="margin-top:8px;font-size:.78rem;color:var(--muted)">15 data centre projects worth A$51.9bn were endorsed on 27 March 2026. Twelve can be matched to a public planning record; together they deliver ${fmtP(sum)} by ${S.year} in this scenario. The other three publish no capacity.</p>`;return}
+  t.textContent='Layer breakdown';h.innerHTML='<div class="empty">Choose a map overlay or click a site to show further breakdowns.</div>'}
+
+/* ---------- render ---------- */
+function render(){
+  $('yrlab').textContent=S.year;
+  document.querySelectorAll('#scen button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===S.scen));
+  document.querySelectorAll('#colour button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===S.colour));
+  // states
+  const caps=Object.fromEntries(Object.keys(M.main.paths).map(s=>[s,stateCap(s,S.year)]));CAPMAX=Math.max(...Object.values(caps));
+  Object.entries(stPath).forEach(([s,p])=>{let c='var(--land)';
+    if(S.overlay==='cap'){const v=caps[s]/CAPMAX;c=`var(--ch${Math.min(4,Math.floor(Math.sqrt(v)*4.999))})`}
+    if(S.overlay==='energy'){const e=energyShare(s,S.year);if(e){const m=(e[0]+e[1])/2;c=`var(--ch${Math.min(4,Math.floor(m/15))})`}else c='var(--ch0)'}
+    if(S.overlay==='none'||S.overlay==='ida'||S.overlay==='rez')c='var(--land)';p.style.fill=c});
+  rezG.style.display=S.overlay==='rez'?'':'none';
+  // dots
+  let n=0,mw=LIVE_TOTAL;const seen=new Set();
+  dots.forEach(({c,p,live,L})=>{const k=0.26/(L.scale||1);
+    if(live){c.setAttribute('r',Math.sqrt(live.mw)*k);return}
+    const d=inScen(p)?delivered(p,S.year):0;const r=d>0?Math.max(2.2/(L.scale||1),Math.sqrt(d)*k):0;c.setAttribute('r',r);c.style.fill=col(p);c.style.opacity=d>0?1:0;
+    c.classList.toggle('ida',S.overlay==='ida'&&p.ida);c.classList.toggle('sel',S.sel===p.id);
+    if(d>0&&!seen.has(p.id)){seen.add(p.id);n++;mw+=d}});
+  $('sum-mw').textContent=fmtP(mw);$('sum-sub').textContent=`installed by ${S.year} across ${n} new sites + today's fleet`;
+  // panels
+  const keys=SCEN[S.scen];
+  stacked('p-stage',keys.slice().filter(k=>k!=='announced'||S.scen==='ceiling'),series('stage',keys),k=>`var(--st-${k})`,k=>SL[k]);
+  stacked('p-dev',DEV,series('devtype',DEV),k=>`var(--dv-${k})`,k=>DL[k]);
+  const SN={NSW:'New South Wales',VIC:'Victoria',QLD:'Queensland',ACT:'ACT',TAS:'Tasmania',WA:'Western Australia',SA:'South Australia',NT:'Northern Territory'};
+  hbars('p-state',Object.keys(SN).map(s=>({l:SN[s],v:caps[s],tip:stateTip(s)})).sort((a,b)=>b.v-a.v),r=>'var(--ink)');
+  const ip=P.filter(inScen);const stated=ip.filter(p=>p.timing==='stated').reduce((a,p)=>a+delivered(p,S.year),0),inf=ip.filter(p=>p.timing==='inferred').reduce((a,p)=>a+delivered(p,S.year),0);
+  hbars('p-time',[{l:'In service today',v:LIVE_TOTAL},{l:'Date published',v:stated},{l:'Date inferred',v:inf}],(r,i)=>['var(--st-inservice)','var(--ink)','var(--accent)'][i]);
+  colourLegend();breakdown();drawSize();
+}
+$('yr').addEventListener('input',e=>{S.year=+e.target.value;render()});
+document.querySelectorAll('#scen button').forEach(b=>b.addEventListener('click',()=>{S.scen=b.dataset.v;render()}));
+document.querySelectorAll('#colour button').forEach(b=>b.addEventListener('click',()=>{S.colour=b.dataset.v;render()}));
+$('overlay').addEventListener('change',e=>{S.overlay=e.target.value;S.sel=null;render()});
+$('helpbtn').addEventListener('click',e=>{const h=$('howto');h.hidden=!h.hidden;e.currentTarget.setAttribute('aria-expanded',String(!h.hidden))});
+render();addEventListener('resize',drawSize);
+})();
+</script>
