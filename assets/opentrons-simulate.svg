@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900"><title>Golden Gate assembly in the Opentrons Protocol Builder Simulate view</title><desc>Rendered from the real SimulationViewer and a generated 24-well protocol: deck, well contents, pipette position and step list.</desc><!-- Figure from actual SimulationViewer, 2026-11-13. -->
 <style>:root{--surface:#fff;--surface-sunk:#f4f6f3;--slot-free:#fbfcfa;--rule:#d4ddd5;--rule-strong:#b3c0b7;--fixture:#cfd6d1;--ink:#12211c;--ink-2:#44544d;--ink-3:#74837c;--part:#1f5fa8;--tips:#2f7d64;--culture:#c97a12;--mono:monospace;--sans:sans-serif}text{font-family:Arial,sans-serif;fill:#12211c}svg.deck {
-  
-  
+
+
   background: var(--surface-sunk);
   border: 1px solid var(--rule);
   border-radius: var(--radius);
