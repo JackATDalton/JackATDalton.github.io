@@ -1,3 +1,7 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Australian Data Centre Pipeline</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -86,6 +90,16 @@ details.more[open] summary::after{content:"–"}
 .alt.b .k{color:var(--ink)}
 .alt .h{font-family:var(--f-display);font-size:1.05rem;color:var(--ink)}
 @media (max-width:560px){.alt{margin-left:0}}
+.stabs{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 16px}
+.stabs button{font:500 .78rem/1 var(--f-ui);letter-spacing:.04em;padding:7px 11px;border:1px solid var(--rule);border-radius:3px;background:var(--bg);color:var(--body);cursor:pointer}
+.stabs button:hover{border-color:var(--accent);color:var(--ink)}
+.stabs button[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.stabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.spane{display:flex;flex-direction:column;gap:2px}
+.spane[hidden]{display:none}
+.sintro{margin:0 0 10px}
+.psrc{font-size:.76rem;color:var(--muted);margin:10px 0 0 40px}
+@media (max-width:560px){.psrc{margin-left:0}}
 ol.qs{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:6px}
 ol.qs li{color:var(--lead);font-weight:400}
 
@@ -222,9 +236,21 @@ hr{border:0;border-top:1px solid var(--rule);margin:40px 0}
   </div>
 
   <details class="more">
-    <summary>Further detail: how a data centre gets built in New South Wales</summary>
+    <summary>Further detail: how a data centre gets built, state by state</summary>
     <div class="steps">
-      <p class="intro">Each state differs, but the stages are similar. NSW is shown because it holds most of the pipeline.</p>
+      <p class="intro">Each state differs, but the stages are similar: secure power, get planning approval, then build. Choose a state.</p>
+      <div class="stabs" role="tablist" aria-label="State or territory">
+        <button type="button" role="tab" id="tab-nsw" aria-controls="pane-nsw" aria-selected="true" title="New South Wales">NSW</button>
+        <button type="button" role="tab" id="tab-vic" aria-controls="pane-vic" aria-selected="false" tabindex="-1" title="Victoria">VIC</button>
+        <button type="button" role="tab" id="tab-qld" aria-controls="pane-qld" aria-selected="false" tabindex="-1" title="Queensland">QLD</button>
+        <button type="button" role="tab" id="tab-wa" aria-controls="pane-wa" aria-selected="false" tabindex="-1" title="Western Australia">WA</button>
+        <button type="button" role="tab" id="tab-sa" aria-controls="pane-sa" aria-selected="false" tabindex="-1" title="South Australia">SA</button>
+        <button type="button" role="tab" id="tab-tas" aria-controls="pane-tas" aria-selected="false" tabindex="-1" title="Tasmania">TAS</button>
+        <button type="button" role="tab" id="tab-act" aria-controls="pane-act" aria-selected="false" tabindex="-1" title="Australian Capital Territory">ACT</button>
+        <button type="button" role="tab" id="tab-nt" aria-controls="pane-nt" aria-selected="false" tabindex="-1" title="Northern Territory">NT</button>
+      </div>
+      <div class="spane" role="tabpanel" id="pane-nsw" aria-labelledby="tab-nsw">
+      <p class="sintro"><strong>New South Wales.</strong> NSW holds most of the pipeline, and has the most detailed rules for data centres.</p>
       <div class="step"><span class="n">1</span><span class="t">Power</span><span class="d">The developer asks a network operator for a connection: Transgrid for transmission, or Ausgrid or Endeavour for distribution. Large loads also go through AEMO's connection process. NSW proposes a $30,000/MW bond to deter speculative requests.</span></div>
       <div class="step"><span class="n">2</span><span class="t">Scoping</span><span class="d">Projects above 15&nbsp;MW are State Significant Development. The developer asks the Department of Planning for Secretary's Environmental Assessment Requirements (SEARs), which set what the environmental impact statement must cover.</span></div>
       <div class="step"><span class="n">3</span><span class="t">Application</span><span class="d">The developer lodges an environmental impact statement (EIS), which is put on public exhibition.</span></div>
@@ -232,7 +258,83 @@ hr{border:0;border-top:1px solid var(--rule);margin:40px 0}
       <div class="step"><span class="n">5</span><span class="t">Determination</span><span class="d">The Minister or Department determines the application. If the council objects or there are many public objections, the Independent Planning Commission decides instead. Consent always comes with conditions, often dozens.</span></div>
       <div class="step"><span class="n">6</span><span class="t">Implementation</span><span class="d">The developer satisfies pre-construction conditions, obtains construction certificates and builds. Many sites are developed by property groups or wholesale operators who build in phases as tenants sign.</span></div>
       <div class="alt"><div class="k">Below the SSD threshold</div><div class="h">Council or regional planning panel</div>Smaller projects with a capital value over $30&nbsp;million are lodged with the council and decided by a regional planning panel. Others are decided by the council.</div>
-      <div class="alt b"><div class="k">Runs alongside stages 2–5</div><div class="h">Investment Delivery Authority (IDA)</div>Since March 2026 the NSW IDA has endorsed data centre projects for coordinated support across government. Endorsement does not replace planning approval. Other states have their own routes: council permits in Victoria and Queensland, an environmental significance opinion or EIS in the ACT, and council approval under Tasmania's planning system.</div>
+      <div class="alt b"><div class="k">Runs alongside stages 2–5</div><div class="h">Investment Delivery Authority (IDA)</div>Since March 2026 the NSW IDA has endorsed data centre projects for coordinated support across government. Endorsement does not replace planning approval.</div>
+      <p class="psrc">Sources: <a href="https://www.planning.nsw.gov.au/policy-and-legislation/planning-reforms/ssd-warehouses-and-data-centres" target="_blank" rel="noopener">NSW Planning, SSD for warehouses and data centres</a>.</p>
+      </div>
+      <div class="spane" role="tabpanel" id="pane-vic" aria-labelledby="tab-vic" hidden>
+      <p class="sintro"><strong>Victoria.</strong> Victoria has two routes: a council permit, or a ministerial permit through the Development Facilitation Program. Since September 2026 its Sustainable Data Centre Action Plan adds energy, water and siting rules.</p>
+      <div class="step"><span class="n">1</span><span class="t">Power</span><span class="d">The developer applies to AusNet for a transmission connection, or to one of the five distribution businesses. Under the action plan the developer pays for the connection and any network upgrades, must "bring its own supply" of new renewable generation and storage, and must offer demand flexibility to the grid.</span></div>
+      <div class="step"><span class="n">2</span><span class="t">Choose a route</span><span class="d">Data centres are a "utility installation" in the Victoria Planning Provisions. On the standard route the council decides, and objectors can appeal to VCAT. Projects costing more than $20&nbsp;million in Melbourne or $10&nbsp;million in regional Victoria can instead use the Development Facilitation Program (DFP), where the Minister for Planning decides and there is no VCAT appeal.</span></div>
+      <div class="step"><span class="n">3</span><span class="t">Siting</span><span class="d">Data centres are prohibited in residential zones and must sit at least 150&nbsp;m from homes. In rural zones they are allowed only near major energy and water infrastructure, and they are barred from Green Wedge land. Night-time noise is capped at 55&nbsp;dB(A), and backup diesel generators may run only in emergencies and for testing.</span></div>
+      <div class="step"><span class="n">4</span><span class="t">Referral</span><span class="d">The application is referred to the EPA and, since September 2026, to WorkSafe, Fire Rescue Victoria, VicGrid and the local water corporation. Water-intensive cooling must use recycled or non-drinking water, or have an agreement to move to it.</span></div>
+      <div class="step"><span class="n">5</span><span class="t">Determination</span><span class="d">The council or the Minister grants a permit with conditions. Councils can still object to DFP applications, as Maribyrnong did over NEXTDC's M3.</span></div>
+      <div class="step"><span class="n">6</span><span class="t">Implementation</span><span class="d">The developer meets pre-construction conditions, obtains any EPA permissions for diesel storage and generators, and builds.</span></div>
+      <div class="alt"><div class="k">Most large Melbourne projects</div><div class="h">Development Facilitation Program</div>AirTrunk's MEL2 received a DFP permit in March 2025. The new action plan rules apply to applications lodged after 23 September 2026, not to those already in the system.</div>
+      <p class="psrc">Sources: <a href="https://www.planning.vic.gov.au/guides-and-resources/guides/sustainable-data-centre-action-plan" target="_blank" rel="noopener">Victorian Government, Sustainable Data Centre Action Plan</a>; <a href="https://www.gadens.com/insights/data-centre-planning-approvals-in-victoria-dfp-pathways-and-approval-risks" target="_blank" rel="noopener">Gadens, Data centre planning approvals in Victoria</a>; <a href="https://hallandwilcox.com.au/news/sustainable-data-centre-action-plan-new-every-water-and-planning-requirements/" target="_blank" rel="noopener">Hall &amp; Wilcox</a>.</p>
+      </div>
+      <div class="spane" role="tabpanel" id="pane-qld" aria-labelledby="tab-qld" hidden>
+      <p class="sintro"><strong>Queensland.</strong> Queensland has no planning category for data centres. They are approved by councils under ordinary development rules, which gives objectors more room to appeal than in NSW or Victoria.</p>
+      <div class="step"><span class="n">1</span><span class="t">Power</span><span class="d">The developer applies to Powerlink for a transmission connection, or to Energex in the south-east or Ergon Energy in regional Queensland. Gigawatt-scale campuses such as Western Downs sit beside existing generators and connect directly to the transmission network.</span></div>
+      <div class="step"><span class="n">2</span><span class="t">Classification</span><span class="d">Under the <i>Planning Act 2016</i> the council's planning scheme sets the rules. With no data centre use defined, proposals are assessed as the closest existing use, usually industry or research and technology.</span></div>
+      <div class="step"><span class="n">3</span><span class="t">Application</span><span class="d">The developer lodges a development application with the council. Where state interests are affected, such as state roads or environmental values, the State Assessment and Referral Agency (SARA) also assesses it.</span></div>
+      <div class="step"><span class="n">4</span><span class="t">Notification</span><span class="d">Large data centres are usually impact assessable. The application is publicly notified, and anyone who makes a properly made submission can appeal the decision to the Planning and Environment Court.</span></div>
+      <div class="step"><span class="n">5</span><span class="t">Determination</span><span class="d">The council decides, with conditions. The Planning Minister can call in an application and decide it instead.</span></div>
+      <div class="step"><span class="n">6</span><span class="t">Implementation</span><span class="d">The developer meets conditions, obtains building approval and builds.</span></div>
+      <div class="alt b"><div class="k">Not available to data centres</div><div class="h">State Strategic Projects</div>Queensland's 2026 State Strategic Project regime, which limits appeals for nominated projects, expressly excludes data centres. The Coordinator-General could still declare a data centre a Coordinated Project, but none has been.</div>
+      <p class="psrc">Sources: <a href="https://www.gadens.com/insights/data-centre-planning-approvals-in-queensland-reform,-risk-and-opportunity" target="_blank" rel="noopener">Gadens, Data centre planning approvals in Queensland</a>; <a href="https://mccullough.com.au/2026/09/17/queensland-data-centre-development-planning-infrastructure/" target="_blank" rel="noopener">McCullough Robertson</a>.</p>
+      </div>
+      <div class="spane" role="tabpanel" id="pane-wa" aria-labelledby="tab-wa" hidden>
+      <p class="sintro"><strong>Western Australia.</strong> Western Australia's main grid is not connected to the rest of the country, so power is the binding constraint. Large projects can bypass councils through a state pathway.</p>
+      <div class="step"><span class="n">1</span><span class="t">Power</span><span class="d">The developer applies to Western Power, which runs the South West Interconnected System. It is a stand-alone grid outside the National Electricity Market, so a large data centre cannot draw on generation in other states.</span></div>
+      <div class="step"><span class="n">2</span><span class="t">Choose a route</span><span class="d">Projects worth $20&nbsp;million or more in Perth and Peel, or $5&nbsp;million or more elsewhere, can use the Significant Development Pathway. Others go to the local council or, for larger applications, a Development Assessment Panel.</span></div>
+      <div class="step"><span class="n">3</span><span class="t">Application</span><span class="d">On the state pathway the State Development Assessment Unit assesses the application and consults the council, agencies and the public.</span></div>
+      <div class="step"><span class="n">4</span><span class="t">Environment</span><span class="d">Proposals with significant environmental effects can be referred to the Environmental Protection Authority for separate assessment.</span></div>
+      <div class="step"><span class="n">5</span><span class="t">Determination</span><span class="d">The Statutory Planning Committee of the Western Australian Planning Commission decides state-pathway applications. Councils or panels decide the rest.</span></div>
+      <div class="step"><span class="n">6</span><span class="t">Implementation</span><span class="d">The developer meets conditions, obtains building permits and builds.</span></div>
+      <p class="psrc">Sources: <a href="https://www.planning.wa.gov.au/significant-development-pathway" target="_blank" rel="noopener">WA Department of Planning, Significant Development Pathway</a>.</p>
+      </div>
+      <div class="spane" role="tabpanel" id="pane-sa" aria-labelledby="tab-sa" hidden>
+      <p class="sintro"><strong>South Australia.</strong> South Australia has a pipeline of gigawatt-scale proposals but no approvals yet. It is legislating a dedicated route for data centres.</p>
+      <div class="step"><span class="n">1</span><span class="t">Power</span><span class="d">The developer applies to ElectraNet for a transmission connection, or to SA Power Networks for distribution.</span></div>
+      <div class="step"><span class="n">2</span><span class="t">Classification</span><span class="d">Under the <i>Planning, Development and Infrastructure Act 2016</i> the Planning and Design Code sets the assessment pathway for the zone. Most projects are performance assessed by a council assessment panel or, for larger projects, the State Commission Assessment Panel.</span></div>
+      <div class="step"><span class="n">3</span><span class="t">Major projects</span><span class="d">The Minister can declare a project impact assessed. The developer then prepares an environmental impact statement, which is put on public exhibition, and the Minister decides.</span></div>
+      <div class="step"><span class="n">4</span><span class="t">Determination</span><span class="d">The relevant panel or the Minister grants approval with conditions.</span></div>
+      <div class="step"><span class="n">5</span><span class="t">Implementation</span><span class="d">The developer meets conditions, obtains building consent and builds.</span></div>
+      <div class="alt b"><div class="k">Proposed, June 2026</div><div class="h">Data Centre and AI Infrastructure Act</div>The Government's Data Centre Strategy would make data centres "essential infrastructure", give the Coordinator-General decision-making power over major projects, and require confirmation from SA Water on supply and certification from the Technical Regulator on grid compliance. Details and timing have not been published.</div>
+      <p class="psrc">Sources: <a href="https://w.media/south-australia-proposes-dedicated-data-centre-legislation/" target="_blank" rel="noopener">W.Media, South Australia proposes dedicated data centre legislation</a>.</p>
+      </div>
+      <div class="spane" role="tabpanel" id="pane-tas" aria-labelledby="tab-tas" hidden>
+      <p class="sintro"><strong>Tasmania.</strong> In Tasmania councils decide data centre applications. Power from Hydro Tasmania is the harder question.</p>
+      <div class="step"><span class="n">1</span><span class="t">Power</span><span class="d">The developer applies to TasNetworks for a connection and negotiates supply, usually with Hydro Tasmania. For Firmus's Bell Bay campus, Hydro Tasmania called the 444&nbsp;MW load a "material increase in demand" and will decide on supply by the end of 2026.</span></div>
+      <div class="step"><span class="n">2</span><span class="t">Application</span><span class="d">Under the <i>Land Use Planning and Approvals Act 1993</i> and the Tasmanian Planning Scheme, the developer lodges an application with the council.</span></div>
+      <div class="step"><span class="n">3</span><span class="t">Notification</span><span class="d">Discretionary applications are advertised for public comment.</span></div>
+      <div class="step"><span class="n">4</span><span class="t">Determination</span><span class="d">The council decides, with conditions. George Town Council approved Bell Bay 6–1 in August 2026, with conditions on its backup diesel generators. Applicants and objectors can appeal to the Tasmanian Civil and Administrative Tribunal.</span></div>
+      <div class="step"><span class="n">5</span><span class="t">Implementation</span><span class="d">The developer meets conditions, obtains building permits and builds.</span></div>
+      <div class="alt b"><div class="k">Drafted, not yet introduced</div><div class="h">Development Assessment Panels</div>The Government has drafted a bill to let some applications go to independent panels rather than councils. As of October 2026 it had not been introduced, and industry groups cite data centres as a reason to move faster.</div>
+      <p class="psrc">Sources: <a href="https://pulsetasmania.com.au/news/george-town-council-approves-288-megawatt-ai-data-centre-at-bell-bay/" target="_blank" rel="noopener">Pulse Tasmania, George Town Council approves Bell Bay</a>; <a href="https://hia.com.au/our-industry/newsroom/planning-and-environment/2026/10/time-for-the-government-to-get-moving-on-daps-data-centres-make-the-need-urgent" target="_blank" rel="noopener">HIA, October 2026</a>.</p>
+      </div>
+      <div class="spane" role="tabpanel" id="pane-act" aria-labelledby="tab-act" hidden>
+      <p class="sintro"><strong>Australian Capital Territory.</strong> In the ACT the territory planning authority decides. Canberra's data centres cluster in the industrial suburbs of Hume and Beard.</p>
+      <div class="step"><span class="n">1</span><span class="t">Power</span><span class="d">The developer applies to Evoenergy for a distribution connection. Transmission into the ACT is run by Transgrid as part of the NSW network.</span></div>
+      <div class="step"><span class="n">2</span><span class="t">Environment</span><span class="d">Larger proposals may need an environmental significance opinion, or a full environmental impact statement before a development application can be decided.</span></div>
+      <div class="step"><span class="n">3</span><span class="t">Application</span><span class="d">Under the <i>Planning Act 2023</i> and the Territory Plan, the developer lodges a development application with the Territory Planning Authority.</span></div>
+      <div class="step"><span class="n">4</span><span class="t">Notification</span><span class="d">The application is publicly notified and referred to agencies such as Evoenergy and Icon Water.</span></div>
+      <div class="step"><span class="n">5</span><span class="t">Determination</span><span class="d">The Territory Planning Authority decides, with conditions. Some decisions can be reviewed by the ACT Civil and Administrative Tribunal.</span></div>
+      <div class="step"><span class="n">6</span><span class="t">Implementation</span><span class="d">The developer meets conditions, obtains building approval and builds.</span></div>
+      <div class="alt b"><div class="k">Announced, August 2026</div><div class="h">ACT data centre framework</div>Chief Minister Andrew Barr announced a framework that will set where data centres can be built and how new sites are assessed, with protections for housing and water. No completion date has been set.</div>
+      <p class="psrc">Sources: <a href="https://begadistrictnews.com.au/story/9344073/cdc-data-centres-unveil-jerrabomberra-stage-2-ahead-of-new-rules" target="_blank" rel="noopener">Canberra Times / ACM, September 2026</a>.</p>
+      </div>
+      <div class="spane" role="tabpanel" id="pane-nt" aria-labelledby="tab-nt" hidden>
+      <p class="sintro"><strong>Northern Territory.</strong> The Northern Territory has one small data centre market in Darwin and some of the largest remote proposals. Its grids are small and isolated, so large projects plan their own generation.</p>
+      <div class="step"><span class="n">1</span><span class="t">Power</span><span class="d">Power and Water Corporation runs the Darwin–Katherine grid, which is not connected to the rest of the country. Remote gigawatt-scale proposals plan their own gas and solar generation.</span></div>
+      <div class="step"><span class="n">2</span><span class="t">Environment</span><span class="d">The developer refers the proposal to the NT Environment Protection Authority, which decides whether it needs an environmental impact statement and what it must cover.</span></div>
+      <div class="step"><span class="n">3</span><span class="t">Application</span><span class="d">Under the <i>Planning Act 1999</i> and the NT Planning Scheme, the developer lodges a development application, which is publicly exhibited.</span></div>
+      <div class="step"><span class="n">4</span><span class="t">Determination</span><span class="d">The Development Consent Authority decides, with conditions.</span></div>
+      <div class="step"><span class="n">5</span><span class="t">Implementation</span><span class="d">The developer meets conditions, obtains building permits and builds.</span></div>
+      <div class="alt b"><div class="k">Stalled, October 2026</div><div class="h">Project Ares</div>In October 2026 the NT EPA suspended its deadline for setting assessment terms for Energy North's 1&nbsp;GW gas-and-solar campus, citing low confidence in proposed mitigation and seeking Commonwealth advice. The developer dropped its 2028 first-power date.</div>
+      <p class="psrc">Sources: <a href="https://www.thestar.com.my/tech/tech-news/2026/11/02/exclusive-australian-outback-data-centre-pulls-timeline-after-regulator-stalls" target="_blank" rel="noopener">Reuters via The Star, November 2026</a>.</p>
+      </div>
+      <div class="alt"><div class="k">Applies in every state</div><div class="h">Commonwealth standards</div>In August 2026 National Cabinet agreed to nationally consistent, mandatory standards for large data centres. The Commonwealth plans legislation in early 2027 requiring them to add at least as much new renewable generation as they use and to pay their share of network and water upgrades.</div>
     </div>
   </details>
 
@@ -672,6 +774,13 @@ hr{border:0;border-top:1px solid var(--rule);margin:40px 0}
   </div>
 </article>
 
+<script>
+(function(){
+  const tabs=[...document.querySelectorAll('.stabs [role=tab]')];
+  function pick(t,focus){tabs.forEach(b=>{const on=b===t;b.setAttribute('aria-selected',on);b.tabIndex=on?0:-1;document.getElementById(b.getAttribute('aria-controls')).hidden=!on;});if(focus)t.focus();}
+  tabs.forEach((b,i)=>{b.addEventListener('click',()=>pick(b));b.addEventListener('keydown',e=>{const d={ArrowRight:1,ArrowLeft:-1}[e.key];if(d){e.preventDefault();pick(tabs[(i+d+tabs.length)%tabs.length],true);}});});
+})();
+</script>
 <script src="../data.js"></script>
 <script>
 (function(){
