@@ -44,6 +44,35 @@ title: Jack Dalton
       </div>
     </section>
 
+    <section class="index-section featured-projects" aria-labelledby="featured-projects-title" aria-roledescription="carousel" data-project-carousel>
+      <div class="featured-projects-heading">
+        <h2 class="section-label" id="featured-projects-title">featured projects</h2>
+        <div class="project-carousel-controls" hidden>
+          <button type="button" data-project-prev aria-label="Previous featured project" aria-controls="featured-project-track">←</button>
+          <button type="button" data-project-next aria-label="Next featured project" aria-controls="featured-project-track">→</button>
+        </div>
+      </div>
+      <!-- Add future projects as sibling list items. Navigation enables itself. -->
+      <ul class="project-carousel-track" id="featured-project-track" tabindex="0" aria-label="Featured projects; scroll to browse">
+        <li class="featured-project" id="project-opentrons">
+          <a class="featured-project-cover" href="https://jackatdalton.github.io/opentrons-protocol-builder/" aria-label="Open the Opentrons Protocol Builder">
+            <img src="/assets/opentrons-simulate.svg" width="1440" height="900" loading="lazy" alt="Opentrons Protocol Builder's Simulate view, showing a Golden Gate assembly on the Flex deck beside its pipetting steps.">
+          </a>
+          <div class="featured-project-body">
+            <p class="card-meta">Lab automation · Open-source software</p>
+            <h3><a href="https://jackatdalton.github.io/opentrons-protocol-builder/">Opentrons Protocol Builder</a></h3>
+            <p>Turn samples and experimental settings into protocols for the Opentrons Flex. Plan the deck, inspect each pipetting step and download the Python for your run.</p>
+            <div class="featured-project-links">
+              <a class="button" href="https://jackatdalton.github.io/opentrons-protocol-builder/">Open the app</a>
+              <a href="https://github.com/JackATDalton/opentrons-protocol-builder">Source code</a>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <p class="visually-hidden" data-project-status aria-live="polite" aria-atomic="true"></p>
+    </section>
+    <script src="/scripts/project-carousel.js" defer></script>
+
     <section class="index-section">
       <h2 class="section-label">featured publications</h2>
       <div class="card-grid">

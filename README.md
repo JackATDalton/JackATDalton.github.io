@@ -103,3 +103,16 @@ This site is designed to work with:
 ---
 
 **Built with ❤️ by Jack Dalton**
+
+## Featured projects
+
+The homepage carousel is a native horizontal scroll list in `index.html` with
+optional controls from `scripts/project-carousel.js`. Add a sibling
+`li.featured-project` for each new project; controls appear automatically when
+there is more than one. It never rotates automatically and works without
+JavaScript. Keep the app link, source link and image alt text with each entry.
+
+`assets/opentrons-simulate.svg` is a vector figure rendered from the protocol
+builder's real `SimulationViewer` and a 24-well Golden Gate example, at step
+86. It is not a simulator-validation result; it shows the step visualisation.
+The same figure is used on the Scientific Projects page.
