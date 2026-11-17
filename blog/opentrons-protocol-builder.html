@@ -1,0 +1,97 @@
+---
+layout: default
+title: Why we built the Opentrons Protocol Builder - Jack Dalton
+---
+
+<main>
+  <div class="column">
+    <article class="post">
+
+      <header class="page-header">
+        <p class="post-kicker">lab automation · 17 November 2026</p>
+        <h1>Why we built the Opentrons Protocol Builder</h1>
+        <p class="page-tagline">A protocol that simulates cleanly can still ruin a plate. This web app writes protocols that follow the rules we learned the hard way.</p>
+      </header>
+
+      <div class="post-body">
+
+        <p>Our lab runs an Opentrons Flex for the routine liquid handling of synthetic biology: minipreps, normalising DNA to one concentration, and combinatorial Golden Gate assembly. The robot's Python API makes it easy to write a protocol. Writing one that actually moves the right volume to the right well, every time, turned out to be much harder.</p>
+
+        <h2>The problem: "it simulates" is not "it works"</h2>
+
+        <p>Opentrons ships a simulator, and it is the obvious place to check a protocol. It confirms that every command can physically run: that the labware exists, the tips are there and the volumes fit the pipette. It cannot tell you whether the protocol does what you meant.</p>
+
+        <p>Over a year of runs we hit a series of failures. Every one of them passed the simulator with no errors:</p>
+
+        <ul>
+          <li><strong>Small volumes went missing.</strong> Reverse-pipetting 1&nbsp;µL of DNA left roughly one well in three empty. Some of the others got more than 1&nbsp;µL.</li>
+          <li><strong>A tip contaminated shared stock.</strong> One protocol alternated between aspirating from a shared repository plate and dispensing into reaction wells, all with the same tip. Each trip carried liquid from the destination back into stock that later plates drew from, which put two plates of data in doubt.</li>
+          <li><strong>Labels silently drifted.</strong> Source wells were ordered over a 3-row selection and destination tubes over a 4-row rack. The two lists agreed for the first column and then diverged, so every later tube was mislabelled and nothing raised an error.</li>
+          <li><strong>A "batching optimisation" ruined samples.</strong> Rewriting a miniprep to lyse everything and then neutralise everything left the first tubes sitting in lysis buffer for the whole pass.</li>
+          <li><strong>Liquid-level detection under-read</strong>, and nearly every well was under-transferred. The simulator can't exercise it at all.</li>
+        </ul>
+
+        <p>Each fix lived in one hand-edited script. The next protocol written for a slightly different experiment would make the same mistake again.</p>
+
+        <h2>The rules we came up with</h2>
+
+        <p>We wrote every lesson down with the run that taught it, and turned the ones that apply everywhere into seven rules every protocol must follow:</p>
+
+        <ol class="post-rules">
+          <li><strong>A tip never goes back into a source after it has touched a destination.</strong> A tip goes source → destination(s) → trash. The only exception is a dispense from above the well that never touches the liquid.</li>
+          <li><strong>Only share a tip between wells with identical contents.</strong> For a combinatorial assembly, that means wells that have received exactly the same parts so far.</li>
+          <li><strong>Pair wells by name, from one ordering.</strong> Source and destination lists come from the same traversal, and the pairing is written into the protocol, not re-derived on the robot.</li>
+          <li><strong>Check volumes against working capacity, not the label.</strong> A 200&nbsp;µL PCR plate is full at about 150&nbsp;µL.</li>
+          <li><strong>Respect time-sensitive steps.</strong> Steps like lysis and neutralisation are interleaved in small groups, and are never "optimised" into two passes.</li>
+          <li><strong>Never hard-code deck slots.</strong> Labware is placed against your robot's actual deck and fixtures, so nothing collides.</li>
+          <li><strong>Never rely on liquid-level detection.</strong> You declare the source volumes.</li>
+        </ol>
+
+        <p>We also worked out pipetting parameters that we now keep in one place instead of retyping them in each script:</p>
+
+        <ul>
+          <li>Below about 3&nbsp;µL, reverse pipetting fails. Use a fresh tip and a blow-out at the bottom of the well, or scale the reaction up.</li>
+          <li>When reverse pipetting, aspirate real excess: the larger of 5&nbsp;µL or 15&nbsp;% of the batch. Blow the excess back at the bottom of the source, not the top, where it stays in the tip.</li>
+          <li>Dispense at half speed, 0.2&nbsp;mm off-centre, so the drop sits against the well wall instead of riding the tip. With that, touch-tip adds nothing.</li>
+        </ul>
+
+        <p>Machine-checkable rules are tested automatically against every generated protocol. The rest are built into how the generators work.</p>
+
+        <h2>The web app</h2>
+
+        <p>Most people don't want to write a protocol; they want to run their samples. The <a href="https://jackatdalton.github.io/opentrons-protocol-builder/">Opentrons Protocol Builder</a> puts these rules behind a form. It has five tools:</p>
+
+        <ul>
+          <li><strong>Normalise tubes</strong>: a box of 1.5&nbsp;mL tubes at assorted concentrations becomes one 96-well plate at a single concentration.</li>
+          <li><strong>Normalise a plate</strong>: dilute a plate's wells in place to one concentration.</li>
+          <li><strong>Miniprep</strong>: vacuum-manifold plasmid prep, from culture to eluate, for 1–48 samples.</li>
+          <li><strong>Plate to tubes</strong>: one 1.5&nbsp;mL tube per selected well.</li>
+          <li><strong>Golden Gate</strong>: combinatorial assembly with onboard or external thermocycling.</li>
+        </ul>
+
+        <h3>How to use it</h3>
+
+        <ol class="post-steps">
+          <li><strong>Pick your deck.</strong> Choose the preset that matches your robot's fixed hardware, then pick a tool.</li>
+          <li><strong>Set up.</strong> Upload or paste your CSV (concentrations, a plate layout or an assembly design) and set the volumes. Each upload box has a download for an example of the expected format. The deck diagram stays beside the form, so if a setting needs another tip rack, you see it appear.</li>
+          <li><strong>Plan.</strong> Check the table of what goes where, and read the warnings: wells that can't reach the target, parts that are short, wells over capacity.</li>
+          <li><strong>Simulate.</strong> Step through an animation of the run. Everything on screen comes from the same code that writes the protocol, so if the animation looks wrong, the protocol <em>is</em> wrong.</li>
+          <li><strong>Download.</strong> The <code>.py</code> file is named with the date and your uploaded plate files, so you can tell later which run it belongs to. Run it through <code>opentrons_simulate</code> (the app shows you the command), then validate it on your own robot before trusting it with real samples.</li>
+        </ol>
+
+        <p>The app is a static site. There's no server, and nothing you paste leaves your browser. Slack notifications for each stage of a run are optional: add your own webhook if you want them.</p>
+
+        <h2>Fork it</h2>
+
+        <p>The parameters come from our Flex and our labware, so treat them as a starting point, not gospel. The code is MIT-licensed and lives in its own repository, <a href="https://github.com/JackATDalton/opentrons-protocol-builder">JackATDalton/opentrons-protocol-builder</a>. Fork it, change the deck presets and labware to match your lab, and GitHub Pages will host your own copy. If you find a rule that's wrong on your machine, or one we missed, open an issue; that is exactly the kind of lesson this project exists to collect.</p>
+
+        <p class="post-links">
+          <a class="button" href="https://jackatdalton.github.io/opentrons-protocol-builder/">Open the app</a>
+          <a href="https://github.com/JackATDalton/opentrons-protocol-builder">Source code</a>
+          <a href="https://github.com/JackATDalton/opentrons-protocol-builder/blob/main/docs/protocol-invariants.md">The seven rules in full</a>
+        </p>
+
+      </div>
+    </article>
+  </div>
+</main>

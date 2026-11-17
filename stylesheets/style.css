@@ -591,3 +591,17 @@ footer {
 @media (prefers-reduced-motion: reduce) {
   .project-carousel-track { scroll-behavior: auto; }
 }
+
+/* ===== BLOG POST ===== */
+.post .page-header h1 { max-width: 22ch; }
+.post-kicker { font-size: .775rem; color: var(--color-label); letter-spacing: .04em; margin-bottom: .75rem; }
+.post-body { max-width: 68ch; padding: 2.5rem 0 4rem; }
+.post-body > p, .post-body li { font-size: .95rem; }
+.post-body h2 { margin-top: 2.75rem; }
+.post-body h3 { margin-top: 1.75rem; }
+.post-body ul, .post-body ol { margin: 0 0 1.1em 1.25rem; }
+.post-body li { margin-bottom: .55em; line-height: 1.65; padding-left: .25rem; }
+.post-body code { font-family: var(--font-mono); font-size: .875em; background: rgba(30, 45, 30, .07); padding: .05em .3em; overflow-wrap: anywhere; }
+.post-rules { border-left: 2px solid var(--color-link); padding: .25rem 0 .25rem 1.5rem; margin-left: 0 !important; list-style-position: inside; }
+.post-rules li { padding-left: 0; }
+.post-links { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-top: 2rem; font-size: .8rem; }
