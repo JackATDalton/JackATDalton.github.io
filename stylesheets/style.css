@@ -605,3 +605,4 @@ footer {
 .post-rules { border-left: 2px solid var(--color-link); padding: .25rem 0 .25rem 1.5rem; margin-left: 0 !important; list-style-position: inside; }
 .post-rules li { padding-left: 0; }
 .post-links { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-top: 2rem; font-size: .8rem; }
+.post-links-top { margin: 1.25rem 0 0; }
